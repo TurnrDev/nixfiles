@@ -119,7 +119,7 @@
     foot
     sbctl
     wget
-    code
+    vscode
     screen
     pciutils
     usbutils

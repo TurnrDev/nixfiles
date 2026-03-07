@@ -8,14 +8,19 @@
       inputs.home-manager.follows = "home-manager";
     };
     nixcord.url = "github:FlameFlag/nixcord";
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
+  outputs = { self, nixpkgs, stylix, ... }@inputs: {
     nixosConfigurations.jay-framework = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs;};
       modules = [
         ./configuration.nix
         inputs.home-manager.nixosModules.default
+        stylix.nixosModules.stylix
       ];
     };
   };

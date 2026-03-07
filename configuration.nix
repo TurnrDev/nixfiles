@@ -67,6 +67,10 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  # COLOURS
+  stylix.enable = true;
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
+
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;

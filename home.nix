@@ -6,14 +6,15 @@
     ./modules/home-manager/common/hyprland/hyprland.nix
     ./modules/home-manager/common/hyprlock/hyprlock.nix
     ./modules/home-manager/common/waybar/waybar.nix
+    ./modules/home-manager/common/fuzzel/fuzzel.nix
   ];
 
   programs.nixcord = {
     enable = true;  # enable Nixcord. Also installs discord package
     config = {
-    #   enabledThemes = [
-    #     "stylix.theme.css"
-    #   ];
+      enabledThemes = [
+        "stylix.theme.css"
+      ];
     #   frameless = true; # set some Vencord options
       plugins = {
         alwaysTrust.enable = true;

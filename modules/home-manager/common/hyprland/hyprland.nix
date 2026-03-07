@@ -32,6 +32,7 @@
       bindd = [
         "$mainMod, W, Launch Firefox, exec, uwsm app -- firefox"
         "$mainMod, T, Launch terminal emulator, exec, uwsm app -- foot"
+        "$mainMod, C, Launch IDE, exec, uwsm app -- code"
         "$mainMod, Super_L, Launch Rofi, exec, uwsm app -- fuzzel"
         "$mainMod, Super_R, Launch Rofi, exec, uwsm app -- fuzzel"
         "$mainMod, Q, Close, killactive"

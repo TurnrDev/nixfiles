@@ -1,6 +1,6 @@
 { config, pkgs, lib, nixpkgs-staging, ... }:
 
-# with config.lib.stylix.colors.withHashtag;
+with config.lib.stylix.colors.withHashtag;
 {
   home.packages = with pkgs; [
     playerctl
@@ -78,107 +78,107 @@
       };
     };
   };
-#   programs.waybar.style = lib.mkForce ''
-# @define-color base00 ${base00}; @define-color base01 ${base01}; @define-color base02 ${base02}; @define-color base03 ${base03};
-# @define-color base04 ${base04}; @define-color base05 ${base05}; @define-color base06 ${base06}; @define-color base07 ${base07};
+  programs.waybar.style = lib.mkForce ''
+@define-color base00 ${base00}; @define-color base01 ${base01}; @define-color base02 ${base02}; @define-color base03 ${base03};
+@define-color base04 ${base04}; @define-color base05 ${base05}; @define-color base06 ${base06}; @define-color base07 ${base07};
 
-# @define-color base08 ${base08}; @define-color base09 ${base09}; @define-color base0A ${base0A}; @define-color base0B ${base0B};
-# @define-color base0C ${base0C}; @define-color base0D ${base0D}; @define-color base0E ${base0E}; @define-color base0F ${base0F};
+@define-color base08 ${base08}; @define-color base09 ${base09}; @define-color base0A ${base0A}; @define-color base0B ${base0B};
+@define-color base0C ${base0C}; @define-color base0D ${base0D}; @define-color base0E ${base0E}; @define-color base0F ${base0F};
 
-# @define-color text ${base0D};
+@define-color text ${base0D};
 
-# * {
-#   border: none;
-#   font-family: 'JetBrains Mono', 'Symbols Nerd Font Mono';
-#   /*font-family: monospace, sans-serif;*/
-#   font-size: 20px;
-#   font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
-#   min-height: 15px;
-#   margin-bottom: 0px;
-# }
+* {
+  border: none;
+  font-family: 'JetBrains Mono', 'Symbols Nerd Font Mono';
+  /*font-family: monospace, sans-serif;*/
+  font-size: 20px;
+  font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
+  min-height: 15px;
+  margin-bottom: 0px;
+}
 
-# window#waybar {
-#   background: alpha(@base00, 0);
-# }
+window#waybar {
+  background: alpha(@base00, 0);
+}
 
-# #cava {
-#   font-family: monospace, sans-serif;
-#   border-top-left-radius: 12px;
-#   border-bottom-left-radius: 12px;
-#   border-top-right-radius: 12px;
-#   border-bottom-right-radius: 12px;
-#   background-color: @base00;
-#   color: @text;
-#   margin-top: 5px;
-#   margin-right: 0px;
-#   margin-left: 10px;
-#   padding-top: 1px;
-#   padding-left: 10px;
-#   padding-right: 5px;
-#   min-width: 180px;
-# }
+#cava {
+  font-family: monospace, sans-serif;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  background-color: @base00;
+  color: @text;
+  margin-top: 5px;
+  margin-right: 0px;
+  margin-left: 10px;
+  padding-top: 1px;
+  padding-left: 10px;
+  padding-right: 5px;
+  min-width: 180px;
+}
 
-# #mpris {
-#   border-top-right-radius: 12px;
-#   border-bottom-right-radius: 12px;
-#   background-color: @base00;
-#   color: @text;
-#   margin-top: 5px;
-#   margin-right: 0px;
-#   margin-left: -8px;
-#   padding-top: 1px;
-#   padding-left: 5px;
-#   padding-right: 10px;
-# }
+#mpris {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  background-color: @base00;
+  color: @text;
+  margin-top: 5px;
+  margin-right: 0px;
+  margin-left: -8px;
+  padding-top: 1px;
+  padding-left: 5px;
+  padding-right: 10px;
+}
 
-# #custom-arch, #workspaces {
-#   border-radius: 12px;
-#   background-color: @base00;
-#   color: @text;
-#   margin-top: 5px;
-#   margin-right: 15px;
-#   padding-top: 1px;
-#   padding-left: 10px;
-#   padding-right: 10px;
-# }
+#custom-arch, #workspaces {
+  border-radius: 12px;
+  background-color: @base00;
+  color: @text;
+  margin-top: 5px;
+  margin-right: 15px;
+  padding-top: 1px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
 
-# #custom-arch {
-#   font-size: 20px;
-#   margin-left: 15px;
-#   color: @text;
-# }
+#custom-arch {
+  font-size: 20px;
+  margin-left: 15px;
+  color: @text;
+}
 
-# #workspaces button {
-#   background: @base00;
-#   color: @text;
-# }
+#workspaces button {
+  background: @base00;
+  color: @text;
+}
 
-# #custom-spotify {
-#   border-radius: 10px;
-#   background-color: @base00;
-#   color: @text;
-#   margin-top: 5px;
-#   padding-left: 10px;
-#   padding-right: 10px;
-#   margin-right: 15px;
-# }
+#custom-spotify {
+  border-radius: 10px;
+  background-color: @base00;
+  color: @text;
+  margin-top: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: 15px;
+}
 
-# #window, #tray, #memory, #backlight, #pulseaudio, #bluetooth, #network, #battery, #wireplumber, #clock {
-#   border-radius: 8px;
-#   background-color: @base00;
-#   color: @text;
-#   margin-top: 5px;
-#   padding-left: 10px;
-#   padding-right: 10px;
-#   margin-right: 10px;
-# }
+#window, #tray, #memory, #backlight, #pulseaudio, #bluetooth, #network, #battery, #wireplumber, #clock {
+  border-radius: 8px;
+  background-color: @base00;
+  color: @text;
+  margin-top: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: 10px;
+}
 
-# #battery.warning {
-#   color: #eed202;
-# }
+#battery.warning {
+  color: #eed202;
+}
 
-# #battery.critical {
-#   color: #ff0000;
-# }
-#   '';
+#battery.critical {
+  color: #ff0000;
+}
+  '';
 }

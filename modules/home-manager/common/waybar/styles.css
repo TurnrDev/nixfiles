@@ -8,9 +8,9 @@
   margin-bottom: 0px;
 }
 
-/* window#waybar {
+window#waybar {
   background: alpha(@base00, ${with config.stylix.opacity; builtins.toString desktop});
-} */
+}
 
 #cava {
 	font-family: monospace, sans-serif;

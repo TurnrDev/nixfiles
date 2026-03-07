@@ -91,9 +91,7 @@
     isNormalUser = true;
     description = "Jay";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      kdePackages.kate
-    ];
+    packages = with pkgs; [];
   };
 
   # Install firefox.
@@ -106,6 +104,10 @@
       user.email = "jaynicholasturner@gmail.com";
       init.defaultBranch = "main";
     };
+  };
+  programs.hyprland = {
+    enable = true;
+    withUWSM = true;
   };
 
   home-manager = {
@@ -156,6 +158,12 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
+  fonts = {
+    packages = [
+      pkgs.font-awesome
+    ];
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

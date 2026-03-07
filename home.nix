@@ -1,7 +1,12 @@
 { config, inputs, pkgs, ... }:
 
 {
-  imports = [ inputs.nixcord.homeModules.nixcord ];
+  imports = [
+    inputs.nixcord.homeModules.nixcord
+    ./modules/home-manager/common/hyprland/hyprland.nix
+    ./modules/home-manager/common/hyprlock/hyprlock.nix
+    ./modules/home-manager/common/waybar/waybar.nix
+  ];
 
   programs.nixcord = {
     enable = true;  # enable Nixcord. Also installs discord package

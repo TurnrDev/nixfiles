@@ -4,9 +4,11 @@
   imports = [
     ./default.nix
     inputs.nixcord.homeModules.nixcord
+    ../common/firefox.nix
     ../common/fuzzel/fuzzel.nix
     ../common/hyprland/hyprland.nix
     ../common/hyprlock/hyprlock.nix
+    ../common/kdeconnect.nix
     ../common/waybar/waybar.nix
   ];
 

@@ -35,8 +35,8 @@
     packages = with pkgs; [];
   };
 
-  # Install firefox.
-  programs.firefox.enable = true;
+  # programs.firefox.enable = true;
+  programs.kdeconnect.enable = true;
 
   programs.git = {
     enable = true;

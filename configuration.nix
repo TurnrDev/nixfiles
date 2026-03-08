@@ -116,7 +116,12 @@
   programs.zsh.enable = true;
   programs.foot = {
     enable = true;
-    enableZshIntegration = true;
+    settings = {
+      main = {
+        shell = "zsh";
+        font = "FiraCode Nerd Font Mono";
+      };
+    };
   };
 
   home-manager = {
@@ -151,7 +156,7 @@
     jq
     smartmontools
     gitkraken
-
+    nerd-fonts.fira-code
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

@@ -113,6 +113,11 @@
     enable = true;
     withUWSM = true;
   };
+  programs.zsh.enable = true;
+  programs.foot = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
@@ -128,7 +133,6 @@
   environment.systemPackages = with pkgs; [
     tpm2-tss
     busybox
-    foot
     sbctl
     wget
     vscode

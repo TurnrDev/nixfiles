@@ -3,10 +3,12 @@
 {
   imports = [
     inputs.nixcord.homeModules.nixcord
+    ./modules/home-manager/common/fuzzel/fuzzel.nix
     ./modules/home-manager/common/hyprland/hyprland.nix
     ./modules/home-manager/common/hyprlock/hyprlock.nix
     ./modules/home-manager/common/waybar/waybar.nix
-    ./modules/home-manager/common/fuzzel/fuzzel.nix
+    ./modules/home-manager/common/zsh.nix
+
   ];
 
   programs.nixcord = {

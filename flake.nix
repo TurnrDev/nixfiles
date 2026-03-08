@@ -12,6 +12,10 @@
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, stylix, ... }@inputs: {
@@ -19,7 +23,9 @@
       specialArgs = {inherit inputs;};
       modules = [
         ./hosts/jay-framework/configuration.nix
+        ./modules/nixos/common/systemd-boot.nix
         inputs.home-manager.nixosModules.default
+        inputs.lanzaboote.nixosModules.lanzaboote
         stylix.nixosModules.stylix
       ];
     };

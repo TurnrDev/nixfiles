@@ -19,6 +19,7 @@
     };
 
   boot.initrd.luks.devices."luks-99292f4d-fda6-4bce-9ff5-f6b344d1e449".device = "/dev/disk/by-uuid/99292f4d-fda6-4bce-9ff5-f6b344d1e449";
+  boot.initrd.luks.devices."luks-d5a84443-b5a5-485b-848e-8c50df120425".device = "/dev/disk/by-uuid/d5a84443-b5a5-485b-848e-8c50df120425";
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/86A7-6521";

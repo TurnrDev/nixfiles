@@ -44,4 +44,9 @@
       }
     ];
   };
+
+  # Restart kanshi when the generated HM config path changes on switch.
+  systemd.user.services.kanshi.Unit.X-Restart-Triggers = [
+    config.xdg.configFile."kanshi/config".source
+  ];
 }

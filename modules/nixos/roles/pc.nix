@@ -14,6 +14,11 @@
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
+  programs.steam = {
+    enable = true;
+    extraCompatPackages = with pkgs; [ proton-ge-bin ];
+  };
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "gb";
@@ -35,7 +40,6 @@
     packages = with pkgs; [];
   };
 
-  # programs.firefox.enable = true;
   programs.kdeconnect.enable = true;
 
   programs.git = {

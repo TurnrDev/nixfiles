@@ -1,6 +1,10 @@
-{ ... }:
+{ inputs, ... }:
 
 {
+  imports = [
+    inputs.lanzaboote.nixosModules.lanzaboote
+  ];
+
   boot.initrd.systemd.enable = true;
   boot.lanzaboote = {
     enable = true;

@@ -23,9 +23,7 @@
       specialArgs = {inherit inputs;};
       modules = [
         ./hosts/jay-framework/configuration.nix
-        ./modules/nixos/common/systemd-boot.nix
         inputs.home-manager.nixosModules.default
-        inputs.lanzaboote.nixosModules.lanzaboote
         stylix.nixosModules.stylix
       ];
     };

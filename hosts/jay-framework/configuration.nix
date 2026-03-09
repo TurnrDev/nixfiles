@@ -5,6 +5,7 @@
     [
       ./hardware-configuration.nix
       ../../modules/nixos/roles/laptop.nix
+      ../../modules/nixos/roles/gaming.nix
     ];
 
   networking.hostName = "jay-framework";

@@ -28,7 +28,7 @@
         profile.outputs = [
           {
             criteria = "eDP-1";
-            status = "enable";
+            status = "disable";
             scale = 1.0;
             mode = "2256x1504@60.00Hz";
             position = "0,1440";

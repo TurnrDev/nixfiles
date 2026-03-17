@@ -4,18 +4,18 @@ author: "Generated once with Matugen from seed #00796B"
 variant: "light"
 palette:
   base00: "#f4fbf8" # background
-  base01: "#ffffff" # surfaceContainerLowest
-  base02: "#eff5f2" # surfaceContainerLow
-  base03: "#6f7976" # outline
-  base04: "#3f4946" # onSurfaceVariant
-  base05: "#171d1b" # onSurface
-  base06: "#f4fbf8" # surfaceBright
-  base07: "#ecf2ef" # inverseOnSurface
+  base01: "#eff5f2" # surfaceContainerLow
+  base02: "#e9efec" # surfaceContainer
+  base03: "#bec9c5" # outlineVariant
+  base04: "#6f7976" # outline
+  base05: "#3f4946" # onSurfaceVariant
+  base06: "#171d1b" # onSurface
+  base07: "#091311" # neutralVariant 5
   base08: "#ba1a1a" # error
-  base09: "#4a635e" # secondary
+  base09: "#ea7d00" # matugen base16 orange
   base0A: "#446179" # tertiary
   base0B: "#006b5e" # primary
-  base0C: "#cde8e1" # secondaryContainer
-  base0D: "#9ff2e2" # primaryContainer
-  base0E: "#cae6ff" # tertiaryContainer
-  base0F: "#ffdad6" # errorContainer
+  base0C: "#4a635e" # secondary
+  base0D: "#005047" # primaryContainer
+  base0E: "#2c4a60" # tertiaryContainer
+  base0F: "#93000a" # errorContainer

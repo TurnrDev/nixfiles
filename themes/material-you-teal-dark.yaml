@@ -4,18 +4,18 @@ author: "Generated once with Matugen from seed #00796B"
 variant: "dark"
 palette:
   base00: "#0e1513" # background
-  base01: "#090f0e" # surfaceContainerLowest
-  base02: "#171d1b" # surfaceContainerLow
-  base03: "#899390" # outline
-  base04: "#bec9c5" # onSurfaceVariant
-  base05: "#dde4e1" # onSurface
-  base06: "#343b39" # surfaceBright
-  base07: "#2b3230" # inverseOnSurface
-  base08: "#ffb4ab" # error
-  base09: "#b1ccc5" # secondary
-  base0A: "#accae5" # tertiary
+  base01: "#171d1b" # surfaceContainerLow
+  base02: "#1b211f" # surfaceContainer
+  base03: "#3f4946" # outlineVariant
+  base04: "#899390" # outline
+  base05: "#bec9c5" # onSurfaceVariant
+  base06: "#dde4e1" # onSurface
+  base07: "#f1fcf8" # neutralVariant 98
+  base08: "#ff897d" # error tone 70
+  base09: "#ea7d00" # matugen base16 orange
+  base0A: "#cd8d42" # matugen base16 amber
   base0B: "#83d5c6" # primary
-  base0C: "#334b46" # secondaryContainer
-  base0D: "#005047" # primaryContainer
-  base0E: "#2c4a60" # tertiaryContainer
-  base0F: "#93000a" # errorContainer
+  base0C: "#46aa9a" # matugen base16 aqua
+  base0D: "#60a0d0" # matugen base16 blue
+  base0E: "#00a3ed" # matugen base16 bright cyan
+  base0F: "#5f6664" # matugen base16 neutral extra

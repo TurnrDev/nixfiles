@@ -4,7 +4,7 @@
   home.packages = with pkgs; [
     hyprlock
   ];
-  stylix.targets.hyprlock.enable = false;
+  stylix.targets.hyprlock.enable = true;
   programs.hyprlock.enable = true;
   wayland.windowManager.hyprland.settings = {
     bindd = [

@@ -10,35 +10,18 @@ with config.lib.stylix.colors.withHashtag;
     systemd.enable = true;
     systemd.target = "hyprland-session.target";
   };
+  systemd.user.services.waybar.Unit.ConditionEnvironment = lib.mkForce [
+    "WAYLAND_DISPLAY"
+    "HYPRLAND_INSTANCE_SIGNATURE"
+  ];
   programs.waybar.settings = {
     mainBar = {
       layer = "top";
       position = "top";
       height = 32;
-      modules-left = [ "cava" "mpris" "image/album_art" "custom/media" ];
+      modules-left = [ "mpris" ];
       modules-center = [ "hyprland/workspaces" ];
       modules-right = [ "tray" "wireplumber" "backlight" "battery" "clock" ];
-      cava = {
-        framerate = 30;
-        autosens =  0;
-        sensitivity = 5;
-        bars = 14;
-        lower_cutoff_freq = 50;
-        higher_cutoff_freq = 10000;
-        method = "pipewire";
-        stereo = true;
-        reverse = false;
-        bar_delimiter = 0;
-        monstercat = false;
-        waves = false;
-        noise_reduction = 0.77;
-        input_delay = 2;
-        format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
-        #format-icons =  ["A" "-" "A" "-" "a" "*" ";" "." ];
-        actions = {
-          on-click-right = "mode";
-        };
-      };
       clock = {
         format = "{:%d %b %Y - %H:%M}";
       };
@@ -85,100 +68,76 @@ with config.lib.stylix.colors.withHashtag;
 @define-color base08 ${base08}; @define-color base09 ${base09}; @define-color base0A ${base0A}; @define-color base0B ${base0B};
 @define-color base0C ${base0C}; @define-color base0D ${base0D}; @define-color base0E ${base0E}; @define-color base0F ${base0F};
 
-@define-color text ${base0D};
+@define-color text ${base05};
+@define-color text-strong ${base06};
+@define-color accent ${base0B};
+@define-color accent-strong ${base0D};
+@define-color surface ${base01};
+@define-color surface-2 ${base02};
+@define-color border ${base03};
 
 * {
   border: none;
-  font-family: 'JetBrains Mono', 'Symbols Nerd Font Mono';
-  /*font-family: monospace, sans-serif;*/
-  font-size: 20px;
-  font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
-  min-height: 15px;
-  margin-bottom: 0px;
+  font-family: '${config.stylix.fonts.sansSerif.name}', '${config.stylix.fonts.emoji.name}', 'Symbols Nerd Font Mono';
+  font-size: 16px;
+  min-height: 0;
 }
 
 window#waybar {
   background: alpha(@base00, 0);
+  color: @text;
 }
 
-#cava {
-  font-family: monospace, sans-serif;
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-  background-color: @base00;
+#mpris, #workspaces, #tray, #wireplumber, #backlight, #battery, #clock {
+  background-color: alpha(@surface, 0.95);
+  border: 1px solid alpha(@border, 0.75);
+  border-radius: 12px;
   color: @text;
   margin-top: 5px;
-  margin-right: 0px;
-  margin-left: 10px;
-  padding-top: 1px;
-  padding-left: 10px;
-  padding-right: 5px;
-  min-width: 180px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 #mpris {
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-  background-color: @base00;
-  color: @text;
-  margin-top: 5px;
-  margin-right: 0px;
-  margin-left: -8px;
-  padding-top: 1px;
-  padding-left: 5px;
-  padding-right: 10px;
-}
-
-#custom-arch, #workspaces {
-  border-radius: 12px;
-  background-color: @base00;
-  color: @text;
-  margin-top: 5px;
+  margin-left: 10px;
   margin-right: 15px;
-  padding-top: 1px;
-  padding-left: 10px;
-  padding-right: 10px;
+  min-width: 220px;
 }
 
-#custom-arch {
-  font-size: 20px;
-  margin-left: 15px;
-  color: @text;
+#workspaces {
+  margin-right: 15px;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 #workspaces button {
-  background: @base00;
-  color: @text;
-}
-
-#custom-spotify {
+  background: transparent;
   border-radius: 10px;
-  background-color: @base00;
-  color: @text;
-  margin-top: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-right: 15px;
+  color: @base04;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
-#window, #tray, #memory, #backlight, #pulseaudio, #bluetooth, #network, #battery, #wireplumber, #clock {
-  border-radius: 8px;
-  background-color: @base00;
-  color: @text;
-  margin-top: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
+#workspaces button:hover {
+  background: @surface-2;
+  color: @text-strong;
+}
+
+#workspaces button.active {
+  background: @accent;
+  color: @base00;
+}
+
+#tray, #wireplumber, #backlight, #battery, #clock {
   margin-right: 10px;
 }
 
 #battery.warning {
-  color: #eed202;
+  color: @base09;
 }
 
 #battery.critical {
-  color: #ff0000;
+  color: @base08;
 }
   '';
 }

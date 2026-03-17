@@ -11,6 +11,7 @@
   networking.hostName = "jay-framework";
 
   home-manager = {
+    backupFileExtension = "hm-backup";
     extraSpecialArgs = { inherit inputs; };
     users.jay.imports = [ ./home.nix ];
   };

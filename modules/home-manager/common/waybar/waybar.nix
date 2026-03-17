@@ -8,8 +8,8 @@ with config.lib.stylix.colors.withHashtag;
   programs.waybar = {
     enable = true;
     systemd.enable = true;
+    systemd.target = "hyprland-session.target";
   };
-  #programs.waybar.systemd.target = "hyprland-session.target";
   programs.waybar.settings = {
     mainBar = {
       layer = "top";

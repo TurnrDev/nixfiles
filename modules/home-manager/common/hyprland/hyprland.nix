@@ -24,7 +24,6 @@
       "$altMod" = "SUPER+ALT";
       exec-once = [
         "uwsm app -- nm-applet"
-        "uwsm app -- hyprlock --no-fade-in --immediate-render --grace 0"
         "uwsm app -- discord"
         "[workspace 2 silent] uwsm app -- spotify"
       ];

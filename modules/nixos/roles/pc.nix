@@ -25,7 +25,7 @@
 
   # COLOURS
   stylix.enable = true;
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
+  stylix.base16Scheme = ../../../themes/material-you-teal-dark.yaml;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.jay = {

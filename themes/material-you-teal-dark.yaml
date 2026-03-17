@@ -1,0 +1,21 @@
+system: "base16"
+name: "Material You Teal"
+author: "Generated once with Matugen from seed #00796B"
+variant: "dark"
+palette:
+  base00: "#0e1513" # background
+  base01: "#090f0e" # surfaceContainerLowest
+  base02: "#171d1b" # surfaceContainerLow
+  base03: "#899390" # outline
+  base04: "#bec9c5" # onSurfaceVariant
+  base05: "#dde4e1" # onSurface
+  base06: "#343b39" # surfaceBright
+  base07: "#2b3230" # inverseOnSurface
+  base08: "#ffb4ab" # error
+  base09: "#b1ccc5" # secondary
+  base0A: "#accae5" # tertiary
+  base0B: "#83d5c6" # primary
+  base0C: "#334b46" # secondaryContainer
+  base0D: "#005047" # primaryContainer
+  base0E: "#2c4a60" # tertiaryContainer
+  base0F: "#93000a" # errorContainer

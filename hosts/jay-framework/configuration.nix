@@ -1,6 +1,24 @@
 { config, inputs, pkgs, ... }:
 
-{
+let
+  hmBackupCommand = pkgs.writeShellScript "home-manager-backup" ''
+    set -eu
+
+    target="$1"
+    backup="$target.hm-backup"
+
+    if [ ! -e "$backup" ]; then
+      exec mv -- "$target" "$backup"
+    fi
+
+    i=1
+    while [ -e "$backup.$i" ]; do
+      i=$((i + 1))
+    done
+
+    exec mv -- "$target" "$backup.$i"
+  '';
+in {
   imports =
     [
       ./hardware-configuration.nix
@@ -11,7 +29,7 @@
   networking.hostName = "jay-framework";
 
   home-manager = {
-    backupFileExtension = "hm-backup";
+    backupCommand = hmBackupCommand;
     extraSpecialArgs = { inherit inputs; };
     users.jay.imports = [ ./home.nix ];
   };

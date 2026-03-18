@@ -3,8 +3,11 @@
 {
   home.packages = with pkgs; [
     fastfetch
-    # python3Packages.pygments
     fzf
+    zoxide
+    eza
+    bat
+    fd
   ];
   programs.zsh = {
     enable = true;
@@ -19,6 +22,10 @@
       d = "docker";
       dl = "docker logs --tail 1000 --follow";
       de = "docker exec -it";
+      ls = "eza --icons=auto --group-directories-first";
+      ll = "eza -lag --icons=auto --group-directories-first";
+      la = "eza -a --icons=auto --group-directories-first";
+      lt = "eza --tree --level=2 --icons=auto";
       random = "openssl rand -hex 12";
       b = "cd /etc/nixos && sudo nix flake update && sudo nixos-rebuild switch --upgrade --show-trace && sudo nix-env --delete-generations +5";
     };
@@ -31,26 +38,15 @@
     };
     oh-my-zsh = {
       enable = true;
-      theme = "fox";
-      plugins = ["colorize" "colored-man-pages" "copypath" "cp" "docker" "extract" "fzf" "heroku" "sudo" "git" "zsh-interactive-cd"];
+      theme = "robbyrussell";
+      plugins = [ "git" "sudo" "extract" "fzf" "docker" "colored-man-pages" "copypath" "zsh-interactive-cd" ];
     };
     initContent = ''
-      fastfetch
-
-      # https://github.com/zsh-users/zsh-syntax-highlighting/issues/956
-      autoload -Uz add-zsh-hook
-      add-zsh-hook -Uz precmd _fix_comment_color
-      _fix_comment_color() {
-        [[ -n ''${ZSH_HIGHLIGHT_STYLES} ]] && ZSH_HIGHLIGHT_STYLES[comment]='fg=magenta,dimmed'
-      }
-
-      if [[ -n "$SSH_TTY" ]]; then
-        ICON="[%{$fg_bold[red]%} %M%{$reset_color%}%{$fg[cyan]%}]-"
-      else
-        ICON=""
+      if [[ -o interactive ]]; then
+        fastfetch
       fi
-      export PROMPT="%{$fg[cyan]%}┌%{$ICON%}%{$fg[cyan]%}[%{$fg_bold[white]%}%D{%d}%{$reset_color%}%{$fg[cyan]%}/%{$fg_bold[white]%}%D{%m}%{$reset_color%}%{$fg[cyan]%}/%{$fg_bold[white]%}%D{%y}%{$reset_color%}%{$fg[cyan]%}]-[%{$fg_bold[white]%}%D{%H}%{$reset_color%}%{$fg[cyan]%}:%{$fg_bold[white]%}%D{%M}%{$reset_color%}%{$fg[cyan]%}:%{$fg_bold[white]%}%D{%S}%{$reset_color%}%{$fg[cyan]%}]-[%{$fg_bold[white]%}%n%{$reset_color%}%{$fg[cyan]%}%{$fg_bold[white]%}%{$reset_color%}%{$fg[cyan]%}]%{$fg[white]%}-%{$fg[cyan]%}(%{$fg_bold[white]%}%~%{$reset_color%}%{$fg[cyan]%})$(git_prompt_info)
-└> % %{$reset_color%}";
+
+      eval "$(zoxide init zsh)"
     '';
   };
 }

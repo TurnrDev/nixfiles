@@ -7,9 +7,10 @@
     ../common/firefox.nix
     ../common/fuzzel/fuzzel.nix
     ../common/hyprland/hyprland.nix
+    ../common/hypridle.nix
     ../common/hyprlock/hyprlock.nix
     ../common/kdeconnect.nix
-    ../common/waybar/waybar.nix
+    ../common/quickshell/quickshell.nix
   ];
 
   programs.nixcord = {

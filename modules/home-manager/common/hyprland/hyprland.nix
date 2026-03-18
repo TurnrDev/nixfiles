@@ -1,8 +1,31 @@
 { configs, pkgs, inputs, ... }:
 
+let
+  screenshotArea = pkgs.writeShellScriptBin "jay-screenshot-area" ''
+    set -euo pipefail
+
+    selection="$(${pkgs.slurp}/bin/slurp)"
+    [ -n "$selection" ] || exit 0
+
+    ${pkgs.grim}/bin/grim -g "$selection" - \
+      | ${pkgs.wl-clipboard}/bin/wl-copy --type image/png
+
+    ${pkgs.libnotify}/bin/notify-send "Screenshot copied" "Selected area copied to the clipboard."
+  '';
+
+  quickshellReload = pkgs.writeShellScriptBin "jay-quickshell-reload" ''
+    exec ${pkgs.systemd}/bin/systemctl --user restart quickshell.service
+  '';
+in
 {
   home.packages = with pkgs; [
     playerctl # cli to media player control
+    grim
+    slurp
+    wl-clipboard
+    libnotify
+    screenshotArea
+    quickshellReload
     # pkgs.hyprpicker # colour picker
   ];
   wayland.windowManager.hyprland = {
@@ -21,9 +44,9 @@
     '';
     settings = {
       "$mainMod" = "SUPER";
+      "$shiftMod" = "SUPER_SHIFT";
       "$altMod" = "SUPER+ALT";
       exec-once = [
-        "uwsm app -- nm-applet"
         "uwsm app -- discord"
         "[workspace 2 silent] uwsm app -- spotify"
       ];
@@ -31,8 +54,12 @@
         "$mainMod, W, Launch Firefox, exec, uwsm app -- firefox"
         "$mainMod, T, Launch terminal emulator, exec, uwsm app -- foot"
         "$mainMod, C, Launch IDE, exec, uwsm app -- code"
+        "$mainMod, I, Toggle quick settings, global, quickshell:toggleQuickSettings"
+        "$shiftMod, R, Reload Quickshell, exec, jay-quickshell-reload"
+        "$shiftMod, S, Screenshot area to clipboard, exec, jay-screenshot-area"
         "$mainMod, Super_L, Launch Rofi, exec, uwsm app -- fuzzel"
         "$mainMod, Super_R, Launch Rofi, exec, uwsm app -- fuzzel"
+        "$mainMod, Escape, Open power menu, exec, uwsm app -- power-menu"
         "$mainMod, Q, Close, killactive"
         "$mainMod, F, Fullscreen, fullscreen"
         # "$altMod, F, Tiled fullscreen, layoutmsg, colresize 1"

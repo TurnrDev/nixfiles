@@ -22,6 +22,7 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  security.pam.services.hyprlock = { };
 
   # COLOURS
   stylix.enable = true;

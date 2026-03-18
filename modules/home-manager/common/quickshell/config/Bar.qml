@@ -17,40 +17,37 @@ PanelWindow {
         right: true
     }
 
-    implicitHeight: 74
+    implicitHeight: 88
     color: "transparent"
     focusable: false
-    exclusiveZone: 74
+    exclusiveZone: 88
 
-    Rectangle {
+    MaterialCard {
         anchors.fill: parent
-        anchors.leftMargin: 16
-        anchors.rightMargin: 16
+        anchors.leftMargin: 14
+        anchors.rightMargin: 14
         anchors.topMargin: 10
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: theme.barGradientTop }
-            GradientStop { position: 1.0; color: theme.barGradientBottom }
-        }
-        radius: 26
-        border.width: 1
-        border.color: theme.outline
+        anchors.bottomMargin: 8
+        theme: panel.theme
+        tone: "surface"
+        outlined: true
+        cornerRadius: 32
 
         RowLayout {
             anchors.fill: parent
-            anchors.leftMargin: 14
-            anchors.rightMargin: 14
-            anchors.topMargin: 10
-            anchors.bottomMargin: 10
-            spacing: 12
+            anchors.leftMargin: 12
+            anchors.rightMargin: 12
+            anchors.topMargin: 12
+            anchors.bottomMargin: 12
+            spacing: 10
 
-            Rectangle {
+            MaterialCard {
                 Layout.alignment: Qt.AlignVCenter
-                radius: 20
-                color: theme.surfaceAlt
-                border.width: 1
-                border.color: theme.outlineStrong
-                implicitHeight: 40
-                implicitWidth: workspaceRow.implicitWidth + 12
+                implicitHeight: 56
+                implicitWidth: workspaceRow.implicitWidth + 18
+                theme: panel.theme
+                tone: "surfaceContainer"
+                cornerRadius: 26
 
                 Row {
                     id: workspaceRow
@@ -71,7 +68,9 @@ PanelWindow {
                                 workspaceId: parent.workspaceNumber
                                 active: parent.workspaceNumber === rootRef.hyprState.activeWorkspace
                                 occupied: rootRef.hyprState.occupied.indexOf(parent.workspaceNumber) !== -1
-                                onClicked: rootRef.focusWorkspace(workspaceId)
+                                onClicked: function(workspaceId) {
+                                    rootRef.focusWorkspace(workspaceId)
+                                }
                             }
                         }
                     }
@@ -82,6 +81,7 @@ PanelWindow {
                 Layout.fillWidth: true
                 theme: panel.theme
                 leftAligned: true
+                subdued: true
                 label: rootRef.hyprState.activeWindow === "" ? "Desktop" : rootRef.hyprState.activeWindow
             }
 
@@ -96,10 +96,13 @@ PanelWindow {
             BarChip {
                 theme: panel.theme
                 clickable: true
-                highlighted: rootRef.quickSettingsVisible && rootRef.quickSettingsScreen === screenModel
-                label: rootRef.systemState.network.label
-                monospace: true
-                onClicked: rootRef.toggleQuickSettings(screenModel)
+                highlighted: true
+                label: rootRef.systemState.network.connected && rootRef.systemState.network.currentSsid !== ""
+                    ? "󰤨 " + rootRef.systemState.network.currentSsid
+                    : rootRef.systemState.network.label
+                onClicked: function() {
+                    rootRef.toggleQuickSettings(screenModel)
+                }
             }
 
             BarChip {
@@ -108,14 +111,16 @@ PanelWindow {
                 subdued: rootRef.systemState.volume.muted
                 label: rootRef.systemState.volume.label
                 monospace: true
-                onClicked: rootRef.runCommand(theme.volumeControlCommand)
+                onClicked: function() {
+                    rootRef.runCommand(theme.volumeControlCommand)
+                }
             }
 
             BarChip {
                 theme: panel.theme
+                subdued: true
                 label: rootRef.systemState.brightness.label
                 monospace: true
-                subdued: true
             }
 
             BarChip {
@@ -129,6 +134,7 @@ PanelWindow {
 
             BarChip {
                 theme: panel.theme
+                subdued: true
                 label: rootRef.timeLabel
                 monospace: true
             }
@@ -136,10 +142,12 @@ PanelWindow {
             BarChip {
                 theme: panel.theme
                 clickable: true
-                highlighted: true
+                danger: true
                 label: "󰐥"
                 monospace: true
-                onClicked: rootRef.runCommand(theme.powerMenuCommand)
+                onClicked: function() {
+                    rootRef.runCommand(theme.powerMenuCommand)
+                }
             }
         }
     }

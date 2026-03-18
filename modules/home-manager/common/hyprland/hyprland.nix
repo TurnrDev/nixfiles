@@ -28,6 +28,7 @@ in
     quickshellReload
     # pkgs.hyprpicker # colour picker
   ];
+  services.hyprpolkitagent.enable = true;
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
@@ -54,6 +55,7 @@ in
         "$mainMod, W, Launch Firefox, exec, uwsm app -- firefox"
         "$mainMod, T, Launch terminal emulator, exec, uwsm app -- foot"
         "$mainMod, C, Launch IDE, exec, uwsm app -- code"
+        "$mainMod, N, Open network menu, exec, uwsm app -- jay-network-menu"
         "$mainMod, I, Toggle quick settings, global, quickshell:toggleQuickSettings"
         "$shiftMod, R, Reload Quickshell, exec, jay-quickshell-reload"
         "$shiftMod, S, Screenshot area to clipboard, exec, jay-screenshot-area"

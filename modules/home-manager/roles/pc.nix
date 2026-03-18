@@ -5,21 +5,14 @@
     ./default.nix
     inputs.nixcord.homeModules.nixcord
     ../common/firefox.nix
-    ../common/fuzzel/fuzzel.nix
     ../common/hyprland/hyprland.nix
-    ../common/hypridle.nix
-    ../common/hyprlock/hyprlock.nix
     ../common/kdeconnect.nix
-    ../common/quickshell/quickshell.nix
   ];
 
   programs.nixcord = {
     enable = true;  # enable Nixcord. Also installs discord package
     config = {
-      enabledThemes = [
-        "stylix.theme.css"
-      ];
-    #   frameless = true; # set some Vencord options
+      # frameless = true; # set some Vencord options
       plugins = {
         alwaysTrust.enable = true;
         ClearURLs.enable = true;  

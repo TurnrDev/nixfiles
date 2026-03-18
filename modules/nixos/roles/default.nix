@@ -67,9 +67,6 @@
   };
 
   programs.zsh.enable = true;
-  environment.shells = [ pkgs.zsh ];
-  users.defaultUserShell = pkgs.zsh;
-  users.users.root.shell = pkgs.zsh;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

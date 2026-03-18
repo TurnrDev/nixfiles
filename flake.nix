@@ -8,8 +8,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixcord.url = "github:FlameFlag/nixcord";
-    stylix = {
-      url = "github:nix-community/stylix";
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     lanzaboote = {
@@ -18,13 +18,12 @@
     };
   };
 
-  outputs = { self, nixpkgs, stylix, ... }@inputs: {
+  outputs = { self, nixpkgs, ... }@inputs: {
     nixosConfigurations.jay-framework = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs;};
       modules = [
         ./hosts/jay-framework/configuration.nix
         inputs.home-manager.nixosModules.default
-        stylix.nixosModules.stylix
       ];
     };
   };

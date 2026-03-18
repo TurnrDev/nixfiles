@@ -22,42 +22,12 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
-  security.pam.services.hyprlock = { };
-
-  # COLOURS
-  stylix.enable = true;
-  stylix.base16Scheme = ../../../themes/material-you-teal-dark.yaml;
-  stylix.fonts = {
-    serif = {
-      package = pkgs.noto-fonts;
-      name = "Noto Serif";
-    };
-    sansSerif = {
-      package = pkgs.noto-fonts;
-      name = "Noto Sans";
-    };
-    monospace = {
-      package = pkgs.nerd-fonts.fira-code;
-      name = "FiraCode Nerd Font Mono";
-    };
-    emoji = {
-      package = pkgs.noto-fonts-color-emoji;
-      name = "Noto Color Emoji";
-    };
-    sizes = {
-      applications = 12;
-      desktop = 11;
-      popups = 12;
-      terminal = 12;
-    };
-  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.jay = {
     isNormalUser = true;
     description = "Jay";
     extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.zsh;
     packages = with pkgs; [];
   };
 
@@ -90,14 +60,12 @@
   environment.systemPackages = with pkgs; [
     vscode
     gitkraken
+    nerd-fonts.fira-code
   ];
 
 
   fonts = {
     packages = [
-      pkgs.noto-fonts
-      pkgs.noto-fonts-color-emoji
-      pkgs.nerd-fonts.fira-code
       pkgs.font-awesome
     ];
   };

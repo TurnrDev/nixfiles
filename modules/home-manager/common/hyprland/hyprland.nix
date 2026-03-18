@@ -77,10 +77,6 @@
         gaps_in = 5;
         gaps_out = 10;
         border_size = 2;
-        layout = "scrolling";
-      };
-      scrolling = {
-        fullscreen_on_one_column = false;
       };
       misc = {
         disable_hyprland_logo = true;

@@ -9,6 +9,7 @@
     bat
     fd
   ];
+  
   programs.zsh = {
     enable = true;
     history = {

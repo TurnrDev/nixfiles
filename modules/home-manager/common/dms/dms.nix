@@ -12,6 +12,26 @@ in
   programs.dank-material-shell = {
     enable = true;
     inherit settings;
+    
+    # plugins = {
+    #   dankKDEConnect.enable = true;
+    #   dankLauncherKeys.enable = true;
+    #   dankNotepadModule.enable = true;
+    #   grimblast.enable = true;
+    #   homeAssistantMonitor = {
+    #     enable = true;
+    #     settings = {
+    #       hassUrl = "https://assistant.home.turnr.dev";
+    #     };
+    #   };
+    #   dockerManager = {
+    #     enable = true;
+    #     settings = {
+    #       terminalApp = "foot --hold";
+    #       groupByCompose = true;
+    #     };
+    #   };
+    # };
 
     systemd = {
       enable = true;             # Systemd service for auto-start

@@ -8,6 +8,10 @@
     ../common/hyprland/hyprland.nix
     ../common/kdeconnect.nix
   ];
+  
+  home.packages = with pkgs; [
+    grimblast
+  ];
 
   programs.nixcord = {
     enable = true;  # enable Nixcord. Also installs discord package

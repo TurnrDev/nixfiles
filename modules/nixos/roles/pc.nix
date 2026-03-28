@@ -27,7 +27,7 @@
   users.users.jay = {
     isNormalUser = true;
     description = "Jay";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [];
   };
 
@@ -69,6 +69,12 @@
     packages = [
       pkgs.font-awesome
     ];
+  };
+
+  virtualisation.docker.enable = true;
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
   };
 
 }

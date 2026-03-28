@@ -61,6 +61,7 @@
     vscode
     gitkraken
     nerd-fonts.fira-code
+    prusa-slicer
   ];
 
 

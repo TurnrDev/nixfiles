@@ -8,23 +8,11 @@
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
-    extraConfig = ''
-    submap = fit-switch
-    bindrt = $mainMod, SUPER_L, submap, reset
-    bind = , escape, submap, reset
-    bind = $mainMod, F, layoutmsg, fit active
-    bind = $mainMod, V, layoutmsg, fit visible
-    bind = $mainMod, A, layoutmsg, fit all
-    bind = $mainMod, E, layoutmsg, fit toend
-    bind = $mainMod, B, layoutmsg, fit tobeg
-    submap = reset
-    '';
     settings = {
       "$mainMod" = "SUPER";
       "$altMod" = "SUPER+ALT";
       exec-once = [
-        "uwsm app -- nm-applet"
-        "uwsm app -- discord"
+        "[workspace 2 silent] uwsm app -- discord"
         "[workspace 2 silent] uwsm app -- spotify"
       ];
       bindd = [
@@ -116,23 +104,6 @@
       binds = {
         scroll_event_delay = 0;
       };
-      windowrule = [
-        {
-          name = "transparency";
-          "match:class" = "(.*)";
-          opacity = "1.0 0.8";
-        }
-        {
-          name = "Youtube";
-          "match:title" = "(.*)(- YouTube)(.*)";
-          opacity = "1.0 1.0";
-        }
-        # {
-        #   name = "Jellyfin";
-        #   "match:class" = "org.jellyfin.JellyfinDesktop";
-        #   opacity = "1.0 1.0";
-        # }
-      ];
     };
   };
 }

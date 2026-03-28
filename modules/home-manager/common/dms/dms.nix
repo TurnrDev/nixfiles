@@ -27,4 +27,13 @@ in
     enableClipboardPaste = true;       # Pasting items from the clipboard (wtype)
   };
 
+  wayland.windowManager.hyprland.settings = {
+      source = "~/.config/hypr/dms/*";
+      env = [
+        "DMS_DISABLE_MATUGEN,1"
+        "DMS_DANKBAR_LAYER,overlay"
+        "DMS_HIDE_TRAYIDS,discord,spotify"
+      ];
+  };
+
 }

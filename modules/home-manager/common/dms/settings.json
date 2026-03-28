@@ -65,43 +65,43 @@
   "privacyShowScreenShareIcon": false,
   "controlCenterWidgets": [
     {
+      "enabled": true,
       "id": "volumeSlider",
-      "enabled": true,
       "width": 50
     },
     {
+      "enabled": true,
       "id": "brightnessSlider",
-      "enabled": true,
       "width": 50
     },
     {
+      "enabled": true,
       "id": "wifi",
-      "enabled": true,
       "width": 50
     },
     {
+      "enabled": true,
       "id": "bluetooth",
-      "enabled": true,
       "width": 50
     },
     {
+      "enabled": true,
       "id": "audioOutput",
-      "enabled": true,
       "width": 50
     },
     {
+      "enabled": true,
       "id": "audioInput",
-      "enabled": true,
       "width": 50
     },
     {
+      "enabled": true,
       "id": "darkMode",
-      "enabled": true,
       "width": 50
     },
     {
-      "id": "idleInhibitor",
       "enabled": true,
+      "id": "idleInhibitor",
       "width": 50
     }
   ],
@@ -383,8 +383,20 @@
   "showOnLastDisplay": {},
   "niriOutputSettings": {},
   "hyprlandOutputSettings": {},
-  "displayProfiles": {},
-  "activeDisplayProfile": {},
+  "displayProfiles": {
+    "hyprland": {
+      "profile_1773853078993_y1m7n0": {
+        "id": "profile_1773853078993_y1m7n0",
+        "name": "Undocked",
+        "outputSet": ["eDP-1"],
+        "createdAt": 1773853078993,
+        "updatedAt": 1773853078993
+      }
+    }
+  },
+  "activeDisplayProfile": {
+    "hyprland": "profile_1773853078993_y1m7n0"
+  },
   "displayProfileAutoSelect": false,
   "displayShowDisconnected": false,
   "displaySnapToEdge": true,

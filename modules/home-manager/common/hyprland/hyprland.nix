@@ -17,16 +17,10 @@
       ];
       bindd = [
         "$mainMod, W, Launch Firefox, exec, uwsm app -- firefox"
-        "$mainMod, T, Launch terminal emulator, exec, uwsm app -- foot"
         "$mainMod, C, Launch IDE, exec, uwsm app -- code"
-        # "$mainMod, Super_L, Launch Rofi, exec, uwsm app -- fuzzel"
-        # "$mainMod, Super_R, Launch Rofi, exec, uwsm app -- fuzzel"
+        "$mainMod, Super_L, Launch Spotlight, exec, dms ipc call spotlight toggle"
+        "$mainMod, Super_R, Launch Spotlight, exec, dms ipc call spotlight toggle"
         "$mainMod, Q, Close, killactive"
-        "$mainMod, F, Fullscreen, fullscreen"
-        # "$altMod, F, Tiled fullscreen, layoutmsg, colresize 1"
-        #"$altMod, F, Fake fullscreen,fakefullscreen"
-        "$altMod, Space, Toggle Floating, togglefloating"
-        # "$mainMod, J, Toggle split, togglesplit" # hy3
         ", XF86AudioRaiseVolume, Raise Volume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%"
         ", XF86AudioLowerVolume, Lower Volume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
         ", XF86AudioMute, Mute Volume, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
@@ -35,9 +29,6 @@
         ", XF86AudioPlay, Media Play, exec, playerctl play-pause"
         ", XF86AudioNext, Media Next, exec, playerctl next"
         ", XF86AudioPrev, Media Previous, exec, playerctl previous"
-        # "$mainMod, F5, Spotify Media Play, exec, playerctl --player=spotify play-pause"
-        # "$mainMod, F8, Spotify Media Next, exec, playerctl --player=spotify next"
-        # "$mainMod, F7, Spotify Media Previous, exec, playerctl --player=spotify previous"
         "$mainMod, mouse_down, Zoom In, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '.float * 1.1')"
         "$mainMod, mouse_up, Zoom Out, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '(.float / 1.1) | if . < 1 then 1 else . end')"
         "$altMod, mouse_up, Reset Zoom, exec, hyprctl -q keyword cursor:zoom_factor 1"

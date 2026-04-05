@@ -28,7 +28,7 @@
       la = "eza -a --icons=auto --group-directories-first";
       lt = "eza --tree --level=2 --icons=auto";
       random = "openssl rand -hex 12";
-      b = "cd /etc/nixos && sudo nix flake update && sudo nixos-rebuild switch --upgrade --show-trace && sudo nix-env --delete-generations +5";
+      b = "cd /etc/nixos && sudo nix flake update && sudo nixos-rebuild switch --show-trace";
     };
     enableCompletion = true;
     autosuggestion = {

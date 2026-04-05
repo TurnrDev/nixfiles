@@ -37,8 +37,6 @@
     enable = true;
     config = {
       core.excludesFile = "/etc/gitignore";
-      user.name = "Jay Turner";
-      user.email = "jaynicholasturner@gmail.com";
       init.defaultBranch = "main";
     };
   };

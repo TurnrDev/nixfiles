@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ../common/git.nix
     ../common/zsh.nix
   ];
 

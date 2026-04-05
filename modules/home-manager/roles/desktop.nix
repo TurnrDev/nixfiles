@@ -2,6 +2,6 @@
 
 {
   imports = [
-    ./pc.nix
+    ./workstation.nix
   ];
 }

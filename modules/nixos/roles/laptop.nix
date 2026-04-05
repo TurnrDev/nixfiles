@@ -7,7 +7,7 @@
 {
   imports =
     [
-      ./pc.nix
+      ./workstation.nix
       ../hardware/bluetooth.nix
     ];
 

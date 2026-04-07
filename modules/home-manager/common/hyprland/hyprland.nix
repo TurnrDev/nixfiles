@@ -1,11 +1,55 @@
 { configs, pkgs, inputs, ... }:
 
 let
+  bindUtils = import ./bind-utils.nix;
+  inherit (bindUtils)
+    altMod
+    mainCtrl
+    mainMod
+    mainShift
+    mainShiftCtrl
+    mkBind
+    ;
+
+  workspaceNumbers = builtins.map builtins.toString [
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9
+  ];
+
+  workspaceBinds = builtins.map (
+    n:
+    mkBind {
+      mods = mainMod;
+      key = n;
+      description = "Workspace ${n}";
+      dispatcher = "workspace";
+      params = n;
+    }
+  ) workspaceNumbers;
+
+  moveToWorkspaceBinds = builtins.map (
+    n:
+    mkBind {
+      mods = mainShift;
+      key = n;
+      description = "Move Window To Workspace ${n}";
+      dispatcher = "movetoworkspace";
+      params = n;
+    }
+  ) workspaceNumbers;
+
   zoomInCommand =
-    "exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '.float * 1.1')";
+    "hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '.float * 1.1')";
   zoomOutCommand =
-    "exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '(.float / 1.1) | if . < 1 then 1 else . end')";
-  zoomResetCommand = "exec, hyprctl -q keyword cursor:zoom_factor 1";
+    "hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | jq '(.float / 1.1) | if . < 1 then 1 else . end')";
+  zoomResetCommand = "hyprctl -q keyword cursor:zoom_factor 1";
 in
 
 {
@@ -17,124 +61,551 @@ in
     enable = true;
     systemd.enable = true;
     settings = {
-      "$mainMod" = "SUPER";
-      "$altMod" = "SUPER+ALT";
       exec-once = [
         "[workspace 2 silent] uwsm app -- discord"
         "[workspace 2 silent] uwsm app -- spotify"
       ];
       bindd = [
-        "$mainMod, Super_L, Launch Spotlight, exec, dms ipc call spotlight toggle"
-        "$mainMod, Super_R, Launch Spotlight, exec, dms ipc call spotlight toggle"
-        "$mainMod, W, Launch Firefox, exec, uwsm app -- firefox"
-        "$mainMod, C, Launch IDE, exec, uwsm app -- code"
-        "$mainMod, G, Launch Git client, exec, uwsm app -- gitkraken"
-        "$mainMod, T, Launch Terminal, exec, ghostty"
-        "SUPER SHIFT, E, Exit Hyprland, exit"
-        "$mainMod, Q, Close Window, killactive"
-        "$mainMod, F, Fullscreen, fullscreen, 1"
-        "SUPER SHIFT, F, Exit Fullscreen, fullscreen, 0"
-        "SUPER SHIFT, T, Toggle Floating, togglefloating"
-
-        "$mainMod, left, Focus Left, movefocus, l"
-        "$mainMod, down, Focus Down, movefocus, d"
-        "$mainMod, up, Focus Up, movefocus, u"
-        "$mainMod, right, Focus Right, movefocus, r"
-        "$mainMod, H, Focus Left, movefocus, l"
-        "$mainMod, J, Focus Down, movefocus, d"
-        "$mainMod, K, Focus Up, movefocus, u"
-        "$mainMod, L, Focus Right, movefocus, r"
-
-        "SUPER SHIFT, left, Move Window Left, movewindow, l"
-        "SUPER SHIFT, down, Move Window Down, movewindow, d"
-        "SUPER SHIFT, up, Move Window Up, movewindow, u"
-        "SUPER SHIFT, right, Move Window Right, movewindow, r"
-        "SUPER SHIFT, H, Move Window Left, movewindow, l"
-        "SUPER SHIFT, J, Move Window Down, movewindow, d"
-        "SUPER SHIFT, K, Move Window Up, movewindow, u"
-        "SUPER SHIFT, L, Move Window Right, movewindow, r"
-
-        "$mainMod, Home, Focus First Window, focuswindow, first"
-        "$mainMod, End, Focus Last Window, focuswindow, last"
-
-        "SUPER CTRL, left, Focus Monitor Left, focusmonitor, l"
-        "SUPER CTRL, right, Focus Monitor Right, focusmonitor, r"
-        "SUPER CTRL, H, Focus Monitor Left, focusmonitor, l"
-        "SUPER CTRL, J, Focus Monitor Down, focusmonitor, d"
-        "SUPER CTRL, K, Focus Monitor Up, focusmonitor, u"
-        "SUPER CTRL, L, Focus Monitor Right, focusmonitor, r"
-
-        "SUPER SHIFT CTRL, left, Move Window To Left Monitor, movewindow, mon:l"
-        "SUPER SHIFT CTRL, down, Move Window To Lower Monitor, movewindow, mon:d"
-        "SUPER SHIFT CTRL, up, Move Window To Upper Monitor, movewindow, mon:u"
-        "SUPER SHIFT CTRL, right, Move Window To Right Monitor, movewindow, mon:r"
-        "SUPER SHIFT CTRL, H, Move Window To Left Monitor, movewindow, mon:l"
-        "SUPER SHIFT CTRL, J, Move Window To Lower Monitor, movewindow, mon:d"
-        "SUPER SHIFT CTRL, K, Move Window To Upper Monitor, movewindow, mon:u"
-        "SUPER SHIFT CTRL, L, Move Window To Right Monitor, movewindow, mon:r"
-
-        "$mainMod, Page_Down, Next Workspace, workspace, e+1"
-        "$mainMod, Page_Up, Previous Workspace, workspace, e-1"
-        "$mainMod, U, Next Workspace, workspace, e+1"
-        "$mainMod, I, Previous Workspace, workspace, e-1"
-        "SUPER CTRL, down, Send Window To Next Workspace, movetoworkspace, e+1"
-        "SUPER CTRL, up, Send Window To Previous Workspace, movetoworkspace, e-1"
-        "SUPER CTRL, U, Send Window To Next Workspace, movetoworkspace, e+1"
-        "SUPER CTRL, I, Send Window To Previous Workspace, movetoworkspace, e-1"
-
-        "SUPER SHIFT, Page_Down, Move Window To Next Workspace, movetoworkspace, e+1"
-        "SUPER SHIFT, Page_Up, Move Window To Previous Workspace, movetoworkspace, e-1"
-        "SUPER SHIFT, U, Move Window To Next Workspace, movetoworkspace, e+1"
-        "SUPER SHIFT, I, Move Window To Previous Workspace, movetoworkspace, e-1"
-
-        "$mainMod, mouse_down, Next Workspace, workspace, e+1"
-        "$mainMod, mouse_up, Previous Workspace, workspace, e-1"
-        "SUPER CTRL, mouse_down, Send Window To Next Workspace, movetoworkspace, e+1"
-        "SUPER CTRL, mouse_up, Send Window To Previous Workspace, movetoworkspace, e-1"
-
-        "$mainMod, 1, Workspace 1, workspace, 1"
-        "$mainMod, 2, Workspace 2, workspace, 2"
-        "$mainMod, 3, Workspace 3, workspace, 3"
-        "$mainMod, 4, Workspace 4, workspace, 4"
-        "$mainMod, 5, Workspace 5, workspace, 5"
-        "$mainMod, 6, Workspace 6, workspace, 6"
-        "$mainMod, 7, Workspace 7, workspace, 7"
-        "$mainMod, 8, Workspace 8, workspace, 8"
-        "$mainMod, 9, Workspace 9, workspace, 9"
-
-        "SUPER SHIFT, 1, Move Window To Workspace 1, movetoworkspace, 1"
-        "SUPER SHIFT, 2, Move Window To Workspace 2, movetoworkspace, 2"
-        "SUPER SHIFT, 3, Move Window To Workspace 3, movetoworkspace, 3"
-        "SUPER SHIFT, 4, Move Window To Workspace 4, movetoworkspace, 4"
-        "SUPER SHIFT, 5, Move Window To Workspace 5, movetoworkspace, 5"
-        "SUPER SHIFT, 6, Move Window To Workspace 6, movetoworkspace, 6"
-        "SUPER SHIFT, 7, Move Window To Workspace 7, movetoworkspace, 7"
-        "SUPER SHIFT, 8, Move Window To Workspace 8, movetoworkspace, 8"
-        "SUPER SHIFT, 9, Move Window To Workspace 9, movetoworkspace, 9"
-
-        "$mainMod, bracketleft, Preselect Left Column, layoutmsg, preselect l"
-        "$mainMod, bracketright, Preselect Right Column, layoutmsg, preselect r"
-        "$mainMod, R, Toggle Split, layoutmsg, togglesplit"
-        "SUPER CTRL, F, Reset Window Size, resizeactive, exact 100%"
-        "$mainMod, code:20, Expand Window Left, resizeactive, -100 0"
-        "$mainMod, code:21, Shrink Window Left, resizeactive, 100 0"
-        "SUPER SHIFT, P, Toggle DPMS, dpms, toggle"
-
-        "$altMod, mouse_down, Zoom In, ${zoomInCommand}"
-        "$altMod, mouse_up, Zoom Out, ${zoomOutCommand}"
-        "$altMod, 0, Reset Zoom, ${zoomResetCommand}"
+        (mkBind {
+          mods = mainMod;
+          key = "Super_L";
+          description = "Launch Spotlight";
+          dispatcher = "exec";
+          params = "dms ipc call spotlight toggle";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "Super_R";
+          description = "Launch Spotlight";
+          dispatcher = "exec";
+          params = "dms ipc call spotlight toggle";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "W";
+          description = "Launch Firefox";
+          dispatcher = "exec";
+          params = "uwsm app -- firefox";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "C";
+          description = "Launch IDE";
+          dispatcher = "exec";
+          params = "uwsm app -- code";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "G";
+          description = "Launch Git Client";
+          dispatcher = "exec";
+          params = "uwsm app -- gitkraken";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "T";
+          description = "Launch Terminal";
+          dispatcher = "exec";
+          params = "ghostty";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "E";
+          description = "Exit Hyprland";
+          dispatcher = "exit";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "Q";
+          description = "Close Window";
+          dispatcher = "killactive";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "F";
+          description = "Enter Fullscreen";
+          dispatcher = "fullscreen";
+          params = "1";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "F";
+          description = "Exit Fullscreen";
+          dispatcher = "fullscreen";
+          params = "0";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "T";
+          description = "Toggle Floating";
+          dispatcher = "togglefloating";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "left";
+          description = "Focus Left";
+          dispatcher = "movefocus";
+          params = "l";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "down";
+          description = "Focus Down";
+          dispatcher = "movefocus";
+          params = "d";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "up";
+          description = "Focus Up";
+          dispatcher = "movefocus";
+          params = "u";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "right";
+          description = "Focus Right";
+          dispatcher = "movefocus";
+          params = "r";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "H";
+          description = "Focus Left";
+          dispatcher = "movefocus";
+          params = "l";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "J";
+          description = "Focus Down";
+          dispatcher = "movefocus";
+          params = "d";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "K";
+          description = "Focus Up";
+          dispatcher = "movefocus";
+          params = "u";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "L";
+          description = "Focus Right";
+          dispatcher = "movefocus";
+          params = "r";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "left";
+          description = "Move Window Left";
+          dispatcher = "movewindow";
+          params = "l";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "down";
+          description = "Move Window Down";
+          dispatcher = "movewindow";
+          params = "d";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "up";
+          description = "Move Window Up";
+          dispatcher = "movewindow";
+          params = "u";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "right";
+          description = "Move Window Right";
+          dispatcher = "movewindow";
+          params = "r";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "H";
+          description = "Move Window Left";
+          dispatcher = "movewindow";
+          params = "l";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "J";
+          description = "Move Window Down";
+          dispatcher = "movewindow";
+          params = "d";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "K";
+          description = "Move Window Up";
+          dispatcher = "movewindow";
+          params = "u";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "L";
+          description = "Move Window Right";
+          dispatcher = "movewindow";
+          params = "r";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "Home";
+          description = "Focus First Window";
+          dispatcher = "focuswindow";
+          params = "first";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "End";
+          description = "Focus Last Window";
+          dispatcher = "focuswindow";
+          params = "last";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "left";
+          description = "Focus Monitor Left";
+          dispatcher = "focusmonitor";
+          params = "l";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "right";
+          description = "Focus Monitor Right";
+          dispatcher = "focusmonitor";
+          params = "r";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "H";
+          description = "Focus Monitor Left";
+          dispatcher = "focusmonitor";
+          params = "l";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "J";
+          description = "Focus Monitor Down";
+          dispatcher = "focusmonitor";
+          params = "d";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "K";
+          description = "Focus Monitor Up";
+          dispatcher = "focusmonitor";
+          params = "u";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "L";
+          description = "Focus Monitor Right";
+          dispatcher = "focusmonitor";
+          params = "r";
+        })
+        (mkBind {
+          mods = mainShiftCtrl;
+          key = "left";
+          description = "Move Window To Left Monitor";
+          dispatcher = "movewindow";
+          params = "mon:l";
+        })
+        (mkBind {
+          mods = mainShiftCtrl;
+          key = "down";
+          description = "Move Window To Lower Monitor";
+          dispatcher = "movewindow";
+          params = "mon:d";
+        })
+        (mkBind {
+          mods = mainShiftCtrl;
+          key = "up";
+          description = "Move Window To Upper Monitor";
+          dispatcher = "movewindow";
+          params = "mon:u";
+        })
+        (mkBind {
+          mods = mainShiftCtrl;
+          key = "right";
+          description = "Move Window To Right Monitor";
+          dispatcher = "movewindow";
+          params = "mon:r";
+        })
+        (mkBind {
+          mods = mainShiftCtrl;
+          key = "H";
+          description = "Move Window To Left Monitor";
+          dispatcher = "movewindow";
+          params = "mon:l";
+        })
+        (mkBind {
+          mods = mainShiftCtrl;
+          key = "J";
+          description = "Move Window To Lower Monitor";
+          dispatcher = "movewindow";
+          params = "mon:d";
+        })
+        (mkBind {
+          mods = mainShiftCtrl;
+          key = "K";
+          description = "Move Window To Upper Monitor";
+          dispatcher = "movewindow";
+          params = "mon:u";
+        })
+        (mkBind {
+          mods = mainShiftCtrl;
+          key = "L";
+          description = "Move Window To Right Monitor";
+          dispatcher = "movewindow";
+          params = "mon:r";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "Page_Down";
+          description = "Next Workspace";
+          dispatcher = "workspace";
+          params = "e+1";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "Page_Up";
+          description = "Previous Workspace";
+          dispatcher = "workspace";
+          params = "e-1";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "U";
+          description = "Next Workspace";
+          dispatcher = "workspace";
+          params = "e+1";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "I";
+          description = "Previous Workspace";
+          dispatcher = "workspace";
+          params = "e-1";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "down";
+          description = "Send Window To Next Workspace";
+          dispatcher = "movetoworkspace";
+          params = "e+1";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "up";
+          description = "Send Window To Previous Workspace";
+          dispatcher = "movetoworkspace";
+          params = "e-1";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "U";
+          description = "Send Window To Next Workspace";
+          dispatcher = "movetoworkspace";
+          params = "e+1";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "I";
+          description = "Send Window To Previous Workspace";
+          dispatcher = "movetoworkspace";
+          params = "e-1";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "Page_Down";
+          description = "Move Window To Next Workspace";
+          dispatcher = "movetoworkspace";
+          params = "e+1";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "Page_Up";
+          description = "Move Window To Previous Workspace";
+          dispatcher = "movetoworkspace";
+          params = "e-1";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "U";
+          description = "Move Window To Next Workspace";
+          dispatcher = "movetoworkspace";
+          params = "e+1";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "I";
+          description = "Move Window To Previous Workspace";
+          dispatcher = "movetoworkspace";
+          params = "e-1";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "mouse_down";
+          description = "Next Workspace";
+          dispatcher = "workspace";
+          params = "e+1";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "mouse_up";
+          description = "Previous Workspace";
+          dispatcher = "workspace";
+          params = "e-1";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "mouse_down";
+          description = "Send Window To Next Workspace";
+          dispatcher = "movetoworkspace";
+          params = "e+1";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "mouse_up";
+          description = "Send Window To Previous Workspace";
+          dispatcher = "movetoworkspace";
+          params = "e-1";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "bracketleft";
+          description = "Preselect Left Column";
+          dispatcher = "layoutmsg";
+          params = "preselect l";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "bracketright";
+          description = "Preselect Right Column";
+          dispatcher = "layoutmsg";
+          params = "preselect r";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "R";
+          description = "Toggle Split";
+          dispatcher = "layoutmsg";
+          params = "togglesplit";
+        })
+        (mkBind {
+          mods = mainCtrl;
+          key = "F";
+          description = "Reset Window Size";
+          dispatcher = "resizeactive";
+          params = "exact 100%";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "code:20";
+          description = "Expand Window Left";
+          dispatcher = "resizeactive";
+          params = "-100 0";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "code:21";
+          description = "Shrink Window Left";
+          dispatcher = "resizeactive";
+          params = "100 0";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "P";
+          description = "Toggle DPMS";
+          dispatcher = "dpms";
+          params = "toggle";
+        })
+        (mkBind {
+          mods = altMod;
+          key = "mouse_down";
+          description = "Zoom In";
+          dispatcher = "exec";
+          params = zoomInCommand;
+        })
+        (mkBind {
+          mods = altMod;
+          key = "mouse_up";
+          description = "Zoom Out";
+          dispatcher = "exec";
+          params = zoomOutCommand;
+        })
+        (mkBind {
+          mods = altMod;
+          key = "0";
+          description = "Reset Zoom";
+          dispatcher = "exec";
+          params = zoomResetCommand;
+        })
+      ] ++ workspaceBinds ++ moveToWorkspaceBinds;
+      bindde = [
+        (mkBind {
+          mods = mainMod;
+          key = "minus";
+          description = "Resize Narrower";
+          dispatcher = "resizeactive";
+          params = "-10% 0";
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "equal";
+          description = "Resize Wider";
+          dispatcher = "resizeactive";
+          params = "10% 0";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "minus";
+          description = "Resize Shorter";
+          dispatcher = "resizeactive";
+          params = "0 -10%";
+        })
+        (mkBind {
+          mods = mainShift;
+          key = "equal";
+          description = "Resize Taller";
+          dispatcher = "resizeactive";
+          params = "0 10%";
+        })
+        (mkBind {
+          mods = altMod;
+          key = "equal";
+          description = "Zoom In";
+          dispatcher = "exec";
+          params = zoomInCommand;
+        })
+        (mkBind {
+          mods = altMod;
+          key = "minus";
+          description = "Zoom Out";
+          dispatcher = "exec";
+          params = zoomOutCommand;
+        })
       ];
-      binde = [
-        "$mainMod, minus, resizeactive, -10% 0"
-        "$mainMod, equal, resizeactive, 10% 0"
-        "SUPER SHIFT, minus, resizeactive, 0 -10%"
-        "SUPER SHIFT, equal, resizeactive, 0 10%"
-        "$altMod, equal, ${zoomInCommand}"
-        "$altMod, minus, ${zoomOutCommand}"
-      ];
-      bindm = [
-        "$mainMod, mouse:272, movewindow"
-        "$mainMod, mouse:273, resizewindow"
+      binddm = [
+        (mkBind {
+          mods = mainMod;
+          key = "mouse:272";
+          description = "Move Window";
+          dispatcher = "movewindow";
+          includeEmptyParam = false;
+        })
+        (mkBind {
+          mods = mainMod;
+          key = "mouse:273";
+          description = "Resize Window";
+          dispatcher = "resizewindow";
+          includeEmptyParam = false;
+        })
       ];
       general = {
         gaps_in = 5;

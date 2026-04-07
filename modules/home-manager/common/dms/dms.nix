@@ -2,6 +2,15 @@
 
 let
   settings = builtins.fromJSON (builtins.readFile ./settings.json);
+  bindUtils = import ../hyprland/bind-utils.nix;
+  inherit (bindUtils)
+    altMod
+    ctrlAlt
+    ctrlShift
+    mainMod
+    mainShift
+    mkBind
+    ;
 in
 
 {
@@ -60,41 +69,210 @@ in
       "DMS_DANKBAR_LAYER,overlay"
       "DMS_HIDE_TRAYIDS,discord,spotify"
     ];
-    bind = [
-      "SUPER, space, exec, dms ipc call spotlight toggle"
-      "SUPER, V, exec, dms ipc call clipboard toggle"
-      "SUPER, M, exec, dms ipc call processlist focusOrToggle"
-      "SUPER, comma, exec, dms ipc call settings focusOrToggle"
-      "SUPER, N, exec, dms ipc call notifications toggle"
-      "SUPER SHIFT, N, exec, dms ipc call notepad toggle"
-      "SUPER, Y, exec, dms ipc call dankdash wallpaper"
-      "SUPER, TAB, exec, dms ipc call hypr toggleOverview"
-      "SUPER, X, exec, dms ipc call powermenu toggle"
-      "SUPER SHIFT, Slash, exec, dms ipc call keybinds toggle hyprland"
-      "SUPER ALT, L, exec, dms ipc call lock lock"
-      "CTRL ALT, Delete, exec, dms ipc call processlist focusOrToggle"
-      "CTRL SHIFT, Escape, exec, dms ipc call processlist focusOrToggle"
-      "SUPER SHIFT, W, exec, dms ipc call window-rules toggle"
-      "CTRL SHIFT, R, exec, dms ipc call workspace-rename open"
-      ", Print, exec, dms screenshot"
-      "CTRL, Print, exec, dms screenshot full"
-      "ALT, Print, exec, dms screenshot window"
+    bindd = [
+      (mkBind {
+        mods = mainMod;
+        key = "space";
+        description = "Toggle Spotlight";
+        dispatcher = "exec";
+        params = "dms ipc call spotlight toggle";
+      })
+      (mkBind {
+        mods = mainMod;
+        key = "V";
+        description = "Toggle Clipboard";
+        dispatcher = "exec";
+        params = "dms ipc call clipboard toggle";
+      })
+      (mkBind {
+        mods = mainMod;
+        key = "M";
+        description = "Open Process List";
+        dispatcher = "exec";
+        params = "dms ipc call processlist focusOrToggle";
+      })
+      (mkBind {
+        mods = mainMod;
+        key = "comma";
+        description = "Open Settings";
+        dispatcher = "exec";
+        params = "dms ipc call settings focusOrToggle";
+      })
+      (mkBind {
+        mods = mainMod;
+        key = "N";
+        description = "Toggle Notifications";
+        dispatcher = "exec";
+        params = "dms ipc call notifications toggle";
+      })
+      (mkBind {
+        mods = mainShift;
+        key = "N";
+        description = "Toggle Notepad";
+        dispatcher = "exec";
+        params = "dms ipc call notepad toggle";
+      })
+      (mkBind {
+        mods = mainMod;
+        key = "Y";
+        description = "Change Wallpaper";
+        dispatcher = "exec";
+        params = "dms ipc call dankdash wallpaper";
+      })
+      (mkBind {
+        mods = mainMod;
+        key = "TAB";
+        description = "Toggle Overview";
+        dispatcher = "exec";
+        params = "dms ipc call hypr toggleOverview";
+      })
+      (mkBind {
+        mods = mainMod;
+        key = "X";
+        description = "Toggle Power Menu";
+        dispatcher = "exec";
+        params = "dms ipc call powermenu toggle";
+      })
+      (mkBind {
+        mods = mainShift;
+        key = "Slash";
+        description = "Show Keybinds";
+        dispatcher = "exec";
+        params = "dms ipc call keybinds toggle hyprland";
+      })
+      (mkBind {
+        mods = altMod;
+        key = "L";
+        description = "Lock Session";
+        dispatcher = "exec";
+        params = "dms ipc call lock lock";
+      })
+      (mkBind {
+        mods = ctrlAlt;
+        key = "Delete";
+        description = "Open Process List";
+        dispatcher = "exec";
+        params = "dms ipc call processlist focusOrToggle";
+      })
+      (mkBind {
+        mods = ctrlShift;
+        key = "Escape";
+        description = "Open Process List";
+        dispatcher = "exec";
+        params = "dms ipc call processlist focusOrToggle";
+      })
+      (mkBind {
+        mods = mainShift;
+        key = "W";
+        description = "Toggle Window Rules";
+        dispatcher = "exec";
+        params = "dms ipc call window-rules toggle";
+      })
+      (mkBind {
+        mods = ctrlShift;
+        key = "R";
+        description = "Rename Workspace";
+        dispatcher = "exec";
+        params = "dms ipc call workspace-rename open";
+      })
+      (mkBind {
+        key = "Print";
+        description = "Take Screenshot";
+        dispatcher = "exec";
+        params = "dms screenshot";
+      })
+      (mkBind {
+        mods = "CTRL";
+        key = "Print";
+        description = "Take Full Screenshot";
+        dispatcher = "exec";
+        params = "dms screenshot full";
+      })
+      (mkBind {
+        mods = "ALT";
+        key = "Print";
+        description = "Take Window Screenshot";
+        dispatcher = "exec";
+        params = "dms screenshot window";
+      })
     ];
-    bindel = [
-      ", XF86AudioRaiseVolume, exec, dms ipc call audio increment 3"
-      ", XF86AudioLowerVolume, exec, dms ipc call audio decrement 3"
-      "CTRL, XF86AudioRaiseVolume, exec, dms ipc call mpris increment 3"
-      "CTRL, XF86AudioLowerVolume, exec, dms ipc call mpris decrement 3"
-      ", XF86MonBrightnessUp, exec, dms ipc call brightness increment 5 \"\""
-      ", XF86MonBrightnessDown, exec, dms ipc call brightness decrement 5 \"\""
+    binddel = [
+      (mkBind {
+        key = "XF86AudioRaiseVolume";
+        description = "Raise Volume";
+        dispatcher = "exec";
+        params = "dms ipc call audio increment 3";
+      })
+      (mkBind {
+        key = "XF86AudioLowerVolume";
+        description = "Lower Volume";
+        dispatcher = "exec";
+        params = "dms ipc call audio decrement 3";
+      })
+      (mkBind {
+        mods = "CTRL";
+        key = "XF86AudioRaiseVolume";
+        description = "Seek Forward";
+        dispatcher = "exec";
+        params = "dms ipc call mpris increment 3";
+      })
+      (mkBind {
+        mods = "CTRL";
+        key = "XF86AudioLowerVolume";
+        description = "Seek Backward";
+        dispatcher = "exec";
+        params = "dms ipc call mpris decrement 3";
+      })
+      (mkBind {
+        key = "XF86MonBrightnessUp";
+        description = "Brightness Up";
+        dispatcher = "exec";
+        params = "dms ipc call brightness increment 5 \"\"";
+      })
+      (mkBind {
+        key = "XF86MonBrightnessDown";
+        description = "Brightness Down";
+        dispatcher = "exec";
+        params = "dms ipc call brightness decrement 5 \"\"";
+      })
     ];
-    bindl = [
-      ", XF86AudioMute, exec, dms ipc call audio mute"
-      ", XF86AudioMicMute, exec, dms ipc call audio micmute"
-      ", XF86AudioPause, exec, dms ipc call mpris playPause"
-      ", XF86AudioPlay, exec, dms ipc call mpris playPause"
-      ", XF86AudioPrev, exec, dms ipc call mpris previous"
-      ", XF86AudioNext, exec, dms ipc call mpris next"
+    binddl = [
+      (mkBind {
+        key = "XF86AudioMute";
+        description = "Mute Volume";
+        dispatcher = "exec";
+        params = "dms ipc call audio mute";
+      })
+      (mkBind {
+        key = "XF86AudioMicMute";
+        description = "Mute Microphone";
+        dispatcher = "exec";
+        params = "dms ipc call audio micmute";
+      })
+      (mkBind {
+        key = "XF86AudioPause";
+        description = "Play Pause Media";
+        dispatcher = "exec";
+        params = "dms ipc call mpris playPause";
+      })
+      (mkBind {
+        key = "XF86AudioPlay";
+        description = "Play Pause Media";
+        dispatcher = "exec";
+        params = "dms ipc call mpris playPause";
+      })
+      (mkBind {
+        key = "XF86AudioPrev";
+        description = "Previous Track";
+        dispatcher = "exec";
+        params = "dms ipc call mpris previous";
+      })
+      (mkBind {
+        key = "XF86AudioNext";
+        description = "Next Track";
+        dispatcher = "exec";
+        params = "dms ipc call mpris next";
+      })
     ];
   };
 

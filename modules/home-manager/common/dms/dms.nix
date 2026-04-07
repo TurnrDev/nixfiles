@@ -16,6 +16,7 @@ in
 {
   imports = [
     inputs.dms.homeModules.dank-material-shell
+    ../hyprland/env.nix
   ];
 
   programs.dank-material-shell = {
@@ -57,17 +58,17 @@ in
   };
 
   wayland.windowManager.hyprland.settings = {
+    env = [
+      "DMS_DISABLE_MATUGEN,1"
+      "DMS_DANKBAR_LAYER,overlay"
+      "DMS_HIDE_TRAYIDS,discord,spotify"
+    ];
     source = [
       "~/.config/hypr/dms/colors.conf"
       "~/.config/hypr/dms/cursor.conf"
       "~/.config/hypr/dms/layout.conf"
       "~/.config/hypr/dms/outputs.conf"
       "~/.config/hypr/dms/windowrules.conf"
-    ];
-    env = [
-      "DMS_DISABLE_MATUGEN,1"
-      "DMS_DANKBAR_LAYER,overlay"
-      "DMS_HIDE_TRAYIDS,discord,spotify"
     ];
     bindd = [
       (mkBind {

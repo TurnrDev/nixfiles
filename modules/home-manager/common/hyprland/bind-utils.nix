@@ -1,4 +1,15 @@
 let
+  # Shared Hyprland bind helpers.
+  # `mkBind` builds described bind strings for bindd/bindde/binddl/binddel/binddm.
+  #
+  # Example:
+  # mkBind {
+  #   mods = mainMod;
+  #   key = "Return";
+  #   description = "Launch Terminal";
+  #   dispatcher = "exec";
+  #   params = "ghostty";
+  # }
   mainMod = "SUPER";
 in
 rec {

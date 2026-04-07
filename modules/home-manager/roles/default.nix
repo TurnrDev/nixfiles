@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ../common/identity.nix
     ../common/git.nix
     ../common/zsh.nix
   ];

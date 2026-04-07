@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, inputs, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 {
   imports =
@@ -23,12 +23,12 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.jay = {
-    isNormalUser = true;
-    description = "Jay";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs; [];
+  # Define workstation-specific groups and packages for the shared user.
+  users.users = lib.mkIf config.my.identity.enable {
+    ${config.my.identity.username} = {
+      extraGroups = [ "networkmanager" "wheel" "docker" ];
+      packages = with pkgs; [];
+    };
   };
 
   programs.kdeconnect.enable = true;

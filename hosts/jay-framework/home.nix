@@ -4,7 +4,4 @@
   imports = [
     ../../modules/home-manager/roles/laptop.nix
   ];
-
-  home.username = "jay";
-  home.homeDirectory = "/home/jay";
 }

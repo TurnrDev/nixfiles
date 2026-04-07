@@ -1,4 +1,4 @@
-{ config, inputs, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 let
   hmBackupCommand = pkgs.writeShellScript "home-manager-backup" ''
@@ -30,7 +30,12 @@ in {
 
   home-manager = {
     backupCommand = hmBackupCommand;
-    extraSpecialArgs = { inherit inputs; };
-    users.jay.imports = [ ./home.nix ];
+    extraSpecialArgs = {
+      inherit inputs;
+      identity = config.my.identity;
+    };
+    users = lib.mkIf config.my.identity.enable {
+      ${config.my.identity.username}.imports = [ ./home.nix ];
+    };
   };
 }

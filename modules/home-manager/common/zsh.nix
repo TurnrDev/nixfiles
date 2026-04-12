@@ -50,4 +50,12 @@
       eval "$(zoxide init zsh)"
     '';
   };
+
+  programs.ghostty = {
+    enable = true;
+    package = null;
+    systemd.enable = false;
+    enableZshIntegration = true;
+    settings.command = "${pkgs.zsh}/bin/zsh";
+  };
 }

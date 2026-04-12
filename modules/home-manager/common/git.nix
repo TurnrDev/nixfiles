@@ -6,6 +6,7 @@ let
   gpg = lib.getExe config.programs.gpg.package;
   gpgconf = lib.getExe' config.programs.gpg.package "gpgconf";
   sshKeygen = lib.getExe' pkgs.openssh "ssh-keygen";
+  reposDir = "${config.home.homeDirectory}/Repos";
   sshDir = "${config.home.homeDirectory}/.ssh";
   sshKeyPath = "${sshDir}/id_ed25519";
   gpgHome = toString config.programs.gpg.homedir;
@@ -40,6 +41,10 @@ lib.mkMerge [
       maxCacheTtl = 7200;
       pinentry.package = pkgs.pinentry-qt;
     };
+
+    home.activation.createReposDirectory = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run mkdir -p ${lib.escapeShellArg reposDir}
+    '';
   }
 
   (lib.mkIf identity.keyBootstrap.enable {

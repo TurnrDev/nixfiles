@@ -37,7 +37,7 @@ in
     #   dockerManager = {
     #     enable = true;
     #     settings = {
-    #       terminalApp = "foot --hold";
+    #       terminalApp = "ghostty --hold";
     #       groupByCompose = true;
     #     };
     #   };

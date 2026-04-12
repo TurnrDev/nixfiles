@@ -4,7 +4,6 @@
   "acProfileName": "",
   "acSuspendBehavior": 0,
   "acSuspendTimeout": 0,
-  "activeDisplayProfile": {},
   "animationSpeed": 1,
   "appDrawerSectionViewModes": {},
   "appIdSubstitutions": [],
@@ -278,23 +277,23 @@
   "displayProfileAutoSelect": false,
   "displayProfiles": {
     "hyprland": {
-      "profile_1774009271774_jibbj7": {
-        "createdAt": 1774009271774,
-        "id": "profile_1774009271774_jibbj7",
-        "name": "Docked Home",
-        "outputSet": ["DP-1", "eDP-1"],
-        "updatedAt": 1774009271774
-      },
       "profile_1773853078993_y1m7n0": {
         "createdAt": 1773853078993,
         "id": "profile_1773853078993_y1m7n0",
         "name": "Undocked",
         "outputSet": ["eDP-1"],
         "updatedAt": 1773853078993
+      },
+      "profile_1775578138764_it1s7n": {
+        "createdAt": 1775578138764,
+        "id": "profile_1775578138764_it1s7n",
+        "name": "Docked",
+        "outputSet": ["DP-3", "eDP-1"],
+        "updatedAt": 1775578138764
       }
     }
   },
-  "displayShowDisconnected": false,
+  "displayShowDisconnected": true,
   "displaySnapToEdge": true,
   "dockAutoHide": false,
   "dockBorderColor": "surfaceText",

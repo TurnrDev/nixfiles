@@ -23,6 +23,7 @@
 
   environment.systemPackages = with pkgs; [
     uv
+    ruff
     (python3.withPackages (ps: with ps; [
       requests
       virtualenv

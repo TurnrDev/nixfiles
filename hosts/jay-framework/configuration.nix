@@ -28,6 +28,30 @@ in {
 
   networking.hostName = "jay-framework";
 
+  # Per-device borgmatic overrides live in the host config. The shared module
+  # provides the defaults and translates this block into borgmatic YAML.
+  #
+  # Example additions:
+  # my.backups.borgmatic = {
+  #   healthchecksUrl = "https://hc-ping.com/01234567-89ab-cdef-0123-456789abcdef";
+  #   repositories.usb = {
+  #     label = "usb";
+  #     path = "/run/media/jay/BACKUP/{hostname}";
+  #   };
+  # };
+  my.backups.borgmatic = {
+    frequency = "hourly";
+    sourceDirectories = [ config.my.identity.homeDirectory ];
+    excludePatterns = [
+      "${config.my.identity.homeDirectory}/.cache"
+      "${config.my.identity.homeDirectory}/Downloads"
+      "${config.my.identity.homeDirectory}/.local/share/Trash"
+    ];
+    repositories = {
+      storagebox.path = "ssh://u551190@u551190.your-storagebox.de:23/./{hostname}";
+    };
+  };
+
   home-manager = {
     backupCommand = hmBackupCommand;
     extraSpecialArgs = {

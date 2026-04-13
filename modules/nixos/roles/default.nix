@@ -6,6 +6,7 @@
 
 {
   imports = [
+    ../common/backups.nix
     ../common/identity.nix
     ../common/systemd-boot.nix
   ];

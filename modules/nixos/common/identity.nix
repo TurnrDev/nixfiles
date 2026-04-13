@@ -39,7 +39,14 @@ in
     keyBootstrap.enable = mkOption {
       type = types.bool;
       default = true;
-      description = "Whether Home Manager should auto-generate missing SSH and GPG identity keys.";
+      description = ''
+        Whether Home Manager should auto-generate missing SSH and GPG identity
+        keys for this user.
+
+        This only creates local keys. Remote key distribution is documented in
+        `NEW_HOST_SETUP.md` so it can happen interactively with password
+        prompts when needed.
+      '';
     };
   };
 

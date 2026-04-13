@@ -179,16 +179,22 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes -p 22 \
 The repo is pinned to Borg 1.4.x locally and configured to use `borg-1.4` on
 the Storage Box side.
 
-Create the Storage Box repo manually once per host. Use the exact same shared
-passphrase you stored in `storagebox-borg-passphrase.age`:
+Create the Storage Box repo manually once per host. This setup decrypts the
+shared passphrase into the Home Manager `agenix` runtime directory:
 
 ```sh
-export BORG_PASSPHRASE='your-shared-passphrase'
+export BORG_PASSPHRASE="$(cat "${XDG_RUNTIME_DIR}/agenix/storagebox-borg-passphrase")"
 bash -c '
-  borg repo-create --remote-path borg-1.4 --encryption=repokey-blake2 \
+  borg init --remote-path borg-1.4 --encryption=repokey-blake2 \
   ssh://u551190@u551190.your-storagebox.de:23/./$(hostname)
 '
 unset BORG_PASSPHRASE
+```
+
+If that file is missing, start the user secret service first:
+
+```sh
+systemctl --user start agenix.service
 ```
 
 If you want to confirm the versions first:

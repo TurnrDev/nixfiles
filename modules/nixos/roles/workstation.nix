@@ -6,6 +6,10 @@
 
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
+  gitkrakenPackage = (import inputs.nixpkgs-gitkraken {
+    system = pkgs.stdenv.hostPlatform.system;
+    config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "gitkraken" ];
+  }).gitkraken;
   dmsGreeterCacheDir = "/var/lib/dms-greeter";
 in
 {
@@ -111,7 +115,7 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vscode
-    gitkraken
+    gitkrakenPackage
     nerd-fonts.fira-code
     prusa-slicer
   ];

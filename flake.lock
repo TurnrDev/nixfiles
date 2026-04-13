@@ -269,6 +269,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-gitkraken": {
+      "locked": {
+        "lastModified": 1776081082,
+        "narHash": "sha256-CPzjI11+A67h16Z1xxeyftN0Uo0THqy0qYWvXEfz82o=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "1c0e03ed006225fa5b844f55d609b0555148164f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "pull/509534/head",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1774748309,
@@ -370,6 +386,7 @@
         "nixcord": "nixcord",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-borg14": "nixpkgs-borg14",
+        "nixpkgs-gitkraken": "nixpkgs-gitkraken",
         "spicetify-nix": "spicetify-nix"
       }
     },

@@ -165,7 +165,7 @@ Notes:
 Run these manually so password prompts and host-key prompts work normally:
 
 ```sh
-ssh-copy-id -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes -p 23 \
+ssh-copy-id -s -i ~/.ssh/id_ed25519.pub -p 23 \
   u551190@u551190.your-storagebox.de
 ```
 

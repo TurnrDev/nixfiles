@@ -49,6 +49,12 @@ in {
     };
   };
 
+  users.users = lib.mkIf config.my.identity.enable {
+    ${config.my.identity.username} = {
+      extraGroups = [ "kvm" ];
+    };
+  };
+
   home-manager = {
     backupCommand = hmBackupCommand;
     extraSpecialArgs = {

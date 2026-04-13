@@ -2,12 +2,15 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, inputs, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 {
   imports = [
     ../common/backups.nix
+    ../common/gradle.nix
     ../common/identity.nix
+    ../common/node.nix
+    ../common/python.nix
     ../common/systemd-boot.nix
   ];
 
@@ -105,12 +108,14 @@
     p7zip
     jq
     smartmontools
-    (python3.withPackages(ps: with ps; [ 
-      requests
-      virtualenv
-    ]))
-    ghostty
+    android-tools
   ];
+
+  users.users = lib.mkIf config.my.identity.enable {
+    ${config.my.identity.username} = {
+      extraGroups = [ "adbusers" "docker" ];
+    };
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -121,6 +126,8 @@
   # };
 
   # List services that you want to enable:
+
+  virtualisation.docker.enable = true;
 
   services.fwupd.enable = true;
 

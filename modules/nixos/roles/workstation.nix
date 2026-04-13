@@ -78,7 +78,7 @@ in
   # Define workstation-specific groups and packages for the shared user.
   users.users = lib.mkIf config.my.identity.enable {
     ${config.my.identity.username} = {
-      extraGroups = [ "networkmanager" "wheel" "docker" ];
+      extraGroups = [ "networkmanager" "wheel" ];
       packages = with pkgs; [];
     };
   };
@@ -114,10 +114,12 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vscode
+    android-studio
+    ghostty
     gitkrakenPackage
     nerd-fonts.fira-code
     prusa-slicer
+    vscode
   ];
 
 
@@ -126,6 +128,4 @@ in
       pkgs.font-awesome
     ];
   };
-
-  virtualisation.docker.enable = true;
 }

@@ -4,6 +4,9 @@
 
 { config, inputs, lib, pkgs, ... }:
 
+let
+  dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
+in
 {
   imports =
     [
@@ -19,7 +22,34 @@
   ];
 
   # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.enable = false;
+  # Use Hyprland's built-in UWSM session and let DMS remember whichever
+  # session was chosen last, while still defaulting system-side to UWSM.
+  services.displayManager = {
+    defaultSession = "hyprland-uwsm";
+    dms-greeter = {
+      enable = true;
+      package = dmsPackages.default;
+      configHome = config.my.identity.homeDirectory;
+      quickshell.package = dmsPackages.quickshell;
+      compositor = {
+        name = "hyprland";
+        customConfig = ''
+          env = DMS_RUN_GREETER,1
+
+          misc {
+              disable_hyprland_logo = true
+              disable_splash_rendering = true
+          }
+
+          input {
+              kb_layout = gb
+              kb_variant = colemak
+          }
+        '';
+      };
+    };
+  };
   services.desktopManager.plasma6.enable = true;
 
   # Configure keymap in X11

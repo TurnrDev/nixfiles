@@ -117,11 +117,10 @@ in
     android-studio
     ghostty
     gitkrakenPackage
+    godot-mono
     nerd-fonts.fira-code
     prusa-slicer
-    vscode
   ];
-
 
   fonts = {
     packages = [

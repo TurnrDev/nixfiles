@@ -10,21 +10,38 @@ let
   defaultRepositoryPath = "ssh://u551190@u551190.your-storagebox.de:23/./${hostName}";
   defaultSourceDirectories = [ config.home.homeDirectory ];
   defaultExcludePatterns = [
+    "*.pyc"
+    "*cache*"
     "${config.home.homeDirectory}/.cache"
-    "${config.home.homeDirectory}/Downloads"
+    "${config.home.homeDirectory}/.config/Code"
+    "${config.home.homeDirectory}/.config/discord"
+    "${config.home.homeDirectory}/.config/GitKraken"
+    "${config.home.homeDirectory}/.config/spotify"
+    "${config.home.homeDirectory}/.gitkraken"
+    "${config.home.homeDirectory}/.local/share/pnpm"
+    "${config.home.homeDirectory}/.local/share/Steam"
     "${config.home.homeDirectory}/.local/share/Trash"
+    "${config.home.homeDirectory}/.nvm"
+    "${config.home.homeDirectory}/.steam-shared"
+    "${config.home.homeDirectory}/.steam"
+    "${config.home.homeDirectory}/.thumbnails"
+    "${config.home.homeDirectory}/.vscode-server"
+    "${config.home.homeDirectory}/.vscode"
+    "${config.home.homeDirectory}/Downloads"
   ];
   defaults = {
     enable = true;
-    frequency = "hourly";
+    frequency = "daily";
     localPath = lib.getExe borg14Package;
     remotePath = "borg-1.4";
     sourceDirectories = defaultSourceDirectories;
+    extraSourceDirectories = [ ];
     excludePatterns = defaultExcludePatterns;
+    extraExcludePatterns = [ ];
     healthchecksUrl = null;
     repositories = {
-      storagebox = {
-        label = "storagebox";
+      hetzner = {
+        label = "hetzner";
         path = defaultRepositoryPath;
       };
     };
@@ -46,6 +63,8 @@ let
   repositories = lib.mapAttrsToList (_: repo: {
     inherit (repo) label path;
   }) cfg.repositories;
+  sourceDirectories = cfg.sourceDirectories ++ cfg.extraSourceDirectories;
+  excludePatterns = cfg.excludePatterns ++ cfg.extraExcludePatterns;
   # Only render the healthchecks section when the host actually configured a
   # ping URL. borgmatic treats the hook as absent otherwise.
   healthchecksConfig = lib.optionalAttrs (cfg.healthchecksUrl != null) {
@@ -78,12 +97,12 @@ lib.mkIf cfg.enable {
     package = borgmaticPackage;
     backups.shared = {
       location = {
-        sourceDirectories = cfg.sourceDirectories;
+        sourceDirectories = sourceDirectories;
         repositories = repositories;
         excludeHomeManagerSymlinks = true;
         extraConfig = {
           archive_name_format = "{hostname}-{utcnow}";
-          exclude_patterns = cfg.excludePatterns;
+          exclude_patterns = excludePatterns;
         };
       };
       storage = {
@@ -95,11 +114,11 @@ lib.mkIf cfg.enable {
         };
       };
       retention = {
-        keepHourly = 48;
-        keepDaily = 14;
-        keepWeekly = 26;
-        keepMonthly = 24;
-        keepYearly = 5;
+        keepHourly = 4;
+        keepDaily = 7;
+        keepWeekly = 4;
+        keepMonthly = 6;
+        keepYearly = 2;
       };
       consistency.extraConfig = {
         checks = [
@@ -115,6 +134,12 @@ lib.mkIf cfg.enable {
       };
       output.extraConfig = {
         statistics = true;
+        borg_exit_codes = [
+          {
+            code = 105;
+            treat_as = "warning";
+          }
+        ];
       };
       hooks.extraConfig = healthchecksConfig;
     };

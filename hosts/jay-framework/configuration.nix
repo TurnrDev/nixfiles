@@ -34,21 +34,18 @@ in {
   # Example additions:
   # my.backups.borgmatic = {
   #   healthchecksUrl = "https://hc-ping.com/01234567-89ab-cdef-0123-456789abcdef";
+  #   extraSourceDirectories = [ "/srv/projects" ];
+  #   extraExcludePatterns = [ "${config.home.homeDirectory}/.config/obs-studio" ];
   #   repositories.usb = {
   #     label = "usb";
   #     path = "/run/media/jay/BACKUP/${config.networking.hostName}";
   #   };
   # };
   my.backups.borgmatic = {
-    frequency = "hourly";
+    frequency = "daily";
     sourceDirectories = [ config.my.identity.homeDirectory ];
-    excludePatterns = [
-      "${config.my.identity.homeDirectory}/.cache"
-      "${config.my.identity.homeDirectory}/Downloads"
-      "${config.my.identity.homeDirectory}/.local/share/Trash"
-    ];
     repositories = {
-      storagebox.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
+      hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
     };
   };
 

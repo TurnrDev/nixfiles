@@ -7,6 +7,27 @@ let
   borg14Package = inputs."nixpkgs-borg14".legacyPackages.${pkgs.system}.borgbackup;
   defaultHomeDirectory = config.my.identity.homeDirectory;
   defaultRepositoryPath = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
+  defaultSourceDirectories = [ defaultHomeDirectory ];
+  defaultExcludePatterns = [
+    "*.pyc"
+    "*cache*"
+    "${defaultHomeDirectory}/.cache"
+    "${defaultHomeDirectory}/.config/Code"
+    "${defaultHomeDirectory}/.config/discord"
+    "${defaultHomeDirectory}/.config/GitKraken"
+    "${defaultHomeDirectory}/.config/spotify"
+    "${defaultHomeDirectory}/.gitkraken"
+    "${defaultHomeDirectory}/.local/share/pnpm"
+    "${defaultHomeDirectory}/.local/share/Steam"
+    "${defaultHomeDirectory}/.local/share/Trash"
+    "${defaultHomeDirectory}/.nvm"
+    "${defaultHomeDirectory}/.steam-shared"
+    "${defaultHomeDirectory}/.steam"
+    "${defaultHomeDirectory}/.thumbnails"
+    "${defaultHomeDirectory}/.vscode-server"
+    "${defaultHomeDirectory}/.vscode"
+    "${defaultHomeDirectory}/Downloads"
+  ];
 in
 {
   options.my.backups.borgmatic = with lib; {
@@ -16,7 +37,7 @@ in
 
     frequency = mkOption {
       type = types.str;
-      default = "hourly";
+      default = "daily";
       example = "daily";
       description = ''
         How often the user borgmatic timer should run.
@@ -52,36 +73,56 @@ in
 
     sourceDirectories = mkOption {
       type = types.listOf types.str;
-      default = [ defaultHomeDirectory ];
+      default = defaultSourceDirectories;
       defaultText = literalExpression "[ config.my.identity.homeDirectory ]";
       example = [
-        "/home/jay"
+        "${config.home.homeDirectory}"
         "/srv/projects"
       ];
       description = ''
-        Directories borgmatic should back up for this device.
+        Base directories borgmatic should back up for this device.
 
         This is intentionally device-scoped rather than repository-scoped so a
         host can define its backup set in one place.
       '';
     };
 
+    extraSourceDirectories = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "/srv/projects" ];
+      description = ''
+        Additional source directories to append to `sourceDirectories`.
+
+        Use this for host-specific additions without replacing the shared base
+        list.
+      '';
+    };
+
     excludePatterns = mkOption {
       type = types.listOf types.str;
-      default = [
-        "${defaultHomeDirectory}/.cache"
-        "${defaultHomeDirectory}/Downloads"
-        "${defaultHomeDirectory}/.local/share/Trash"
-      ];
+      default = defaultExcludePatterns;
       example = [
-        "/home/jay/.cache"
-        "/home/jay/Downloads"
-        "/home/jay/VirtualMachines"
+        "*.pyc"
+        "${config.home.homeDirectory}/.local/share/Steam"
+        "${config.home.homeDirectory}/Downloads"
       ];
       description = ''
-        Borg exclude patterns to use for this device.
+        Base Borg exclude patterns to use for this device.
 
         These are written to borgmatic as `exclude_patterns`.
+      '';
+    };
+
+    extraExcludePatterns = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "${config.home.homeDirectory}/.config/obs-studio" ];
+      description = ''
+        Additional Borg exclude patterns to append to `excludePatterns`.
+
+        Use this for host-specific additions without replacing the shared base
+        list.
       '';
     };
 
@@ -117,21 +158,21 @@ in
           label = mkOption {
             type = types.str;
             default = name;
-            example = "storagebox";
+            example = "hetzner";
             description = "Short borgmatic label for the repository.";
           };
         };
       }));
       default = {
-        storagebox = {
-          label = "storagebox";
+        hetzner = {
+          label = "hetzner";
           path = defaultRepositoryPath;
         };
       };
       example = literalExpression ''
         {
-          storagebox = {
-            label = "storagebox";
+          hetzner = {
+            label = "hetzner";
             path = "ssh://u551190@u551190.your-storagebox.de:23/./''${config.networking.hostName}";
           };
 
@@ -145,7 +186,8 @@ in
         Named repositories to include in the shared borgmatic configuration.
 
         All repositories share the same device-level source directories,
-        excludes, local Borg binary, and remote Borg path.
+        excludes for the primary home directory, local Borg binary, and remote
+        Borg path.
       '';
     };
   };

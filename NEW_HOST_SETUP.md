@@ -11,22 +11,21 @@ Per-device Borgmatic overrides belong in the host config, for example:
 
 ```nix
 my.backups.borgmatic = {
-  frequency = "hourly";
+  frequency = "daily";
   sourceDirectories = [ config.my.identity.homeDirectory ];
-  excludePatterns = [
-    "${config.my.identity.homeDirectory}/.cache"
-    "${config.my.identity.homeDirectory}/Downloads"
-    "${config.my.identity.homeDirectory}/.local/share/Trash"
-  ];
+  extraSourceDirectories = [ "/srv/projects" ];
+  extraExcludePatterns = [ "${config.home.homeDirectory}/.config/obs-studio" ];
   healthchecksUrl = "https://hc-ping.com/replace-me";
   repositories = {
-    storagebox.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
+    hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
   };
 };
 ```
 
 Add more repositories later by extending `my.backups.borgmatic.repositories`.
 The shared Borgmatic module already supports multiple repositories per device.
+Use `extraSourceDirectories` and `extraExcludePatterns` when a host needs to
+append more paths without replacing the shared defaults.
 
 ## 2. Add The Host SSH Key As An Age Recipient
 
@@ -63,7 +62,7 @@ the private key you want to use for editing:
 cd /etc/nixos
 EDITOR=nano RULES=/etc/nixos/secrets/secrets.nix \
   nix run github:ryantm/agenix -- -e /etc/nixos/secrets/storagebox-borg-passphrase.age \
-  -i /home/jay/.ssh/id_ed25519
+  -i ~/.ssh/id_ed25519
 ```
 
 You said you want to choose the passphrase yourself, so type the exact shared

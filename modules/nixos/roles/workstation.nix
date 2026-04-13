@@ -117,6 +117,7 @@ in
     android-studio
     ghostty
     gitkrakenPackage
+    josm
     nerd-fonts.fira-code
     openscad
     prusa-slicer

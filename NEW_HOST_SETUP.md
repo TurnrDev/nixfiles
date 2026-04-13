@@ -20,7 +20,7 @@ my.backups.borgmatic = {
   ];
   healthchecksUrl = "https://hc-ping.com/replace-me";
   repositories = {
-    storagebox.path = "ssh://u551190@u551190.your-storagebox.de:23/./{hostname}";
+    storagebox.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
   };
 };
 ```

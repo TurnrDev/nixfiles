@@ -36,7 +36,7 @@ in {
   #   healthchecksUrl = "https://hc-ping.com/01234567-89ab-cdef-0123-456789abcdef";
   #   repositories.usb = {
   #     label = "usb";
-  #     path = "/run/media/jay/BACKUP/{hostname}";
+  #     path = "/run/media/jay/BACKUP/${config.networking.hostName}";
   #   };
   # };
   my.backups.borgmatic = {
@@ -48,7 +48,7 @@ in {
       "${config.my.identity.homeDirectory}/.local/share/Trash"
     ];
     repositories = {
-      storagebox.path = "ssh://u551190@u551190.your-storagebox.de:23/./{hostname}";
+      storagebox.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
     };
   };
 

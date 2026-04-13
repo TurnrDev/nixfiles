@@ -6,6 +6,8 @@ let
   # create Python dependency conflicts in the closure.
   borg14Pkgs = inputs."nixpkgs-borg14".legacyPackages.${pkgs.system};
   borg14Package = borg14Pkgs.borgbackup;
+  hostName = osConfig.networking.hostName;
+  defaultRepositoryPath = "ssh://u551190@u551190.your-storagebox.de:23/./${hostName}";
   defaultSourceDirectories = [ config.home.homeDirectory ];
   defaultExcludePatterns = [
     "${config.home.homeDirectory}/.cache"
@@ -23,12 +25,12 @@ let
     repositories = {
       storagebox = {
         label = "storagebox";
-        path = "ssh://u551190@u551190.your-storagebox.de:23/./{hostname}";
+        path = defaultRepositoryPath;
       };
     };
   };
   # Read per-device overrides from the NixOS module when Home Manager is being
-  # evaluated through a NixOS host. Otherwise fall back to standalone defaults.
+  # evaluated through a host config. Otherwise fall back to the shared defaults.
   cfg =
     if osConfig != null && osConfig ? my && osConfig.my ? backups && osConfig.my.backups ? borgmatic then
       osConfig.my.backups.borgmatic

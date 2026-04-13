@@ -6,7 +6,7 @@ let
   cfg = config.my.backups.borgmatic;
   borg14Package = inputs."nixpkgs-borg14".legacyPackages.${pkgs.system}.borgbackup;
   defaultHomeDirectory = config.my.identity.homeDirectory;
-  defaultRepositoryPath = "ssh://u551190@u551190.your-storagebox.de:23/./{hostname}";
+  defaultRepositoryPath = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
 in
 {
   options.my.backups.borgmatic = with lib; {
@@ -102,12 +102,15 @@ in
         options = {
           path = mkOption {
             type = types.str;
-            example = "ssh://u551190@u551190.your-storagebox.de:23/./{hostname}";
+            example = "ssh://u551190@u551190.your-storagebox.de:23/./jay-framework";
             description = ''
               Repository URL or path.
 
               The attribute name is only used locally in Nix; borgmatic uses
-              the rendered `label` and `path`.
+              the rendered `label` and `path`. If you want the device hostname
+              in the path, interpolate it in Nix with
+              `''${config.networking.hostName}` so the generated borgmatic config
+              contains a concrete repository location.
             '';
           };
 
@@ -129,12 +132,12 @@ in
         {
           storagebox = {
             label = "storagebox";
-            path = "ssh://u551190@u551190.your-storagebox.de:23/./{hostname}";
+            path = "ssh://u551190@u551190.your-storagebox.de:23/./''${config.networking.hostName}";
           };
 
           usb = {
             label = "usb";
-            path = "/run/media/jay/BACKUP/{hostname}";
+            path = "/run/media/jay/BACKUP/''${config.networking.hostName}";
           };
         }
       '';

@@ -118,10 +118,10 @@ in
     ghostty
     gitkrakenPackage
     nerd-fonts.fira-code
+    openscad
     prusa-slicer
     vscode
   ];
-
 
   fonts = {
     packages = [

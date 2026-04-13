@@ -12,7 +12,10 @@ let
   defaultSourceDirectories = [ homeDirectory ];
   defaultExcludePatterns = [
     "*.pyc"
+    "*.sqlite"
+    "*.sqlite-*"
     "*cache*"
+    "${homeDirectory}/.codex"
     "${homeDirectory}/.cache"
     "${homeDirectory}/.local/share/Trash"
     "${homeDirectory}/.thumbnails"

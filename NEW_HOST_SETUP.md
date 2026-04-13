@@ -14,7 +14,7 @@ my.backups.borgmatic = {
   frequency = "daily";
   sourceDirectories = [ config.my.identity.homeDirectory ];
   extraSourceDirectories = [ "/srv/projects" ];
-  extraExcludePatterns = [ "${config.home.homeDirectory}/.config/obs-studio" ];
+  extraExcludePatterns = [ "${config.my.identity.homeDirectory}/.config/obs-studio" ];
   healthchecksUrl = "https://hc-ping.com/replace-me";
   repositories = {
     hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
@@ -26,6 +26,8 @@ Add more repositories later by extending `my.backups.borgmatic.repositories`.
 The shared Borgmatic module already supports multiple repositories per device.
 Use `extraSourceDirectories` and `extraExcludePatterns` when a host needs to
 append more paths without replacing the shared defaults.
+App-specific excludes are also added automatically by the modules that enable
+those programs, so the shared base list can stay focused on generic clutter.
 
 ## 2. Add The Host SSH Key As An Age Recipient
 

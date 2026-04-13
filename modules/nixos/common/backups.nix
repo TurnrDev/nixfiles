@@ -12,20 +12,8 @@ let
     "*.pyc"
     "*cache*"
     "${defaultHomeDirectory}/.cache"
-    "${defaultHomeDirectory}/.config/Code"
-    "${defaultHomeDirectory}/.config/discord"
-    "${defaultHomeDirectory}/.config/GitKraken"
-    "${defaultHomeDirectory}/.config/spotify"
-    "${defaultHomeDirectory}/.gitkraken"
-    "${defaultHomeDirectory}/.local/share/pnpm"
-    "${defaultHomeDirectory}/.local/share/Steam"
     "${defaultHomeDirectory}/.local/share/Trash"
-    "${defaultHomeDirectory}/.nvm"
-    "${defaultHomeDirectory}/.steam-shared"
-    "${defaultHomeDirectory}/.steam"
     "${defaultHomeDirectory}/.thumbnails"
-    "${defaultHomeDirectory}/.vscode-server"
-    "${defaultHomeDirectory}/.vscode"
     "${defaultHomeDirectory}/Downloads"
   ];
 in
@@ -75,10 +63,12 @@ in
       type = types.listOf types.str;
       default = defaultSourceDirectories;
       defaultText = literalExpression "[ config.my.identity.homeDirectory ]";
-      example = [
-        "${config.home.homeDirectory}"
-        "/srv/projects"
-      ];
+      example = literalExpression ''
+        [
+          config.my.identity.homeDirectory
+          "/srv/projects"
+        ]
+      '';
       description = ''
         Base directories borgmatic should back up for this device.
 
@@ -102,22 +92,26 @@ in
     excludePatterns = mkOption {
       type = types.listOf types.str;
       default = defaultExcludePatterns;
-      example = [
-        "*.pyc"
-        "${config.home.homeDirectory}/.local/share/Steam"
-        "${config.home.homeDirectory}/Downloads"
-      ];
+      example = literalExpression ''
+        [
+          "*.pyc"
+          "${config.my.identity.homeDirectory}/Downloads"
+        ]
+      '';
       description = ''
         Base Borg exclude patterns to use for this device.
 
-        These are written to borgmatic as `exclude_patterns`.
+        These are written to borgmatic as `exclude_patterns`. Program and role
+        modules can append their own app-specific excludes automatically.
       '';
     };
 
     extraExcludePatterns = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "${config.home.homeDirectory}/.config/obs-studio" ];
+      example = literalExpression ''
+        [ "${config.my.identity.homeDirectory}/.config/obs-studio" ]
+      '';
       description = ''
         Additional Borg exclude patterns to append to `excludePatterns`.
 

@@ -1,4 +1,4 @@
-{ config, inputs, lib, osConfig ? null, pkgs, ... }:
+{ config, identity, inputs, lib, osConfig ? null, pkgs, ... }:
 
 let
   # Keep borgmatic and borgbackup from the same explicitly pinned package set.
@@ -6,28 +6,17 @@ let
   # create Python dependency conflicts in the closure.
   borg14Pkgs = inputs."nixpkgs-borg14".legacyPackages.${pkgs.system};
   borg14Package = borg14Pkgs.borgbackup;
+  homeDirectory = identity.homeDirectory;
   hostName = osConfig.networking.hostName;
   defaultRepositoryPath = "ssh://u551190@u551190.your-storagebox.de:23/./${hostName}";
-  defaultSourceDirectories = [ config.home.homeDirectory ];
+  defaultSourceDirectories = [ homeDirectory ];
   defaultExcludePatterns = [
     "*.pyc"
     "*cache*"
-    "${config.home.homeDirectory}/.cache"
-    "${config.home.homeDirectory}/.config/Code"
-    "${config.home.homeDirectory}/.config/discord"
-    "${config.home.homeDirectory}/.config/GitKraken"
-    "${config.home.homeDirectory}/.config/spotify"
-    "${config.home.homeDirectory}/.gitkraken"
-    "${config.home.homeDirectory}/.local/share/pnpm"
-    "${config.home.homeDirectory}/.local/share/Steam"
-    "${config.home.homeDirectory}/.local/share/Trash"
-    "${config.home.homeDirectory}/.nvm"
-    "${config.home.homeDirectory}/.steam-shared"
-    "${config.home.homeDirectory}/.steam"
-    "${config.home.homeDirectory}/.thumbnails"
-    "${config.home.homeDirectory}/.vscode-server"
-    "${config.home.homeDirectory}/.vscode"
-    "${config.home.homeDirectory}/Downloads"
+    "${homeDirectory}/.cache"
+    "${homeDirectory}/.local/share/Trash"
+    "${homeDirectory}/.thumbnails"
+    "${homeDirectory}/Downloads"
   ];
   defaults = {
     enable = true;
@@ -56,7 +45,7 @@ let
 
   secretName = "storagebox-borg-passphrase";
   secretFile = ../../../secrets/storagebox-borg-passphrase.age;
-  sshKeyPath = "${config.home.homeDirectory}/.ssh/id_ed25519";
+  sshKeyPath = "${homeDirectory}/.ssh/id_ed25519";
   sshCommand = "ssh -i ${sshKeyPath} -o IdentitiesOnly=yes -p 23";
   borgmaticPackage = borg14Pkgs.borgmatic;
   agenixPackage = inputs.agenix.packages.${pkgs.system}.default;
@@ -64,7 +53,10 @@ let
     inherit (repo) label path;
   }) cfg.repositories;
   sourceDirectories = cfg.sourceDirectories ++ cfg.extraSourceDirectories;
-  excludePatterns = cfg.excludePatterns ++ cfg.extraExcludePatterns;
+  excludePatterns =
+    cfg.excludePatterns
+    ++ cfg.extraExcludePatterns
+    ++ config.my.backups.borgmatic.moduleExcludePatterns;
   # Only render the healthchecks section when the host actually configured a
   # ping URL. borgmatic treats the hook as absent otherwise.
   healthchecksConfig = lib.optionalAttrs (cfg.healthchecksUrl != null) {
@@ -74,88 +66,99 @@ let
     };
   };
 in
-lib.mkIf cfg.enable {
-  assertions = [
-    {
-      assertion = lib.hasPrefix "1.4." borg14Package.version;
-      message = "Pinned Borg package must resolve to Borg 1.4.x, got ${borg14Package.version}.";
-    }
-  ];
-
-  home.packages = [
-    agenixPackage
-    borg14Package
-  ];
-
-  age = {
-    identityPaths = [ sshKeyPath ];
-    secrets.${secretName}.file = secretFile;
+{
+  options.my.backups.borgmatic.moduleExcludePatterns = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    default = [ ];
+    description = ''
+      Additional borgmatic exclude patterns contributed by Home Manager
+      modules for enabled programs.
+    '';
   };
 
-  programs.borgmatic = {
-    enable = true;
-    package = borgmaticPackage;
-    backups.shared = {
-      location = {
-        sourceDirectories = sourceDirectories;
-        repositories = repositories;
-        excludeHomeManagerSymlinks = true;
-        extraConfig = {
-          archive_name_format = "{hostname}-{utcnow}";
-          exclude_patterns = excludePatterns;
-        };
-      };
-      storage = {
-        encryptionPasscommand = "${pkgs.coreutils}/bin/cat ${config.age.secrets.${secretName}.path}";
-        extraConfig = {
-          local_path = cfg.localPath;
-          remote_path = cfg.remotePath;
-          ssh_command = sshCommand;
-        };
-      };
-      retention = {
-        keepHourly = 4;
-        keepDaily = 7;
-        keepWeekly = 4;
-        keepMonthly = 6;
-        keepYearly = 2;
-      };
-      consistency.extraConfig = {
-        checks = [
-          {
-            name = "repository";
-            max_duration = 1800;
-          }
-          {
-            name = "archives";
-            frequency = "2 weeks";
-          }
-        ];
-      };
-      output.extraConfig = {
-        statistics = true;
-        borg_exit_codes = [
-          {
-            code = 105;
-            treat_as = "warning";
-          }
-        ];
-      };
-      hooks.extraConfig = healthchecksConfig;
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = lib.hasPrefix "1.4." borg14Package.version;
+        message = "Pinned Borg package must resolve to Borg 1.4.x, got ${borg14Package.version}.";
+      }
+    ];
+
+    home.packages = [
+      agenixPackage
+      borg14Package
+    ];
+
+    age = {
+      identityPaths = [ sshKeyPath ];
+      secrets.${secretName}.file = secretFile;
     };
-  };
 
-  services.borgmatic = {
-    enable = true;
-    frequency = cfg.frequency;
-  };
+    programs.borgmatic = {
+      enable = true;
+      package = borgmaticPackage;
+      backups.shared = {
+        location = {
+          sourceDirectories = sourceDirectories;
+          repositories = repositories;
+          excludeHomeManagerSymlinks = true;
+          extraConfig = {
+            archive_name_format = "{hostname}-{utcnow}";
+            exclude_patterns = excludePatterns;
+          };
+        };
+        storage = {
+          encryptionPasscommand = "${pkgs.coreutils}/bin/cat ${config.age.secrets.${secretName}.path}";
+          extraConfig = {
+            local_path = cfg.localPath;
+            remote_path = cfg.remotePath;
+            ssh_command = sshCommand;
+          };
+        };
+        retention = {
+          keepHourly = 4;
+          keepDaily = 7;
+          keepWeekly = 4;
+          keepMonthly = 6;
+          keepYearly = 2;
+        };
+        consistency.extraConfig = {
+          checks = [
+            {
+              name = "repository";
+              max_duration = 1800;
+            }
+            {
+              name = "archives";
+              frequency = "2 weeks";
+            }
+          ];
+        };
+        output.extraConfig = {
+          statistics = true;
+          borg_exit_codes = [
+            {
+              code = 105;
+              treat_as = "warning";
+            }
+          ];
+        };
+        hooks.extraConfig = healthchecksConfig;
+      };
+    };
 
-  systemd.user.services.borgmatic = {
-    Unit = {
-      # Ensure the decrypted age secret is mounted before borgmatic tries to
-      # read the shared encryption passphrase.
-      After = [ "agenix.service" ];
-      Requires = [ "agenix.service" ];
+    services.borgmatic = {
+      enable = true;
+      frequency = cfg.frequency;
+    };
+
+    systemd.user.services.borgmatic = {
+      Unit = {
+        # Ensure the decrypted age secret is mounted before borgmatic tries to
+        # read the shared encryption passphrase.
+        After = [ "agenix.service" ];
+        Requires = [ "agenix.service" ];
+      };
     };
   };
 }

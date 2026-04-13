@@ -3,11 +3,12 @@
 let
   gitName = identity.fullName;
   gitEmail = identity.email;
+  homeDirectory = identity.homeDirectory;
   gpg = lib.getExe config.programs.gpg.package;
   gpgconf = lib.getExe' config.programs.gpg.package "gpgconf";
   sshKeygen = lib.getExe' pkgs.openssh "ssh-keygen";
-  reposDir = "${config.home.homeDirectory}/Repos";
-  sshDir = "${config.home.homeDirectory}/.ssh";
+  reposDir = "${homeDirectory}/Repos";
+  sshDir = "${homeDirectory}/.ssh";
   sshKeyPath = "${sshDir}/id_ed25519";
   gpgHome = toString config.programs.gpg.homedir;
   signingUid = "${gitName} <${gitEmail}>";

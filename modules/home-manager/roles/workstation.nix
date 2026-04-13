@@ -1,4 +1,4 @@
-{ config, inputs, pkgs, ... }:
+{ identity, inputs, lib, pkgs, ... }:
 
 {
   imports = [
@@ -8,6 +8,10 @@
     ../common/hyprland/hyprland.nix
     ../common/kdeconnect.nix
     ../common/spotify.nix
+  ];
+
+  my.backups.borgmatic.moduleExcludePatterns = lib.mkAfter [
+    "${identity.homeDirectory}/.config/discord"
   ];
   
   home.packages = with pkgs; [

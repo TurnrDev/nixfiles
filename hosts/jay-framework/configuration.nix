@@ -35,7 +35,7 @@ in {
   # my.backups.borgmatic = {
   #   healthchecksUrl = "https://hc-ping.com/01234567-89ab-cdef-0123-456789abcdef";
   #   extraSourceDirectories = [ "/srv/projects" ];
-  #   extraExcludePatterns = [ "${config.home.homeDirectory}/.config/obs-studio" ];
+  #   extraExcludePatterns = [ "${config.my.identity.homeDirectory}/.config/obs-studio" ];
   #   repositories.usb = {
   #     label = "usb";
   #     path = "/run/media/jay/BACKUP/${config.networking.hostName}";

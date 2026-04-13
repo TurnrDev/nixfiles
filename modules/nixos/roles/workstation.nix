@@ -10,6 +10,14 @@
       ./default.nix
     ];
 
+  my.backups.borgmatic.extraExcludePatterns = lib.mkAfter [
+    "${config.my.identity.homeDirectory}/.config/Code"
+    "${config.my.identity.homeDirectory}/.config/GitKraken"
+    "${config.my.identity.homeDirectory}/.gitkraken"
+    "${config.my.identity.homeDirectory}/.vscode"
+    "${config.my.identity.homeDirectory}/.vscode-server"
+  ];
+
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;

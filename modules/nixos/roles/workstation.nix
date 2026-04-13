@@ -6,6 +6,7 @@
 
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
+  dmsGreeterCacheDir = "/var/lib/dms-greeter";
 in
 {
   imports =
@@ -31,11 +32,14 @@ in
       enable = true;
       package = dmsPackages.default;
       configHome = config.my.identity.homeDirectory;
+      # Reuse the same DMS-managed monitor layout that Hyprland sources at runtime.
+      configFiles = [ "${config.my.identity.homeDirectory}/.config/hypr/dms/outputs.conf" ];
       quickshell.package = dmsPackages.quickshell;
       compositor = {
         name = "hyprland";
         customConfig = ''
           env = DMS_RUN_GREETER,1
+          source = ${dmsGreeterCacheDir}/outputs.conf
 
           misc {
               disable_hyprland_logo = true
@@ -50,6 +54,12 @@ in
       };
     };
   };
+  systemd.services.greetd.preStart = lib.mkAfter ''
+    if [ ! -f ${dmsGreeterCacheDir}/outputs.conf ]; then
+        : > ${dmsGreeterCacheDir}/outputs.conf
+        chown dms-greeter:dms-greeter ${dmsGreeterCacheDir}/outputs.conf
+    fi
+  '';
   services.desktopManager.plasma6.enable = true;
 
   # Configure keymap in X11

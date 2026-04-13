@@ -1,4 +1,4 @@
-{ configs, pkgs, inputs, ... }:
+{ config, configs, lib, pkgs, inputs, ... }:
 
 let
   settings = builtins.fromJSON (builtins.readFile ./settings.json);
@@ -22,26 +22,26 @@ in
   programs.dank-material-shell = {
     enable = true;
     inherit settings;
-    
-    # plugins = {
-    #   dankKDEConnect.enable = true;
-    #   dankLauncherKeys.enable = true;
-    #   dankNotepadModule.enable = true;
-    #   grimblast.enable = true;
-    #   homeAssistantMonitor = {
-    #     enable = true;
-    #     settings = {
-    #       hassUrl = "https://assistant.home.turnr.dev";
-    #     };
-    #   };
-    #   dockerManager = {
-    #     enable = true;
-    #     settings = {
-    #       terminalApp = "ghostty --hold";
-    #       groupByCompose = true;
-    #     };
-    #   };
-    # };
+
+    plugins = {
+      dankKDEConnect.src = inputs.dms-plugins + "/DankKDEConnect";
+      dankLauncherKeys.src = inputs.dms-plugins + "/DankLauncherKeys";
+      dankNotepadModule.src = inputs.dms-plugins + "/DankNotepadModule";
+      grimblast.src = inputs.dms-plugins-taylan + "/grimblast";
+      homeAssistantMonitor = {
+        src = inputs.dms-plugin-hass;
+        settings = {
+          hassUrl = "https://assistant.home.turnr.dev";
+        };
+      };
+      dockerManager = {
+        src = inputs.dms-plugin-docker-manager;
+        settings = {
+          terminalApp = "ghostty --hold";
+          groupByCompose = true;
+        };
+      };
+    };
 
     systemd = {
       enable = true;             # Systemd service for auto-start
@@ -56,6 +56,20 @@ in
     enableCalendarEvents = false;       # Calendar integration (khal)
     enableClipboardPaste = true;       # Pasting items from the clipboard (wtype)
   };
+
+  home.packages = with pkgs; [
+    # Needed for the Home Assistant Monitor plugin's websocket connection.
+    qt6.qtwebsockets
+  ];
+
+  xdg.configFile =
+    let
+      enabledPlugins = lib.filterAttrs (_: plugin: plugin.enable) config.programs.dank-material-shell.plugins;
+    in
+    lib.mapAttrs' (name: _: {
+      name = "DankMaterialShell/plugins/${name}";
+      value.force = true;
+    }) enabledPlugins;
 
   wayland.windowManager.hyprland.settings = {
     env = [

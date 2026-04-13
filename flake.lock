@@ -82,6 +82,70 @@
         "type": "github"
       }
     },
+    "dms-plugin-docker-manager": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1764045770,
+        "narHash": "sha256-VoJCaygWnKpv0s0pqTOmzZnPM922qPDMHk4EPcgVnaU=",
+        "ref": "refs/heads/main",
+        "rev": "860457bbb043a6651a2cbafe6e77d443123a0b07",
+        "revCount": 36,
+        "type": "git",
+        "url": "https://github.com/LuckShiba/DmsDockerManager"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/LuckShiba/DmsDockerManager"
+      }
+    },
+    "dms-plugin-hass": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775828285,
+        "narHash": "sha256-i7FMwh/r6eh9bBzApG+OHnqL9dMLnRibrbqcXPlsrvc=",
+        "ref": "refs/heads/master",
+        "rev": "f0950da9cd9f59f25ad1c8451898f986bf79ee7f",
+        "revCount": 37,
+        "type": "git",
+        "url": "https://github.com/xxyangyoulin/dms-plugin-hass"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/xxyangyoulin/dms-plugin-hass"
+      }
+    },
+    "dms-plugins": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775573998,
+        "narHash": "sha256-s6zQvPoTaJYMA8A/vUEgQhTE/VhQJZwcGw1ET6bOYKg=",
+        "ref": "refs/heads/master",
+        "rev": "a759ddfccb021ef7e6824685e7a1c3728170977e",
+        "revCount": 94,
+        "type": "git",
+        "url": "https://github.com/AvengeMedia/dms-plugins"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/AvengeMedia/dms-plugins"
+      }
+    },
+    "dms-plugins-taylan": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1761528751,
+        "narHash": "sha256-CA5fjB2KmlBXeh9m1+1ddjNMhZbwR4pQ9PiEPWDcuZs=",
+        "ref": "refs/heads/master",
+        "rev": "2fa71a37f7ba411991a9e76baa3637351830ec6a",
+        "revCount": 6,
+        "type": "git",
+        "url": "https://github.com/TaylanTatli/dms-plugins"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/TaylanTatli/dms-plugins"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -381,6 +445,10 @@
       "inputs": {
         "agenix": "agenix",
         "dms": "dms",
+        "dms-plugin-docker-manager": "dms-plugin-docker-manager",
+        "dms-plugin-hass": "dms-plugin-hass",
+        "dms-plugins": "dms-plugins",
+        "dms-plugins-taylan": "dms-plugins-taylan",
         "home-manager": "home-manager_2",
         "lanzaboote": "lanzaboote",
         "nixcord": "nixcord",

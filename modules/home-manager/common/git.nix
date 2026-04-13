@@ -44,7 +44,7 @@ lib.mkMerge [
     };
 
     home.activation.createReposDirectory = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      run mkdir -p ${lib.escapeShellArg reposDir}
+      run mkdir -p ${lib.escapeShellArg reposDir} && ln -f -s /etc/nixos ${lib.escapeShellArg reposDir}/nixos
     '';
   }
 

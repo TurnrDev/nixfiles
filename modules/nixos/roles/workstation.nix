@@ -115,6 +115,7 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     android-studio
+    dbeaver-bin
     ghostty
     gitkrakenPackage
     josm

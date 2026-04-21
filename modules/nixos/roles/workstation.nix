@@ -116,6 +116,7 @@ in
   environment.systemPackages = with pkgs; [
     android-studio
     dbeaver-bin
+    gh
     ghostty
     gitkrakenPackage
     josm

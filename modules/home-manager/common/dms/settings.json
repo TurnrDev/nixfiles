@@ -60,7 +60,11 @@
       "iconScale": 1,
       "id": "default",
       "innerPadding": 4,
-      "leftWidgets": ["launcherButton", "workspaceSwitcher", "focusedWindow"],
+      "leftWidgets": [
+        "launcherButton",
+        "workspaceSwitcher",
+        "focusedWindow"
+      ],
       "maximizeDetection": true,
       "maximizeWidgetIcons": false,
       "maximizeWidgetText": false,
@@ -111,7 +115,9 @@
           "showBatteryIcon": false
         }
       ],
-      "screenPreferences": ["all"],
+      "screenPreferences": [
+        "all"
+      ],
       "scrollEnabled": true,
       "scrollXBehavior": "column",
       "scrollYBehavior": "workspace",
@@ -143,9 +149,17 @@
   "batterySuspendBehavior": 0,
   "batterySuspendTimeout": 0,
   "bluetoothDevicePins": {},
+  "blurBorderColor": "outline",
+  "blurBorderCustomColor": "#ffffff",
+  "blurBorderOpacity": 0.35,
+  "blurEnabled": false,
+  "blurForegroundLayers": true,
+  "blurLayerOutlineOpacity": 0.12,
   "blurredWallpaperLayer": false,
   "blurWallpaperOnOverview": false,
   "brightnessDevicePins": {},
+  "browserPickerViewMode": "grid",
+  "browserUsageHistory": {},
   "builtInPluginSettings": {
     "dms_settings_search": {
       "trigger": "?"
@@ -258,7 +272,9 @@
     "r": 1,
     "valid": true
   },
-  "desktopClockDisplayPreferences": ["all"],
+  "desktopClockDisplayPreferences": [
+    "all"
+  ],
   "desktopClockEnabled": false,
   "desktopClockHeight": 180,
   "desktopClockShowAnalogNumbers": false,
@@ -281,14 +297,19 @@
         "createdAt": 1773853078993,
         "id": "profile_1773853078993_y1m7n0",
         "name": "Undocked",
-        "outputSet": ["eDP-1"],
+        "outputSet": [
+          "eDP-1"
+        ],
         "updatedAt": 1773853078993
       },
       "profile_1775578138764_it1s7n": {
         "createdAt": 1775578138764,
         "id": "profile_1775578138764_it1s7n",
         "name": "Docked",
-        "outputSet": ["DP-3", "eDP-1"],
+        "outputSet": [
+          "DP-3",
+          "eDP-1"
+        ],
         "updatedAt": 1775578138764
       }
     }
@@ -539,7 +560,9 @@
     "r": 1,
     "valid": true
   },
-  "systemMonitorDisplayPreferences": ["all"],
+  "systemMonitorDisplayPreferences": [
+    "all"
+  ],
   "systemMonitorEnabled": false,
   "systemMonitorGpuPciId": "",
   "systemMonitorGraphInterval": 60,
@@ -563,6 +586,9 @@
   "systemMonitorWidth": 320,
   "systemMonitorX": -1,
   "systemMonitorY": -1,
+  "systemTrayIconTintMode": "none",
+  "systemTrayIconTintSaturation": 50,
+  "systemTrayIconTintStrength": 135,
   "terminalsAlwaysDark": true,
   "u2fMode": "or",
   "updaterCustomCommand": "",
@@ -579,7 +605,9 @@
   "widgetBackgroundColor": "sch",
   "widgetColorMode": "colorful",
   "wifiNetworkPins": {
-    "preferredWifi": ["Turners-MLO"]
+    "preferredWifi": [
+      "Turners-MLO"
+    ]
   },
   "windSpeedUnit": "kmh",
   "workspaceAppIconSizeOffset": 0,

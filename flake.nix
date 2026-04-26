@@ -8,8 +8,8 @@
     nixpkgs-borg14.url = "github:NixOS/nixpkgs/4e92bbcdb030f3b4782be4751dc08e6b6cb6ccf2";
     # Keep GitKraken on nixpkgs PR #509534 until the update lands upstream.
     nixpkgs-gitkraken.url = "github:NixOS/nixpkgs/pull/509534/head";
-    agenix = {
-      url = "github:ryantm/agenix";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {

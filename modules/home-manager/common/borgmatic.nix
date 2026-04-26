@@ -47,11 +47,11 @@ let
       defaults;
 
   secretName = "storagebox-borg-passphrase";
-  secretFile = ../../../secrets/storagebox-borg-passphrase.age;
+  secretFile = ../../../secrets/hosts/${hostName}.yaml;
   sshKeyPath = "${homeDirectory}/.ssh/id_ed25519";
   sshCommand = "ssh -i ${sshKeyPath} -o IdentitiesOnly=yes -p 23";
   borgmaticPackage = borg14Pkgs.borgmatic;
-  agenixPackage = inputs.agenix.packages.${pkgs.system}.default;
+  sopsPackage = pkgs.sops;
   repositories = lib.mapAttrsToList (_: repo: {
     inherit (repo) label path;
   }) cfg.repositories;
@@ -88,13 +88,15 @@ in
     ];
 
     home.packages = [
-      agenixPackage
+      sopsPackage
       borg14Package
     ];
 
-    age = {
-      identityPaths = [ sshKeyPath ];
-      secrets.${secretName}.file = secretFile;
+    sops = {
+      age.sshKeyPaths = [ sshKeyPath ];
+      secrets.${secretName} = {
+        sopsFile = secretFile;
+      };
     };
 
     programs.borgmatic = {
@@ -111,7 +113,7 @@ in
           };
         };
         storage = {
-          encryptionPasscommand = "${pkgs.coreutils}/bin/cat ${config.age.secrets.${secretName}.path}";
+          encryptionPasscommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.${secretName}.path}";
           extraConfig = {
             local_path = cfg.localPath;
             remote_path = cfg.remotePath;
@@ -157,10 +159,10 @@ in
 
     systemd.user.services.borgmatic = {
       Unit = {
-        # Ensure the decrypted age secret is mounted before borgmatic tries to
+        # Ensure the decrypted sops secret is mounted before borgmatic tries to
         # read the shared encryption passphrase.
-        After = [ "agenix.service" ];
-        Requires = [ "agenix.service" ];
+        After = [ "sops-nix.service" ];
+        Requires = [ "sops-nix.service" ];
       };
     };
   };

@@ -2,7 +2,7 @@
 
 {
   imports = [
-    inputs.agenix.homeManagerModules.default
+    inputs.sops-nix.homeManagerModules.sops
     ../common/borgmatic.nix
     ../common/identity.nix
     ../common/git.nix

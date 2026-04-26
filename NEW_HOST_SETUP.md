@@ -29,55 +29,66 @@ append more paths without replacing the shared defaults.
 App-specific excludes are also added automatically by the modules that enable
 those programs, so the shared base list can stay focused on generic clutter.
 
-## 2. Add The Host SSH Key As An Age Recipient
+## 2. Add The Host SSH Key To SOPS And Create Host Secrets
 
 After the new machine has generated `~/.ssh/id_ed25519`, commit its public key
 into the repo as `hosts/<hostname>/id_ed25519.pub`.
 
-Then reference that file from `secrets/secrets.nix` and add it to the
-recipient list for `storagebox-borg-passphrase.age`.
-
-Important: do not replace the existing recipient list when adding a new device.
-Add the new public key alongside the old ones. If you remove `jay-framework`
-from the list and rekey the secret, `jay-framework` will lose access.
-
-Then, from a machine that can already decrypt the secret, rekey it:
+Convert that SSH public key to an age recipient:
 
 ```sh
 cd /etc/nixos
-EDITOR=nano RULES=/etc/nixos/secrets/secrets.nix \
-  nix run github:ryantm/agenix -- -r
+nix shell nixpkgs#ssh-to-age --command sh -c \
+  'ssh-to-age < hosts/<hostname>/id_ed25519.pub'
 ```
 
-That command is safe as long as `secrets/secrets.nix` contains both the old and
-new recipients. It re-encrypts the same plaintext to the full recipient set.
-
-Only use `-e` when either:
-
-- the secret does not exist yet, or
-- you intentionally want to change the shared Borg passphrase plaintext
-
-If the passphrase secret does not exist yet, create it from a machine that has
-the private key you want to use for editing:
+From an existing authorized machine, ensure `sops` can decrypt by exporting an
+age key derived from your SSH private key:
 
 ```sh
-cd /etc/nixos
-EDITOR=nano RULES=/etc/nixos/secrets/secrets.nix \
-  nix run github:ryantm/agenix -- -e /etc/nixos/secrets/storagebox-borg-passphrase.age \
-  -i ~/.ssh/id_ed25519
+mkdir -p ~/.config/sops/age
+nix shell nixpkgs#ssh-to-age --command ssh-to-age \
+  -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt
+chmod 600 ~/.config/sops/age/keys.txt
+export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
 ```
 
-You said you want to choose the passphrase yourself, so type the exact shared
-passphrase you want into the editor when agenix opens.
+Add the new recipient to `secrets/.sops.yaml`:
+
+- add a new key anchor under `keys:`
+- add/update a `creation_rules` entry for `hosts/<hostname>.yaml`
+
+Important: do not replace existing recipients when adding a device. Add the new
+recipient alongside existing ones, otherwise older machines may lose access.
+
+Then create or update that host's secret file from a machine that can already
+decrypt and edit secrets:
+
+```sh
+cd /etc/nixos/secrets
+nix shell nixpkgs#sops --command sops hosts/<hostname>.yaml
+```
+
+Set `storagebox-borg-passphrase` in that file.
+
+- Use the same value across hosts for a shared passphrase.
+- Use a different value per host if you want host-specific credentials.
+
+If you changed recipients in `secrets/.sops.yaml`, refresh recipient metadata:
+
+```sh
+cd /etc/nixos/secrets
+nix shell nixpkgs#sops --command sops updatekeys -y hosts/<hostname>.yaml
+```
 
 Recommended flow for a new device:
 
 1. Rebuild the new host once so it creates `~/.ssh/id_ed25519`.
-2. Commit that public key as `hosts/<hostname>/id_ed25519.pub`.
-3. Reference it from `secrets/secrets.nix` alongside the existing keys.
-4. On an already-authorized machine, run `agenix -r`.
-5. Commit both `secrets/secrets.nix` and `secrets/storagebox-borg-passphrase.age`.
-6. Rebuild the new machine again so it can decrypt the shared secret.
+2. Commit `hosts/<hostname>/id_ed25519.pub`.
+3. Add the new age recipient and host rule in `secrets/.sops.yaml`.
+4. Create/edit `secrets/hosts/<hostname>.yaml` with `sops`.
+5. Commit `secrets/.sops.yaml` and `secrets/hosts/<hostname>.yaml`.
+6. Rebuild the new machine again so it can decrypt its host secret file.
 
 ## 3. Apply The NixOS Config
 
@@ -181,10 +192,10 @@ The repo is pinned to Borg 1.4.x locally and configured to use `borg-1.4` on
 the Storage Box side.
 
 Create the Storage Box repo manually once per host. This setup decrypts the
-shared passphrase into the Home Manager `agenix` runtime directory:
+host passphrase into the Home Manager `sops-nix` runtime symlink directory:
 
 ```sh
-export BORG_PASSPHRASE="$(cat "${XDG_RUNTIME_DIR}/agenix/storagebox-borg-passphrase")"
+export BORG_PASSPHRASE="$(cat "${HOME}/.config/sops-nix/secrets/storagebox-borg-passphrase")"
 bash -c '
   borg init --remote-path borg-1.4 --encryption=repokey-blake2 \
   ssh://u551190@u551190.your-storagebox.de:23/./$(hostname)
@@ -195,7 +206,7 @@ unset BORG_PASSPHRASE
 If that file is missing, start the user secret service first:
 
 ```sh
-systemctl --user start agenix.service
+systemctl --user start sops-nix.service
 ```
 
 If you want to confirm the versions first:

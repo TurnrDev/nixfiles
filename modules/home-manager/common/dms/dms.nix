@@ -156,7 +156,7 @@ in
         params = "dms ipc call keybinds toggle hyprland";
       })
       (mkBind {
-        mods = altMod;
+        mods = mainMod;
         key = "L";
         description = "Lock Session";
         dispatcher = "exec";

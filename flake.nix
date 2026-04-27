@@ -47,13 +47,22 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
-    nixosConfigurations.jay-framework = nixpkgs.lib.nixosSystem {
-      specialArgs = {inherit inputs;};
-      modules = [
-        ./hosts/jay-framework/configuration.nix
-        inputs.home-manager.nixosModules.default
-      ];
+  outputs = { self, nixpkgs, ... }@inputs:
+    let
+      mkHost = hostPath: nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          hostPath
+          inputs.home-manager.nixosModules.default
+        ];
+      };
+    in {
+      nixosConfigurations = {
+        jay-framework = mkHost ./hosts/jay-framework/configuration.nix;
+        jay-desktop = mkHost ./hosts/jay-desktop/configuration.nix;
+
+        # Compatibility alias so plain `nixos-rebuild` works on hosts named "nixos".
+        nixos = mkHost ./hosts/jay-desktop/configuration.nix;
+      };
     };
-  };
 }

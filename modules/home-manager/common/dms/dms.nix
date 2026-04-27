@@ -88,7 +88,6 @@ in
 
   wayland.windowManager.hyprland.settings = {
     env = [
-      "DMS_DISABLE_MATUGEN,1"
       "DMS_DANKBAR_LAYER,overlay"
       "DMS_HIDE_TRAYIDS,discord,spotify"
     ];

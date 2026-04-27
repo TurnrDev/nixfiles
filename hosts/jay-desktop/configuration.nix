@@ -26,6 +26,9 @@ in {
       ../../modules/nixos/roles/gaming.nix
     ];
 
+  boot.lanzaboote.enable = lib.mkForce false;
+  boot.loader.systemd-boot.enable = lib.mkForce true;
+
   networking.hostName = "jay-desktop";
 
   # Per-device borgmatic overrides live in the host config. The shared module

@@ -90,7 +90,9 @@
     description = "Jay Turner";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-      kdePackages.kate
+      git
+      vscode
+      gitkraken
     #  thunderbird
     ];
   };

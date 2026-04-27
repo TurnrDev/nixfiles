@@ -34,13 +34,13 @@ in {
   # Per-device borgmatic overrides live in the host config. The shared module
   # provides the defaults and translates this block into borgmatic YAML.
   #
-  # my.backups.borgmatic = {
-  #   frequency = "daily";
-  #   sourceDirectories = [ config.my.identity.homeDirectory ];
-  #   repositories = {
-  #     hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
-  #   };
-  # };
+  my.backups.borgmatic = {
+    frequency = "daily";
+    sourceDirectories = [ config.my.identity.homeDirectory ];
+    repositories = {
+      hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
+    };
+  };
 
   home-manager = {
     backupCommand = hmBackupCommand;

@@ -3,7 +3,7 @@
 {
   imports = [
     inputs.sops-nix.homeManagerModules.sops
-    # ../common/borgmatic.nix
+    ../common/borgmatic.nix
     ../common/identity.nix
     ../common/git.nix
     ../common/zsh.nix

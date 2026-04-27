@@ -1,11 +1,15 @@
-{ inputs, ... }:
+{ identity, inputs, lib, ... }:
 
 {
-  imports = [
-    inputs.spicetify-nix.homeManagerModules.spicetify
-  ];
+   imports = [
+     inputs.spicetify-nix.homeManagerModules.spicetify
+   ];
 
-  programs.spicetify = {
-    enable = true;
-  };
+   my.backups.borgmatic.moduleExcludePatterns = lib.mkAfter [
+     "${identity.homeDirectory}/.config/spotify"
+   ];
+
+   programs.spicetify = {
+     enable = true;
+   };
 }

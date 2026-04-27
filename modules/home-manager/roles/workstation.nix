@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }:
+{ identity, inputs, lib, pkgs, ... }:
 
 {
   imports = [
@@ -10,6 +10,10 @@
     ../common/spotify.nix
   ];
 
+  my.backups.borgmatic.moduleExcludePatterns = lib.mkAfter [
+    "${identity.homeDirectory}/.config/discord"
+  ];
+  
   home.packages = with pkgs; [
     grimblast
   ];
@@ -20,7 +24,7 @@
       # frameless = true; # set some Vencord options
       plugins = {
         alwaysTrust.enable = true;
-        ClearURLs.enable = true;
+        ClearURLs.enable = true;  
         copyFileContents.enable = true;
         CustomRPC.enable = true;
         forceOwnerCrown.enable = true;

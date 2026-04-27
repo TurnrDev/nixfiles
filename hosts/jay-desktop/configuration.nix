@@ -22,11 +22,14 @@ in {
   imports =
     [
       ./hardware-configuration.nix
-      ../../modules/nixos/roles/laptop.nix
+      ../../modules/nixos/roles/desktop.nix
       ../../modules/nixos/roles/gaming.nix
     ];
 
-  networking.hostName = "jay-framework";
+  boot.lanzaboote.enable = lib.mkForce false;
+  boot.loader.systemd-boot.enable = lib.mkForce true;
+
+  networking.hostName = "jay-desktop";
 
   # Per-device borgmatic overrides live in the host config. The shared module
   # provides the defaults and translates this block into borgmatic YAML.
@@ -36,12 +39,6 @@ in {
     sourceDirectories = [ config.my.identity.homeDirectory ];
     repositories = {
       hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
-    };
-  };
-
-  users.users = lib.mkIf config.my.identity.enable {
-    ${config.my.identity.username} = {
-      extraGroups = [ "kvm" ];
     };
   };
 

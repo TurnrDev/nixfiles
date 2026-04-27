@@ -62,6 +62,21 @@ in
     qt6.qtwebsockets
   ];
 
+  home.activation.createDmsSourceFiles = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for f in \
+      "$HOME/.config/hypr/dms/colors.conf" \
+      "$HOME/.config/hypr/dms/cursor.conf" \
+      "$HOME/.config/hypr/dms/layout.conf" \
+      "$HOME/.config/hypr/dms/outputs.conf" \
+      "$HOME/.config/hypr/dms/windowrules.conf"
+    do
+      if [ ! -f "$f" ]; then
+        mkdir -p "$(dirname "$f")"
+        touch "$f"
+      fi
+    done
+  '';
+
   xdg.configFile =
     let
       enabledPlugins = lib.filterAttrs (_: plugin: plugin.enable) config.programs.dank-material-shell.plugins;
@@ -73,7 +88,6 @@ in
 
   wayland.windowManager.hyprland.settings = {
     env = [
-      "DMS_DISABLE_MATUGEN,1"
       "DMS_DANKBAR_LAYER,overlay"
       "DMS_HIDE_TRAYIDS,discord,spotify"
     ];

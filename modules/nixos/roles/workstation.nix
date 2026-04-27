@@ -53,6 +53,7 @@ in
           input {
               kb_layout = gb
               kb_variant = colemak
+              numlock_by_default = true
           }
         '';
       };

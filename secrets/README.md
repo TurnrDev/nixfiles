@@ -69,6 +69,30 @@ Then add a key in the editor, for example:
 github-token: ghp_example
 ```
 
+GitHub API rate limits for Nix flakes
+-------------------------------------
+
+Nix needs GitHub credentials before it can evaluate this flake, so the token
+cannot be bootstrapped from a SOPS-managed NixOS secret. Store it in a local
+root-only Nix config include instead:
+
+```sh
+sudo install -d -m 0755 /etc/nix
+printf 'access-tokens = github.com=ghp_example\n' \
+  | sudo tee /etc/nix/github-access-token.conf >/dev/null
+sudo chmod 0600 /etc/nix/github-access-token.conf
+```
+
+Replace `ghp_example` with a GitHub personal access token. The shared NixOS
+role includes this file with `!include`, so machines without it keep working.
+For the first rebuild, before that include has been activated, either put the
+same `access-tokens = ...` line in `~/.config/nix/nix.conf` temporarily or run
+the rebuild with:
+
+```sh
+sudo env NIX_CONFIG='access-tokens = github.com=ghp_example' nixos-rebuild switch --flake /etc/nixos
+```
+
 Add a host-specific secret:
 
 ```sh

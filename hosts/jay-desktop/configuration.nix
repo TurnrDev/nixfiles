@@ -18,7 +18,7 @@ let
 
     exec mv -- "$target" "$backup.$i"
   '';
-{
+in {
   imports =
     [
       ./hardware-configuration.nix

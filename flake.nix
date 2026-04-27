@@ -62,7 +62,7 @@
         jay-desktop = mkHost ./hosts/jay-desktop/configuration.nix;
 
         # Compatibility alias so plain `nixos-rebuild` works on hosts named "nixos".
-        nixos = mkHost ./hosts/jay-desktop/configuration.nix;
+        # nixos = mkHost ./hosts/<newhost>/configuration.nix;
       };
     };
 }

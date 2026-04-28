@@ -10,22 +10,55 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
+  boot.initrd.supportedFilesystems = [ "btrfs" ];
+  boot.initrd.luks.devices."cryptroot" = {
+    device = "/dev/disk/by-partlabel/nixos-crypt";
+    allowDiscards = true;
+  };
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
+  boot.supportedFilesystems = [ "btrfs" ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/3296882c-4415-435b-9f4c-2bbd41f9369e";
-      fsType = "ext4";
+    { device = "/dev/mapper/cryptroot";
+      fsType = "btrfs";
+      options = [ "subvol=@" "compress=zstd" "noatime" ];
+    };
+
+  fileSystems."/nix" =
+    { device = "/dev/mapper/cryptroot";
+      fsType = "btrfs";
+      options = [ "subvol=@nix" "compress=zstd" "noatime" ];
+    };
+
+  fileSystems."/home" =
+    { device = "/dev/mapper/cryptroot";
+      fsType = "btrfs";
+      options = [ "subvol=@home" "compress=zstd" "noatime" ];
+    };
+
+  fileSystems."/var/log" =
+    { device = "/dev/mapper/cryptroot";
+      fsType = "btrfs";
+      options = [ "subvol=@log" "compress=zstd" "noatime" ];
+    };
+
+  fileSystems."/swap" =
+    { device = "/dev/mapper/cryptroot";
+      fsType = "btrfs";
+      options = [ "subvol=@swap" "noatime" "compress=no" ];
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/B56F-29D7";
+    { device = "/dev/disk/by-partlabel/nixos-efi";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/329616f9-cd97-464f-9784-a50d0aa0c043"; }
+    [ { device = "/swap/swapfile";
+        size = 32 * 1024;
+      }
     ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

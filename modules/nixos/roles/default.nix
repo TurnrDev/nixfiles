@@ -112,6 +112,7 @@
     whois
     p7zip
     jq
+    yq
     smartmontools
     android-tools
   ];

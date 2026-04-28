@@ -11,7 +11,20 @@ let
   sshDir = "${homeDirectory}/.ssh";
   sshKeyPath = "${sshDir}/id_ed25519";
   gpgHome = toString config.programs.gpg.homedir;
-  signingUid = "${gitName} <${gitEmail}>";
+  signingKey = "E4C8D6EEB05503E94B2896CA53C55D34138B4E04";
+  signingSecretName = "git-signing-secret-key";
+  importSigningKey = pkgs.writeShellScript "import-git-signing-key" ''
+    set -eu
+
+    export GNUPGHOME=${lib.escapeShellArg gpgHome}
+
+    if ${gpg} --batch --list-secret-keys ${lib.escapeShellArg signingKey} >/dev/null 2>&1; then
+      exit 0
+    fi
+
+    ${gpgconf} --launch gpg-agent >/dev/null 2>&1 || true
+    ${gpg} --batch --import ${lib.escapeShellArg config.sops.secrets.${signingSecretName}.path}
+  '';
 in
 lib.mkMerge [
   {
@@ -26,7 +39,7 @@ lib.mkMerge [
       };
       signing = {
         format = "openpgp";
-        key = null;
+        key = signingKey;
         signByDefault = true;
       };
     };
@@ -41,6 +54,23 @@ lib.mkMerge [
       defaultCacheTtl = 1800;
       maxCacheTtl = 7200;
       pinentry.package = pkgs.pinentry-qt;
+    };
+
+    sops.secrets.${signingSecretName} = {
+      sopsFile = ../../../secrets/shared.yaml;
+    };
+
+    systemd.user.services.import-git-signing-key = {
+      Unit = {
+        Description = "Import Git signing GPG key";
+        After = [ "sops-nix.service" ];
+        Requires = [ "sops-nix.service" ];
+      };
+      Service = {
+        Type = "oneshot";
+        ExecStart = importSigningKey;
+      };
+      Install.WantedBy = [ "default.target" ];
     };
 
     home.activation.createReposDirectory = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -59,11 +89,6 @@ lib.mkMerge [
 
       if [[ ! -f ${lib.escapeShellArg sshKeyPath} ]]; then
         run ${sshKeygen} -q -t ed25519 -a 100 -C ${lib.escapeShellArg gitEmail} -N "" -f ${lib.escapeShellArg sshKeyPath}
-      fi
-
-      if ! ${gpg} --batch --list-secret-keys --with-colons ${lib.escapeShellArg gitEmail} 2>/dev/null | grep -q '^sec:'; then
-        ${gpgconf} --launch gpg-agent >/dev/null 2>&1 || true
-        run ${gpg} --batch --pinentry-mode loopback --passphrase "" --quick-generate-key ${lib.escapeShellArg signingUid} ed25519 sign 0
       fi
     '';
   })

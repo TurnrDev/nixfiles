@@ -84,6 +84,17 @@ in {
     ];
   };
 
+  # TEMPORARY SATA ROOT HOUSEKEEPING:
+  # jay-desktop currently boots from a small SATA SSD and will eventually move
+  # onto the NVMe. Keep Nix's retention tighter here so /nix/store does not
+  # slowly crowd out the root filesystem before that migration.
+  nix.gc.options = lib.mkForce "--delete-older-than 7d";
+  nix.settings = {
+    min-free = 10 * 1024 * 1024 * 1024;
+    max-free = 20 * 1024 * 1024 * 1024;
+  };
+  boot.loader.grub.configurationLimit = 10;
+
   networking.hostName = "jay-desktop";
 
   # Per-device borgmatic overrides live in the host config. The shared module

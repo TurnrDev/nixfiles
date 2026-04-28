@@ -9,6 +9,8 @@
     [
       ./workstation.nix
       ../hardware/bluetooth.nix
+      ../hardware/logitech-g512.nix
+      ../hardware/logitech-mx-master-3s.nix
       ../services/tailscale.nix
     ];
 

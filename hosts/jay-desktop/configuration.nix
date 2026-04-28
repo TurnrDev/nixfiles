@@ -24,6 +24,8 @@ in {
       ./hardware-configuration.nix
       ../../modules/nixos/roles/desktop.nix
       ../../modules/nixos/hardware/bluetooth.nix
+      ../../modules/nixos/hardware/logitech-g512.nix
+      ../../modules/nixos/hardware/logitech-mx-master-3s.nix
       ../../modules/nixos/roles/gaming.nix
     ];
 

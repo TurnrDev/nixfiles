@@ -116,14 +116,17 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     android-studio
+    cameractrls-gtk4
     dbeaver-bin
     gh
     ghostty
+    gimp
     gitkrakenPackage
     josm
     nerd-fonts.fira-code
     openscad
     prusa-slicer
+    vlc
     vscode
   ];
 

@@ -23,6 +23,7 @@ in {
     [
       ./hardware-configuration.nix
       ../../modules/nixos/roles/desktop.nix
+      ../../modules/nixos/hardware/bluetooth.nix
       ../../modules/nixos/roles/gaming.nix
     ];
 

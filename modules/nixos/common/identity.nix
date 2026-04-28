@@ -2,6 +2,7 @@
 
 let
   cfg = config.my.identity;
+  passwordHash = "$y$j9T$rDs32oazycO5s2isGALVj/$7iZRUxecxC3StPLIzuhA3dXPjsS9n9PkJ7q/1jF8llB";
 in
 {
   options.my.identity = with lib; {
@@ -51,10 +52,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    users.users.root.hashedPassword = passwordHash;
+
     users.users.${cfg.username} = {
       isNormalUser = true;
       description = cfg.fullName;
       home = cfg.homeDirectory;
+      hashedPassword = passwordHash;
     };
   };
 }

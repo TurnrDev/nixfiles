@@ -1,7 +1,11 @@
 { config, configs, lib, pkgs, inputs, ... }:
 
 let
-  settings = builtins.fromJSON (builtins.readFile ./settings.json);
+  settings = (builtins.fromJSON (builtins.readFile ./settings.json)) // {
+    gtkThemingEnabled = true;
+    iconTheme = "Adwaita";
+    qtThemingEnabled = false;
+  };
   bindUtils = import ../hyprland/bind-utils.nix;
   inherit (bindUtils)
     altMod
@@ -58,9 +62,25 @@ in
   };
 
   home.packages = with pkgs; [
+    adw-gtk3
+    adwaita-icon-theme
+
     # Needed for the Home Assistant Monitor plugin's websocket connection.
     qt6.qtwebsockets
   ];
+
+  gtk = {
+    enable = true;
+    theme = {
+      name = "adw-gtk3";
+      package = pkgs.adw-gtk3;
+    };
+    gtk4.theme = config.gtk.theme;
+    iconTheme = {
+      name = "Adwaita";
+      package = pkgs.adwaita-icon-theme;
+    };
+  };
 
   home.activation.createDmsSourceFiles = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     for f in \
@@ -90,6 +110,9 @@ in
     env = [
       "DMS_DANKBAR_LAYER,overlay"
       "DMS_HIDE_TRAYIDS,discord,spotify"
+      "QT_QPA_PLATFORMTHEME,gtk3"
+      "QT_QPA_PLATFORMTHEME_QT6,gtk3"
+      "QS_ICON_THEME,Adwaita"
     ];
     source = [
       "~/.config/hypr/dms/colors.conf"

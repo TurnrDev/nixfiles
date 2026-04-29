@@ -52,8 +52,12 @@
     layout = "gb";
   };
 
-  # Configure console keymap
-  console.keyMap = "uk";
+  # Use the XKB layout/variant for the TTY and initrd so the early LUKS
+  # unlock prompt matches the desktop keyboard layout.
+  console = {
+    useXkbConfig = true;
+    earlySetup = true;
+  };
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;

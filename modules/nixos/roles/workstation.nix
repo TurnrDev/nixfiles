@@ -16,6 +16,7 @@ in
   imports =
     [
       ./default.nix
+      ../services/dms-home-assistant-monitor.nix
     ];
 
   my.backups.borgmatic.extraExcludePatterns = lib.mkAfter [

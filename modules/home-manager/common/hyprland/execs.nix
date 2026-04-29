@@ -8,8 +8,5 @@
   #   "[workspace 3 silent] uwsm app -- slack"
   #   "uwsm app -- nm-applet"
   # ];
-  wayland.windowManager.hyprland.settings."exec-once" = [
-    "[workspace 2 silent] uwsm app -- discord"
-    "[workspace 2 silent] uwsm app -- spotify"
-  ];
+  wayland.windowManager.hyprland.settings."exec-once" = [ ];
 }

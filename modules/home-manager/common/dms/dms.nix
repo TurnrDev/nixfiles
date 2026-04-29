@@ -36,6 +36,8 @@ in
         src = inputs.dms-plugin-hass;
         settings = {
           hassUrl = "https://assistant.home.turnr.dev";
+          hassTokenPath = "/run/secrets/hass_token";
+          hassToken = "";
         };
       };
       dockerManager = {

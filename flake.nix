@@ -6,8 +6,6 @@
     # Keep the Borg client/tooling on an explicit 1.4-capable package set even
     # when the rest of the system tracks a newer nixpkgs revision.
     nixpkgs-borg14.url = "github:NixOS/nixpkgs/4e92bbcdb030f3b4782be4751dc08e6b6cb6ccf2";
-    # Keep GitKraken on nixpkgs PR #509534 until the update lands upstream.
-    nixpkgs-gitkraken.url = "github:NixOS/nixpkgs/pull/509534/head";
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";

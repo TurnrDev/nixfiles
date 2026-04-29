@@ -6,10 +6,6 @@
 
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
-  gitkrakenPackage = (import inputs.nixpkgs-gitkraken {
-    system = pkgs.stdenv.hostPlatform.system;
-    config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "gitkraken" ];
-  }).gitkraken;
   dmsGreeterCacheDir = "/var/lib/dms-greeter";
 in
 {
@@ -122,7 +118,7 @@ in
     gh
     ghostty
     gimp
-    gitkrakenPackage
+    gitkraken
     josm
     nerd-fonts.fira-code
     openscad

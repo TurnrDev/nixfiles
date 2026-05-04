@@ -114,6 +114,7 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     android-studio
+    bitwarden-desktop
     cameractrls-gtk4
     dbeaver-bin
     gh
@@ -125,6 +126,7 @@ in
     josm
     nerd-fonts.fira-code
     openscad
+    postman
     prusa-slicer
     vlc
     vscode

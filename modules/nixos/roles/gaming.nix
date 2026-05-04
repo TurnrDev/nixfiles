@@ -5,6 +5,10 @@
 { config, inputs, lib, pkgs, ... }:
 
 {
+  imports = [
+    ../common/minecraft.nix
+  ];
+
   my.backups.borgmatic.extraExcludePatterns = lib.mkAfter [
     "${config.my.identity.homeDirectory}/.local/share/Steam"
     "${config.my.identity.homeDirectory}/.steam-shared"
@@ -15,9 +19,4 @@
     enable = true;
     extraCompatPackages = with pkgs; [ proton-ge-bin ];
   };
-
-  environment.systemPackages = with pkgs; [
-    prismlauncher
-  ];
-
 }

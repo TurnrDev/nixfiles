@@ -9,8 +9,4 @@
     ../common/kdeconnect.nix
     ../common/spotify.nix
   ];
-  
-  home.packages = with pkgs; [
-    grimblast
-  ];
 }

@@ -125,6 +125,7 @@ in
     prusa-slicer
     vlc
     vscode
+    grimblast
   ];
 
   fonts = {

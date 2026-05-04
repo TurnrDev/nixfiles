@@ -58,7 +58,7 @@ in {
   fileSystems."/mnt/arch" = {
     device = "/dev/disk/by-uuid/b8be9d02-e091-4f19-99b9-d89ea5e17ee4";
     fsType = "ext4";
-    options = [ "nofail" "noauto" "x-systemd.automount" "ro" ];
+    options = [ "nofail" "noauto" "x-systemd.automount" ];
   };
 
   fileSystems."/mnt/win" = {

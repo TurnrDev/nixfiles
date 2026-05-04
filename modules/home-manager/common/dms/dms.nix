@@ -21,6 +21,7 @@ in
   imports = [
     inputs.dms.homeModules.dank-material-shell
     ../hyprland/env.nix
+    ./wallpaper-automation.nix
   ];
 
   programs.dank-material-shell = {

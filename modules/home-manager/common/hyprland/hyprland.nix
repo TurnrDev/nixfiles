@@ -58,6 +58,13 @@
           };
         };
 
+        # Constrain a single tiled window on ultrawide displays.
+        # 16:9 yields 2560px width on a 1440px-tall monitor.
+        layout = {
+          single_window_aspect_ratio = "16 9";
+          single_window_aspect_ratio_tolerance = 0.1;
+        };
+
         xwayland = {
           force_zero_scaling = true;
           enabled = true;

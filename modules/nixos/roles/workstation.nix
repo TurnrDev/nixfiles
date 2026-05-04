@@ -7,6 +7,7 @@
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
   dmsGreeterCacheDir = "/var/lib/dms-greeter";
+  device_list = [ "home-server" "jay-framework" ];
 in
 {
   imports =
@@ -119,18 +120,50 @@ in
     ghostty
     gimp
     gitkraken
+    grimblast
+    imagemagick
     josm
     nerd-fonts.fira-code
     openscad
     prusa-slicer
     vlc
     vscode
-    grimblast
   ];
 
   fonts = {
     packages = [
       pkgs.font-awesome
     ];
+  };
+
+
+  services.syncthing = {
+    enable = true;
+    user = "${config.my.identity.username}";
+    configDir = "${config.my.identity.homeDirectory}/.config/syncthing";
+    settings = {
+      devices = {
+        "jay-framework" = {id = "VUUG6YN-SHPRRSW-44UADVY-VQ4MQZX-3T5PPN5-65MCQ6K-GIP4Y5T-CXH2UAQ"; };
+        "home-server" = {id = "D6Y3JIQ-HCGMVPG-K6YLKDK-7X4D7YI-4BSGQ5J-WJW3WNY-ZHCJYT5-2VMAKAT"; };
+      };
+      folders = {
+        "3D Printing" = {
+          path = "${config.my.identity.homeDirectory}/3D Printing/";
+          devices = device_list;
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
+        };
+        "Documents" = {
+          path = "${config.my.identity.homeDirectory}/Documents/";
+          devices = device_list;
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
+        };
+      };
+    };
   };
 }

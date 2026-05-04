@@ -28,6 +28,13 @@ in {
 
   networking.hostName = "jay-framework";
 
+  # Framework laptop has an AMD Radeon iGPU; pin the matching stack explicitly.
+  services.xserver.videoDrivers = [ "amdgpu" ];
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
   # Per-device borgmatic overrides live in the host config. The shared module
   # provides the defaults and translates this block into borgmatic YAML.
   #

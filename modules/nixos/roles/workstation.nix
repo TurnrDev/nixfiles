@@ -7,7 +7,7 @@
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
   dmsGreeterCacheDir = "/var/lib/dms-greeter";
-  device_list = [ "home-server" "jay-framework" ];
+  device_list = [ "home-server" "jay-framework" "jay-desktop"];
 in
 {
   imports =
@@ -143,8 +143,9 @@ in
     configDir = "${config.my.identity.homeDirectory}/.config/syncthing";
     settings = {
       devices = {
-        "jay-framework" = {id = "VUUG6YN-SHPRRSW-44UADVY-VQ4MQZX-3T5PPN5-65MCQ6K-GIP4Y5T-CXH2UAQ"; };
         "home-server" = {id = "D6Y3JIQ-HCGMVPG-K6YLKDK-7X4D7YI-4BSGQ5J-WJW3WNY-ZHCJYT5-2VMAKAT"; };
+        "jay-desktop" = {id = "IVDUYVG-C3BMCUT-SKGGMUW-GC5BVZP-GOZ6E6K-VGICOE2-C4ZGYEE-BWVY4QY"; };
+        "jay-framework" = {id = "VUUG6YN-SHPRRSW-44UADVY-VQ4MQZX-3T5PPN5-65MCQ6K-GIP4Y5T-CXH2UAQ"; };
       };
       folders = {
         "3D Printing" = {

@@ -107,7 +107,7 @@ in {
     frequency = "daily";
     sourceDirectories = [ config.my.identity.homeDirectory ];
     repositories = {
-      hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
+      hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./arch";
     };
   };
 

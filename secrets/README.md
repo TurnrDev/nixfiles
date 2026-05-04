@@ -73,8 +73,8 @@ GitHub API rate limits for Nix flakes
 -------------------------------------
 
 Nix needs GitHub credentials before it can evaluate this flake, so the token
-cannot be bootstrapped from a SOPS-managed NixOS secret. Store it in a local
-root-only Nix config include instead:
+cannot be bootstrapped from a SOPS-managed NixOS secret on a brand new machine.
+Bootstrap with a local root-only Nix config include first:
 
 ```sh
 sudo install -d -m 0755 /etc/nix
@@ -85,12 +85,32 @@ sudo chmod 0600 /etc/nix/github-access-token.conf
 
 Replace `ghp_example` with a GitHub personal access token. The shared NixOS
 role includes this file with `!include`, so machines without it keep working.
-For the first rebuild, before that include has been activated, either put the
-same `access-tokens = ...` line in `~/.config/nix/nix.conf` temporarily or run
-the rebuild with:
+For the first rebuild, before the generated secret-backed file can exist, either
+put the same `access-tokens = ...` line in `~/.config/nix/nix.conf`
+temporarily or run the rebuild with:
 
 ```sh
 sudo env NIX_CONFIG='access-tokens = github.com=ghp_example' nixos-rebuild switch --flake /etc/nixos
+```
+
+After that bootstrap rebuild succeeds, store the raw token in shared secrets so
+future rebuilds render `/etc/nix/github-access-token.conf` automatically:
+
+```sh
+cd /etc/nixos/secrets
+sops shared.yaml
+```
+
+Then add:
+
+```yaml
+github-token: ghp_example
+```
+
+The system role decrypts `github-token` and writes the include file as:
+
+```conf
+access-tokens = github.com=...
 ```
 
 Add a host-specific secret:

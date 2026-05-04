@@ -6,6 +6,7 @@
 
 {
   imports = [
+    inputs.sops-nix.nixosModules.sops
     ../common/backups.nix
     ../common/gradle.nix
     ../common/identity.nix
@@ -86,6 +87,26 @@
       !include /etc/nix/github-access-token.conf
     '';
   };
+
+  sops.age.sshKeyPaths = [
+    "${config.my.identity.homeDirectory}/.ssh/id_ed25519"
+  ];
+
+  sops.secrets.github-token = {
+    sopsFile = ../../../secrets/shared.yaml;
+  };
+
+  sops.templates."github-access-token.conf" = {
+    path = "/etc/nix/github-access-token.conf";
+    content = ''
+      access-tokens = github.com=${config.sops.placeholder.github-token}
+    '';
+    owner = "root";
+    group = "root";
+    mode = "0400";
+    restartUnits = [ "nix-daemon.service" ];
+  };
+
   nix.gc = {
     automatic = true;
     dates = "weekly";

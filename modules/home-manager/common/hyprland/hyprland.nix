@@ -74,5 +74,15 @@
           scroll_event_delay = 0;
         };
       };
+
+    # Keep the external Logitech K120 on plain QWERTY while the main
+    # keyboard stays on the global Colemak layout.
+    extraConfig = ''
+      device {
+        name = logitech-usb-keyboard
+        kb_layout = gb
+        kb_variant =
+      }
+    '';
   };
 }

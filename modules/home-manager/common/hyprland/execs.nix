@@ -1,12 +1,23 @@
-{ ... }:
+{ lib, ... }:
 {
-  # Startup commands that should run once when Hyprland starts.
-  # Add one command per string.
+  # Startup hooks for Hyprland's Lua config.
   #
-  # Example:
-  # wayland.windowManager.hyprland.settings."exec-once" = [
-  #   "[workspace 3 silent] uwsm app -- slack"
-  #   "uwsm app -- nm-applet"
+  # In the Lua config path we prefer `settings.on` with the `hyprland.start`
+  # event instead of hyprlang's `exec-once`. Add one handler object per hook.
+  #
+  # Usage:
+  # wayland.windowManager.hyprland.settings.on = [
+  #   {
+  #     _args = [
+  #       "hyprland.start"
+  #       (lib.generators.mkLuaInline ''
+  #         function()
+  #           hl.exec_cmd("[workspace 3 silent] uwsm app -- slack")
+  #           hl.exec_cmd("uwsm app -- nm-applet")
+  #         end
+  #       '')
+  #     ];
+  #   }
   # ];
-  wayland.windowManager.hyprland.settings."exec-once" = [ ];
+  wayland.windowManager.hyprland.settings.on = [ ];
 }

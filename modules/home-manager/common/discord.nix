@@ -38,24 +38,15 @@
   };
 
   wayland.windowManager.hyprland.settings = {
-    on = lib.mkAfter [
-      {
-        _args = [
-          "hyprland.start"
-          (lib.generators.mkLuaInline ''
-            function()
-              hl.exec_cmd("[workspace 9 silent] uwsm app -- discord")
-            end
-          '')
-        ];
-      }
+    "exec-once" = lib.mkAfter [
+      "[workspace 9 silent] uwsm app -- discord"
     ];
 
-    window_rule = lib.mkAfter [
+    windowrule = lib.mkAfter [
       {
         name = "workspace-discord";
-        match.class = "discord";
-        workspace = "9 silent";
+        "match:initial_class" = "^([dD]iscord)$";
+        workspace = "9";
       }
     ];
   };

@@ -6,7 +6,6 @@
 
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
-  quickshellPackage = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
   dmsGreeterCacheDir = "/var/lib/dms-greeter";
   device_list = [ "home-server" "jay-framework" "jay-desktop"];
 in
@@ -37,7 +36,7 @@ in
       configHome = config.my.identity.homeDirectory;
       # Reuse the same DMS-managed monitor layout that Hyprland sources at runtime.
       configFiles = [ "${config.my.identity.homeDirectory}/.config/hypr/dms/outputs.conf" ];
-      quickshell.package = quickshellPackage;
+      quickshell.package = dmsPackages.quickshell;
       compositor = {
         name = "hyprland";
         customConfig = ''

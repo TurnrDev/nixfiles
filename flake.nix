@@ -15,9 +15,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixcord.url = "github:FlameFlag/nixcord";
-    quickshell.url = "git+https://git.outfoxxed.me/quickshell/quickshell?rev=018c8a83973a6fa55dcdd66d18d14a998179a8dd";
     dms = {
-      url = "github:AvengeMedia/DankMaterialShell?rev=66e38c5efeacc8a5e2387e7a81953cbdac7bffad";
+      url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     dms-plugins = {

@@ -1,11 +1,7 @@
-{ config, identity, inputs, lib, osConfig ? null, pkgs, ... }:
+{ config, identity, lib, osConfig ? null, pkgs, ... }:
 
 let
-  # Keep borgmatic and borgbackup from the same explicitly pinned package set.
-  # Mixing borgmatic from one nixpkgs snapshot with borgbackup from another can
-  # create Python dependency conflicts in the closure.
-  borg14Pkgs = inputs."nixpkgs-borg14".legacyPackages.${pkgs.system};
-  borg14Package = borg14Pkgs.borgbackup;
+  borgPackage = pkgs.borgbackup;
   homeDirectory = identity.homeDirectory;
   hostName = osConfig.networking.hostName;
   defaultRepositoryPath = "ssh://u551190@u551190.your-storagebox.de:23/./${hostName}";
@@ -24,7 +20,7 @@ let
   defaults = {
     enable = true;
     frequency = "daily";
-    localPath = lib.getExe borg14Package;
+    localPath = lib.getExe borgPackage;
     remotePath = "borg-1.4";
     sourceDirectories = defaultSourceDirectories;
     extraSourceDirectories = [ ];
@@ -50,7 +46,7 @@ let
   secretFile = ../../../secrets/hosts/${hostName}.yaml;
   sshKeyPath = "${homeDirectory}/.ssh/id_ed25519";
   sshCommand = "ssh -i ${sshKeyPath} -o IdentitiesOnly=yes -p 23";
-  borgmaticPackage = borg14Pkgs.borgmatic;
+  borgmaticPackage = pkgs.borgmatic;
   sopsPackage = pkgs.sops;
   repositories = lib.mapAttrsToList (_: repo: {
     inherit (repo) label path;
@@ -82,14 +78,14 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = lib.hasPrefix "1.4." borg14Package.version;
-        message = "Pinned Borg package must resolve to Borg 1.4.x, got ${borg14Package.version}.";
+        assertion = lib.hasPrefix "1.4." borgPackage.version;
+        message = "Borg version must be 1.4.x for backup compatibility; got ${borgPackage.version}.";
       }
     ];
 
     home.packages = [
       sopsPackage
-      borg14Package
+      borgPackage
     ];
 
     sops = {

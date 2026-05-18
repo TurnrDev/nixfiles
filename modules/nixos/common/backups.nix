@@ -1,10 +1,10 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   # These options are the per-device interface. The Home Manager module reads
   # them from osConfig and renders a single shared borgmatic configuration file.
   cfg = config.my.backups.borgmatic;
-  borg14Package = inputs."nixpkgs-borg14".legacyPackages.${pkgs.system}.borgbackup;
+  borgPackage = pkgs.borgbackup;
   defaultHomeDirectory = config.my.identity.homeDirectory;
   defaultRepositoryPath = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
   defaultSourceDirectories = [ defaultHomeDirectory ];
@@ -39,15 +39,13 @@ in
 
     localPath = mkOption {
       type = types.str;
-      default = lib.getExe borg14Package;
-      defaultText = literalExpression ''lib.getExe inputs."nixpkgs-borg14".legacyPackages.${pkgs.system}.borgbackup'';
-      example = literalExpression ''lib.getExe inputs."nixpkgs-borg14".legacyPackages.${pkgs.system}.borgbackup'';
+      default = lib.getExe borgPackage;
+      defaultText = literalExpression ''lib.getExe pkgs.borgbackup'';
+      example = literalExpression ''lib.getExe pkgs.borgbackup'';
       description = ''
-        Absolute path to the pinned Borg client binary to use locally.
+        Absolute path to the Borg client binary to use locally.
 
-        The default comes from the dedicated `nixpkgs-borg14` flake input so
-        regular flake lock updates do not silently change the Borg major/minor
-        version used for backups.
+        By default this uses `pkgs.borgbackup` from the active nixpkgs input.
       '';
     };
 

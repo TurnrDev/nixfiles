@@ -4,7 +4,6 @@
   home.packages = with pkgs; [
     fastfetch
     fzf
-    zoxide
     eza
     bat
     fd
@@ -46,8 +45,10 @@
       if [[ -o interactive ]]; then
         fastfetch
       fi
-
-      eval "$(zoxide init zsh)"
+      
+      dhc() {
+        docker inspect --format "{{json .State.Health }}" $1 | jq
+      }
     '';
   };
 

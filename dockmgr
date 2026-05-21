@@ -1,0 +1,272 @@
+#!/usr/bin/env bash
+# USB profile watcher.
+# Runs with bash or zsh: bash ~/dockmgr watch, zsh ~/dockmgr watch, or just ~/dockmgr watch.
+
+# Profile USB IDs. Space-separated vendor:product pairs.
+# Work profile, from your connected lsusb output:
+#   ID 05e3:0625 Genesys Logic, Inc. USB3.2 Hub
+WORK_PROFILE_USB_IDS="${WORK_PROFILE_USB_IDS:-05e3:0625}"
+
+# Home profile placeholder. Fill this in later, for example:
+# HOME_PROFILE_USB_IDS="abcd:1234 dead:beef"
+HOME_PROFILE_USB_IDS="${HOME_PROFILE_USB_IDS:-}"
+
+DOCK_POLL_INTERVAL="${DOCK_POLL_INTERVAL:-2}"
+
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+activate_work() {
+    dms ipc outputs listProfiles
+    dms ipc outputs setProfile "Docked Work"
+    notify "Profile switched to work" "Work profile activated"
+}
+
+deactivate_work() {
+    dms ipc outputs listProfiles
+    dms ipc outputs setProfile "Undocked"
+    notify "Profile switched to undocked" "Work profile deactivated"
+}
+
+activate_home() {
+    # Stub: put your home-profile activation actions here.
+    printf '%s\n' "activate: home"
+}
+
+deactivate_home() {
+    # Stub: put your home-profile deactivation actions here.
+    printf '%s\n' "deactivate: home"
+}
+
+activate_undocked() {
+    # Stub: put your undocked-profile activation actions here.
+    printf '%s\n' "activate: undocked"
+}
+
+deactivate_undocked() {
+    # Stub: put your undocked-profile deactivation actions here.
+    printf '%s\n' "deactivate: undocked"
+}
+
+notify() {
+    dms notify "$@" "$@" --app dockmgr
+}
+
+need_cmd() {
+    command -v "$1" >/dev/null 2>&1 || {
+        printf 'dockmgr: missing required command: %s\n' "$1" >&2
+        exit 1
+    }
+}
+
+usb_device_paths_for_id() {
+    want_id="$1"
+    want_vendor="${want_id%%:*}"
+    want_product="${want_id#*:}"
+
+    found=1
+    for vendor_file in /sys/bus/usb/devices/*/idVendor; do
+        [ -e "$vendor_file" ] || continue
+
+        device_dir="${vendor_file%/idVendor}"
+        product_file="$device_dir/idProduct"
+        [ -r "$vendor_file" ] || continue
+        [ -r "$product_file" ] || continue
+
+        read -r got_vendor < "$vendor_file" || continue
+        read -r got_product < "$product_file" || continue
+
+        if [ "$got_vendor:$got_product" = "$want_vendor:$want_product" ]; then
+            found=0
+            printf '%s\n' "$device_dir"
+        fi
+    done
+
+    return "$found"
+}
+
+profile_matches() {
+    ids="$1"
+
+    for usb_id in $ids; do
+        if usb_device_paths_for_id "$usb_id" >/dev/null; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+current_profile() {
+    if profile_matches "$WORK_PROFILE_USB_IDS"; then
+        printf '%s\n' "work"
+        return 0
+    fi
+
+    if [ -n "$HOME_PROFILE_USB_IDS" ] && profile_matches "$HOME_PROFILE_USB_IDS"; then
+        printf '%s\n' "home"
+        return 0
+    fi
+
+    printf '%s\n' "undocked"
+}
+
+print_status() {
+    print_profile_status "work" "$WORK_PROFILE_USB_IDS"
+    print_profile_status "home" "$HOME_PROFILE_USB_IDS"
+    printf 'Current profile: %s\n' "$(current_profile)"
+}
+
+print_profile_status() {
+    profile_name="$1"
+    ids="$2"
+
+    if [ -z "$ids" ]; then
+        printf 'Profile %s IDs: <unset>\n' "$profile_name"
+        return 0
+    fi
+
+    printf 'Profile %s IDs: %s\n' "$profile_name" "$ids"
+
+    for usb_id in $ids; do
+        matches="$(usb_device_paths_for_id "$usb_id" || true)"
+
+        if [ -n "$matches" ]; then
+            printf '%s\n' "$matches" | while IFS= read -r device_dir; do
+                manufacturer=""
+                product=""
+
+                [ -r "$device_dir/manufacturer" ] && read -r manufacturer < "$device_dir/manufacturer"
+                [ -r "$device_dir/product" ] && read -r product < "$device_dir/product"
+
+                printf 'Matched %s device: %s' "$profile_name" "$device_dir"
+                if [ -n "$manufacturer$product" ]; then
+                    printf ' (%s %s)' "$manufacturer" "$product"
+                fi
+                printf '\n'
+            done
+        else
+            printf 'Matched %s device: none for %s\n' "$profile_name" "$usb_id"
+        fi
+    done
+}
+
+check_transition() {
+    current="$(current_profile)"
+
+    if [ "$current" != "$last_state" ]; then
+        transition_profile "$last_state" "$current"
+        last_state="$current"
+    fi
+}
+
+transition_profile() {
+    from_profile="$1"
+    to_profile="$2"
+
+    if [ -n "$from_profile" ] && [ "$from_profile" != "unknown" ]; then
+        deactivate_profile "$from_profile"
+    fi
+
+    activate_profile "$to_profile"
+}
+
+activate_profile() {
+    profile="$1"
+
+    case "$profile" in
+        work)
+            activate_work
+            ;;
+        home)
+            activate_home
+            ;;
+        undocked)
+            activate_undocked
+            ;;
+        *)
+            printf 'dockmgr: unknown profile: %s\n' "$profile" >&2
+            return 1
+            ;;
+    esac
+}
+
+deactivate_profile() {
+    profile="$1"
+
+    case "$profile" in
+        work)
+            deactivate_work
+            ;;
+        home)
+            deactivate_home
+            ;;
+        undocked)
+            deactivate_undocked
+            ;;
+        *)
+            printf 'dockmgr: unknown profile: %s\n' "$profile" >&2
+            return 1
+            ;;
+    esac
+}
+
+watch_udev() {
+    udevadm monitor --subsystem-match=usb 2>/dev/null | while IFS= read -r _event; do
+        sleep 1
+        check_transition
+    done
+    return 1
+}
+
+watch_poll() {
+    while :; do
+        check_transition
+        sleep "$DOCK_POLL_INTERVAL"
+    done
+}
+
+watch() {
+    last_state="unknown"
+    check_transition
+
+    if command -v udevadm >/dev/null 2>&1 && watch_udev; then
+        return 0
+    fi
+
+    printf 'dockmgr: udev monitor unavailable; polling every %ss\n' "$DOCK_POLL_INTERVAL" >&2
+    watch_poll
+}
+
+usage() {
+    cat <<'EOF'
+Usage:
+  dockmgr watch      Watch for profile transitions
+  dockmgr status     Print profile match inputs and current profile
+  dockmgr once       Run the current profile activation hook once
+
+Environment overrides:
+  WORK_PROFILE_USB_IDS   default: 05e3:0625
+  HOME_PROFILE_USB_IDS   default: unset
+  DOCK_POLL_INTERVAL   default: 2
+EOF
+}
+
+case "${1:-watch}" in
+    watch)
+        watch
+        ;;
+    status)
+        print_status
+        ;;
+    once)
+        activate_profile "$(current_profile)"
+        ;;
+    -h|--help|help)
+        usage
+        ;;
+    *)
+        usage >&2
+        exit 2
+        ;;
+esac

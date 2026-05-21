@@ -248,7 +248,7 @@ Usage:
 Environment overrides:
   WORK_PROFILE_USB_IDS   default: 05e3:0625
   HOME_PROFILE_USB_IDS   default: unset
-  DOCK_POLL_INTERVAL   default: 2
+  DOCK_POLL_INTERVAL   default: 2 unit: seconds
 EOF
 }
 

@@ -4,12 +4,21 @@
 
 # Profile USB IDs. Space-separated vendor:product pairs.
 # Work profile, from your connected lsusb output:
-#   ID 05e3:0625 Genesys Logic, Inc. USB3.2 Hub
-WORK_PROFILE_USB_IDS="${WORK_PROFILE_USB_IDS:-05e3:0625}"
+WORK_PROFILE_USB_IDS="${WORK_PROFILE_USB_IDS:-}"
 
 # Home profile placeholder. Fill this in later, for example:
 # HOME_PROFILE_USB_IDS="abcd:1234 dead:beef"
-HOME_PROFILE_USB_IDS="${HOME_PROFILE_USB_IDS:-}"
+# Bus 002 Device 002: ID 05e3:0625 Genesys Logic, Inc. USB3.2 Hub
+# Bus 002 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
+# Bus 003 Device 002: ID 05e3:0610 Genesys Logic, Inc. Hub
+# Bus 003 Device 004: ID 1a86:8091 QinHeng Electronics USB HUB
+# Bus 003 Device 006: ID 05e3:0610 Genesys Logic, Inc. Hub
+# Bus 003 Device 008: ID 057e:0000 Nintendo Co., Ltd USB BillBoard
+# Bus 003 Device 009: ID 291a:3369 Anker PowerConf C200 Anker PowerConf C200
+# Bus 003 Device 011: ID 0bda:5411 Realtek Semiconductor Corp. RTS5411 Hub
+# Bus 003 Device 012: ID 046d:c548 Logitech, Inc. Logi Bolt Receiver
+# Bus 003 Device 013: ID 046d:c342 Logitech, Inc. G512 SE
+HOME_PROFILE_USB_IDS="${HOME_PROFILE_USB_IDS:-046d:c342 046d:c548}"
 
 DOCK_POLL_INTERVAL="${DOCK_POLL_INTERVAL:-2}"
 
@@ -19,33 +28,35 @@ trap 'exit 143' TERM
 activate_work() {
     dms ipc outputs listProfiles
     dms ipc outputs setProfile "Docked Work"
-    notify "Profile switched to work" "Work profile activated"
+    notify "Work profile activated"  "Profile switched to Docked Work"
 }
 
 deactivate_work() {
-    dms ipc outputs listProfiles
-    dms ipc outputs setProfile "Undocked"
-    notify "Profile switched to undocked" "Work profile deactivated"
+    quick_notify "Work profile deactivated"
 }
 
 activate_home() {
-    # Stub: put your home-profile activation actions here.
-    printf '%s\n' "activate: home"
+    dms ipc outputs listProfiles
+    dms ipc outputs setProfile "Docked Home"
+    notify "Home profile activated" "Profile switched to Docked Home"
 }
 
 deactivate_home() {
-    # Stub: put your home-profile deactivation actions here.
-    printf '%s\n' "deactivate: home"
+    quick_notify "Home profile deactivated"
 }
 
 activate_undocked() {
-    # Stub: put your undocked-profile activation actions here.
-    printf '%s\n' "activate: undocked"
+    dms ipc outputs listProfiles
+    dms ipc outputs setProfile "Undocked"
+    notify "Undocked profile activated" "Profile switched to Undocked"
 }
 
 deactivate_undocked() {
-    # Stub: put your undocked-profile deactivation actions here.
-    printf '%s\n' "deactivate: undocked"
+    quick_notify "Undocked profile deactivated"
+}
+
+quick_notify() {
+    dms notify "$@" --app dockmgr
 }
 
 notify() {
@@ -246,8 +257,8 @@ Usage:
   dockmgr once       Run the current profile activation hook once
 
 Environment overrides:
-  WORK_PROFILE_USB_IDS   default: 05e3:0625
-  HOME_PROFILE_USB_IDS   default: unset
+  WORK_PROFILE_USB_IDS   default: unset
+  HOME_PROFILE_USB_IDS   default: 046d:c342 046d:c548
   DOCK_POLL_INTERVAL   default: 2 unit: seconds
 EOF
 }

@@ -21,6 +21,10 @@
     "${config.my.identity.homeDirectory}/.steam"
   ];
 
+  environment.systemPackages = with pkgs; [
+    edmarketconnector
+  ];
+
   programs.steam = {
     enable = true;
     extraCompatPackages = with pkgs; [

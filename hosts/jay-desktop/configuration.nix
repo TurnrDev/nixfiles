@@ -37,47 +37,30 @@ in
 
   boot.lanzaboote.enable = lib.mkForce false;
   boot.loader.systemd-boot.enable = lib.mkForce true;
-#   boot.loader.timeout = lib.mkForce 30;
-#   boot.loader.systemd-boot.enable = lib.mkForce false;
-#   boot.loader.grub = {
-#     enable = true;
-#     efiSupport = true;
-#     device = "nodev";
-#     theme = ./grub-theme;
-#     useOSProber = false;
-#     extraEntries = ''
-#       menuentry "Windows" {
-#         insmod part_gpt
-#         insmod fat
-#         search --no-floppy --fs-uuid --set=root 842B-04A5
-#         chainloader /EFI/Microsoft/Boot/bootmgfw.efi
-#       }
-#     '';
-#   };
-#
-#   fileSystems."/mnt/win" = {
-#     device = "/dev/disk/by-uuid/9AFC2B85FC2B5AB1";
-#     fsType = "ntfs3";
-#     options = [
-#       "nofail"
-#       "noauto"
-#       "x-systemd.automount"
-#       "ro"
-#       "uid=${config.my.identity.username}"
-#       "gid=users"
-#       "windows_names"
-#     ];
-#   };
 
-#   fileSystems."/mnt/slow" = {
-#     device = "/dev/disk/by-label/slow";
-#     fsType = "ext4";
-#     options = [
-#       "nofail"
-#       "noauto"
-#       "x-systemd.automount"
-#     ];
-#   };
+  fileSystems."/mnt/win" = {
+    device = "/dev/disk/by-uuid/9AFC2B85FC2B5AB1";
+    fsType = "ntfs3";
+    options = [
+      "nofail"
+      "noauto"
+      "x-systemd.automount"
+      "ro"
+      "uid=${config.my.identity.username}"
+      "gid=users"
+      "windows_names"
+    ];
+  };
+
+  fileSystems."/mnt/slow" = {
+    device = "/dev/disk/by-label/slow";
+    fsType = "ext4";
+    options = [
+      "nofail"
+      "noauto"
+      "x-systemd.automount"
+    ];
+  };
 
   networking.hostName = "jay-desktop";
 

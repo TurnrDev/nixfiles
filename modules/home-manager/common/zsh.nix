@@ -8,7 +8,7 @@
     bat
     fd
   ];
-  
+
   programs.zsh = {
     enable = true;
     history = {
@@ -39,13 +39,22 @@
     oh-my-zsh = {
       enable = true;
       theme = "robbyrussell";
-      plugins = [ "git" "sudo" "extract" "fzf" "docker" "colored-man-pages" "copypath" "zsh-interactive-cd" ];
+      plugins = [
+        "git"
+        "sudo"
+        "extract"
+        "fzf"
+        "docker"
+        "colored-man-pages"
+        "copypath"
+        "zsh-interactive-cd"
+      ];
     };
     initContent = ''
       if [[ -o interactive ]]; then
         fastfetch
       fi
-      
+
       dhc() {
         docker inspect --format "{{json .State.Health }}" $1 | jq
       }

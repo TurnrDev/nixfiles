@@ -2,7 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, inputs, lib, pkgs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
@@ -21,7 +27,6 @@
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
-
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -82,7 +87,10 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   nix = {
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     extraOptions = ''
       !include /etc/nix/github-access-token.conf
     '';
@@ -144,7 +152,10 @@
 
   users.users = lib.mkIf config.my.identity.enable {
     ${config.my.identity.username} = {
-      extraGroups = [ "adbusers" "docker" ];
+      extraGroups = [
+        "adbusers"
+        "docker"
+      ];
     };
   };
 
@@ -164,7 +175,6 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

@@ -1,4 +1,10 @@
-{ config, identity, lib, pkgs, ... }:
+{
+  config,
+  identity,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   gitName = identity.fullName;

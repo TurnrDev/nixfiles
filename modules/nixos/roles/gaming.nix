@@ -2,7 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, inputs, lib, pkgs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
@@ -17,6 +23,8 @@
 
   programs.steam = {
     enable = true;
-    extraCompatPackages = with pkgs; [ proton-ge-bin ];
+    extraCompatPackages = with pkgs; [
+      proton-ge-bin
+    ];
   };
 }

@@ -42,16 +42,20 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs:
+  outputs =
+    { self, nixpkgs, ... }@inputs:
     let
-      mkHost = hostPath: nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        modules = [
-          hostPath
-          inputs.home-manager.nixosModules.default
-        ];
-      };
-    in {
+      mkHost =
+        hostPath:
+        nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; };
+          modules = [
+            hostPath
+            inputs.home-manager.nixosModules.default
+          ];
+        };
+    in
+    {
       nixosConfigurations = {
         jay-framework = mkHost ./hosts/jay-framework/configuration.nix;
         jay-desktop = mkHost ./hosts/jay-desktop/configuration.nix;

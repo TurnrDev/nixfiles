@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   # These options are the per-device interface. The Home Manager module reads
@@ -40,8 +45,8 @@ in
     localPath = mkOption {
       type = types.str;
       default = lib.getExe borgPackage;
-      defaultText = literalExpression ''lib.getExe pkgs.borgbackup'';
-      example = literalExpression ''lib.getExe pkgs.borgbackup'';
+      defaultText = literalExpression "lib.getExe pkgs.borgbackup";
+      example = literalExpression "lib.getExe pkgs.borgbackup";
       description = ''
         Absolute path to the Borg client binary to use locally.
 
@@ -134,30 +139,35 @@ in
     };
 
     repositories = mkOption {
-      type = types.attrsOf (types.submodule ({ name, ... }: {
-        options = {
-          path = mkOption {
-            type = types.str;
-            example = "ssh://u551190@u551190.your-storagebox.de:23/./jay-framework";
-            description = ''
-              Repository URL or path.
+      type = types.attrsOf (
+        types.submodule (
+          { name, ... }:
+          {
+            options = {
+              path = mkOption {
+                type = types.str;
+                example = "ssh://u551190@u551190.your-storagebox.de:23/./jay-framework";
+                description = ''
+                  Repository URL or path.
 
-              The attribute name is only used locally in Nix; borgmatic uses
-              the rendered `label` and `path`. If you want the device hostname
-              in the path, interpolate it in Nix with
-              `''${config.networking.hostName}` so the generated borgmatic config
-              contains a concrete repository location.
-            '';
-          };
+                  The attribute name is only used locally in Nix; borgmatic uses
+                  the rendered `label` and `path`. If you want the device hostname
+                  in the path, interpolate it in Nix with
+                  `''${config.networking.hostName}` so the generated borgmatic config
+                  contains a concrete repository location.
+                '';
+              };
 
-          label = mkOption {
-            type = types.str;
-            default = name;
-            example = "hetzner";
-            description = "Short borgmatic label for the repository.";
-          };
-        };
-      }));
+              label = mkOption {
+                type = types.str;
+                default = name;
+                example = "hetzner";
+                description = "Short borgmatic label for the repository.";
+              };
+            };
+          }
+        )
+      );
       default = {
         hetzner = {
           label = "hetzner";

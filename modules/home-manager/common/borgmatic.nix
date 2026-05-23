@@ -1,4 +1,11 @@
-{ config, identity, lib, osConfig ? null, pkgs, ... }:
+{
+  config,
+  identity,
+  lib,
+  osConfig ? null,
+  pkgs,
+  ...
+}:
 
 let
   borgPackage = pkgs.borgbackup;
@@ -37,7 +44,9 @@ let
   # Read per-device overrides from the NixOS module when Home Manager is being
   # evaluated through a host config. Otherwise fall back to the shared defaults.
   cfg =
-    if osConfig != null && osConfig ? my && osConfig.my ? backups && osConfig.my.backups ? borgmatic then
+    if
+      osConfig != null && osConfig ? my && osConfig.my ? backups && osConfig.my.backups ? borgmatic
+    then
       osConfig.my.backups.borgmatic
     else
       defaults;

@@ -39,8 +39,5 @@ rec {
         dispatcher
       ];
     in
-    if params == "" then
-      if includeEmptyParam then "${prefix}," else prefix
-    else
-      "${prefix}, ${params}";
+    if params == "" then if includeEmptyParam then "${prefix}," else prefix else "${prefix}, ${params}";
 }

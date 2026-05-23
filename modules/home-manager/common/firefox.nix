@@ -7,7 +7,7 @@
     nativeMessagingHosts = [ pkgs.kdePackages.plasma-browser-integration ];
   };
   xdg.mimeApps = {
-    enable =  true;
+    enable = true;
     defaultApplications = {
       "default-web-browser" = [ "firefox.desktop" ];
       "text/html" = [ "firefox.desktop" ];

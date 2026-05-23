@@ -2,19 +2,28 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, inputs, lib, pkgs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
   dmsGreeterCacheDir = "/var/lib/dms-greeter";
-  device_list = [ "home-server" "jay-framework" "jay-desktop"];
+  device_list = [
+    "home-server"
+    "jay-framework"
+    "jay-desktop"
+  ];
 in
 {
-  imports =
-    [
-      ./default.nix
-      ../services/dms-home-assistant-monitor.nix
-    ];
+  imports = [
+    ./default.nix
+    ../services/dms-home-assistant-monitor.nix
+  ];
 
   my.backups.borgmatic.extraExcludePatterns = lib.mkAfter [
     "${config.my.identity.homeDirectory}/.config/Code"
@@ -92,8 +101,11 @@ in
   # Define workstation-specific groups and packages for the shared user.
   users.users = lib.mkIf config.my.identity.enable {
     ${config.my.identity.username} = {
-      extraGroups = [ "networkmanager" "wheel" ];
-      packages = with pkgs; [];
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+      ];
+      packages = with pkgs; [ ];
     };
   };
 
@@ -153,16 +165,21 @@ in
     ];
   };
 
-
   services.syncthing = {
     enable = true;
     user = "${config.my.identity.username}";
     configDir = "${config.my.identity.homeDirectory}/.config/syncthing";
     settings = {
       devices = {
-        "home-server" = {id = "D6Y3JIQ-HCGMVPG-K6YLKDK-7X4D7YI-4BSGQ5J-WJW3WNY-ZHCJYT5-2VMAKAT"; };
-        "jay-desktop" = {id = "IVDUYVG-C3BMCUT-SKGGMUW-GC5BVZP-GOZ6E6K-VGICOE2-C4ZGYEE-BWVY4QY"; };
-        "jay-framework" = {id = "VUUG6YN-SHPRRSW-44UADVY-VQ4MQZX-3T5PPN5-65MCQ6K-GIP4Y5T-CXH2UAQ"; };
+        "home-server" = {
+          id = "D6Y3JIQ-HCGMVPG-K6YLKDK-7X4D7YI-4BSGQ5J-WJW3WNY-ZHCJYT5-2VMAKAT";
+        };
+        "jay-desktop" = {
+          id = "IVDUYVG-C3BMCUT-SKGGMUW-GC5BVZP-GOZ6E6K-VGICOE2-C4ZGYEE-BWVY4QY";
+        };
+        "jay-framework" = {
+          id = "VUUG6YN-SHPRRSW-44UADVY-VQ4MQZX-3T5PPN5-65MCQ6K-GIP4Y5T-CXH2UAQ";
+        };
       };
       folders = {
         "3D Printing" = {

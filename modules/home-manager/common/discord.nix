@@ -1,4 +1,9 @@
-{ identity, inputs, lib, ... }:
+{
+  identity,
+  inputs,
+  lib,
+  ...
+}:
 
 {
   imports = [

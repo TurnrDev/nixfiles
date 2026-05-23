@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   wallpaperScript = "/etc/nixos/scripts/random_wallpaper.sh";

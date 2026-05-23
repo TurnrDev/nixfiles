@@ -1,4 +1,10 @@
-{ config, inputs, lib, pkgs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   hmBackupCommand = pkgs.writeShellScript "home-manager-backup" ''
@@ -18,16 +24,16 @@ let
 
     exec mv -- "$target" "$backup.$i"
   '';
-in {
-  imports =
-    [
-      ./hardware-configuration.nix
-      ../../modules/nixos/roles/desktop.nix
-      ../../modules/nixos/hardware/bluetooth.nix
-      ../../modules/nixos/hardware/logitech-g512.nix
-      ../../modules/nixos/hardware/logitech-mx-master-3s.nix
-      ../../modules/nixos/roles/gaming.nix
-    ];
+in
+{
+  imports = [
+    ./hardware-configuration.nix
+    ../../modules/nixos/roles/desktop.nix
+    ../../modules/nixos/hardware/bluetooth.nix
+    ../../modules/nixos/hardware/logitech-g512.nix
+    ../../modules/nixos/hardware/logitech-mx-master-3s.nix
+    ../../modules/nixos/roles/gaming.nix
+  ];
 
   boot.lanzaboote.enable = lib.mkForce false;
   boot.loader.timeout = lib.mkForce 30;
@@ -58,7 +64,11 @@ in {
   fileSystems."/mnt/arch" = {
     device = "/dev/disk/by-uuid/b8be9d02-e091-4f19-99b9-d89ea5e17ee4";
     fsType = "ext4";
-    options = [ "nofail" "noauto" "x-systemd.automount" ];
+    options = [
+      "nofail"
+      "noauto"
+      "x-systemd.automount"
+    ];
   };
 
   fileSystems."/mnt/win" = {

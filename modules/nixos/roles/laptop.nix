@@ -2,17 +2,21 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, inputs, pkgs, ... }:
+{
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
 
 {
-  imports =
-    [
-      ./workstation.nix
-      ../hardware/bluetooth.nix
-      ../hardware/logitech-g512.nix
-      ../hardware/logitech-mx-master-3s.nix
-      ../services/tailscale.nix
-    ];
+  imports = [
+    ./workstation.nix
+    ../hardware/bluetooth.nix
+    ../hardware/logitech-g512.nix
+    ../hardware/logitech-mx-master-3s.nix
+    ../services/tailscale.nix
+  ];
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
@@ -22,5 +26,5 @@
     HandleLidSwitch = "suspend";
     HandleLidSwitchDocked = "ignore";
   };
-  
+
 }

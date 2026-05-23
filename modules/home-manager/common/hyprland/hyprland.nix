@@ -1,4 +1,9 @@
-{ configs, pkgs, inputs, ... }:
+{
+  configs,
+  pkgs,
+  inputs,
+  ...
+}:
 {
   # Wrapper module for generic Hyprland config.
   # Use this file for core compositor settings that don't deserve their own module.
@@ -19,62 +24,61 @@
     enable = true;
     systemd.enable = true;
     configType = "hyprlang";
-    settings =
-      {
-        general = {
-          gaps_in = 5;
-          gaps_out = 10;
-          border_size = 2;
-        };
+    settings = {
+      general = {
+        gaps_in = 5;
+        gaps_out = 10;
+        border_size = 2;
+      };
 
-        misc = {
-          disable_hyprland_logo = true;
-          disable_splash_rendering = true;
-          force_default_wallpaper = 0;
-        };
+      misc = {
+        disable_hyprland_logo = true;
+        disable_splash_rendering = true;
+        force_default_wallpaper = 0;
+      };
 
-        input = {
-          follow_mouse = 1;
-          numlock_by_default = true;
-          touchpad = {
-            natural_scroll = false;
-            disable_while_typing = false;
-            tap-to-click = false;
-          };
-          kb_layout = "gb";
-          kb_variant = "colemak";
+      input = {
+        follow_mouse = 1;
+        numlock_by_default = true;
+        touchpad = {
+          natural_scroll = false;
+          disable_while_typing = false;
+          tap-to-click = false;
         };
+        kb_layout = "gb";
+        kb_variant = "colemak";
+      };
 
-        decoration = {
-          rounding = 10;
-          blur = {
-            enabled = true;
-            size = 3;
-            passes = 1;
-          };
-          shadow = {
-            enabled = true;
-            range = 4;
-            render_power = 3;
-          };
-        };
-
-        # Constrain a single tiled window on ultrawide displays.
-        # 16:9 yields 2560px width on a 1440px-tall monitor.
-        layout = {
-          single_window_aspect_ratio = "16 9";
-          single_window_aspect_ratio_tolerance = 0.1;
-        };
-
-        xwayland = {
-          force_zero_scaling = true;
+      decoration = {
+        rounding = 10;
+        blur = {
           enabled = true;
+          size = 3;
+          passes = 1;
         };
-
-        binds = {
-          scroll_event_delay = 0;
+        shadow = {
+          enabled = true;
+          range = 4;
+          render_power = 3;
         };
       };
+
+      # Constrain a single tiled window on ultrawide displays.
+      # 16:9 yields 2560px width on a 1440px-tall monitor.
+      layout = {
+        single_window_aspect_ratio = "16 9";
+        single_window_aspect_ratio_tolerance = 0.1;
+      };
+
+      xwayland = {
+        force_zero_scaling = true;
+        enabled = true;
+      };
+
+      binds = {
+        scroll_event_delay = 0;
+      };
+    };
 
     # Keep the external Logitech K120 on plain QWERTY while the main
     # keyboard stays on the global Colemak layout.

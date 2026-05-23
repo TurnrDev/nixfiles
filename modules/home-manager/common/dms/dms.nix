@@ -1,4 +1,11 @@
-{ config, configs, lib, pkgs, inputs, ... }:
+{
+  config,
+  configs,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
   settings = (builtins.fromJSON (builtins.readFile ./settings.json)) // {
@@ -51,17 +58,17 @@ in
     };
 
     systemd = {
-      enable = true;             # Systemd service for auto-start
-      restartIfChanged = true;   # Auto-restart dms.service when dank-material-shell changes
+      enable = true; # Systemd service for auto-start
+      restartIfChanged = true; # Auto-restart dms.service when dank-material-shell changes
     };
 
     # Core features
-    enableSystemMonitoring = true;     # System monitoring widgets (dgop)
-    enableVPN = true;                  # VPN management widget
-    enableDynamicTheming = true;       # Wallpaper-based theming (matugen)
-    enableAudioWavelength = true;      # Audio visualizer (cava)
-    enableCalendarEvents = false;       # Calendar integration (khal)
-    enableClipboardPaste = true;       # Pasting items from the clipboard (wtype)
+    enableSystemMonitoring = true; # System monitoring widgets (dgop)
+    enableVPN = true; # VPN management widget
+    enableDynamicTheming = true; # Wallpaper-based theming (matugen)
+    enableAudioWavelength = true; # Audio visualizer (cava)
+    enableCalendarEvents = false; # Calendar integration (khal)
+    enableClipboardPaste = true; # Pasting items from the clipboard (wtype)
   };
 
   home.packages = with pkgs; [
@@ -102,7 +109,9 @@ in
 
   xdg.configFile =
     let
-      enabledPlugins = lib.filterAttrs (_: plugin: plugin.enable) config.programs.dank-material-shell.plugins;
+      enabledPlugins = lib.filterAttrs (
+        _: plugin: plugin.enable
+      ) config.programs.dank-material-shell.plugins;
     in
     lib.mapAttrs' (name: _: {
       name = "DankMaterialShell/plugins/${name}";

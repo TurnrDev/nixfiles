@@ -32,6 +32,10 @@
       url = "git+https://github.com/LuckShiba/DmsDockerManager";
       flake = false;
     };
+    edmc-discord-presence = {
+      url = "git+https://github.com/elite-kode/edmc-discord-presence?submodules=1";
+      flake = false;
+    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";

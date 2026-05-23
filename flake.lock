@@ -101,6 +101,24 @@
         "url": "https://github.com/TaylanTatli/dms-plugins"
       }
     },
+    "edmc-discord-presence": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1731584770,
+        "narHash": "sha256-jYMqnLtLxbXmeISqOB6zCpCr62eckB/95XiEv2UmeAw=",
+        "ref": "refs/heads/master",
+        "rev": "1dccdeeb064a1379cafbb67ffa2d389854f784f6",
+        "revCount": 47,
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/elite-kode/edmc-discord-presence"
+      },
+      "original": {
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/elite-kode/edmc-discord-presence"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -350,6 +368,7 @@
         "dms-plugin-hass": "dms-plugin-hass",
         "dms-plugins": "dms-plugins",
         "dms-plugins-taylan": "dms-plugins-taylan",
+        "edmc-discord-presence": "edmc-discord-presence",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
         "nixcord": "nixcord",

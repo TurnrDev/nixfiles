@@ -119,6 +119,22 @@
         "url": "https://github.com/elite-kode/edmc-discord-presence"
       }
     },
+    "edmcoverlay2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1706389079,
+        "narHash": "sha256-fk4Unudhq2w6VUMRlhYSxsFR0/rfRLv99sfqS6B8qkU=",
+        "ref": "refs/heads/main",
+        "rev": "81f8cb3c2eb556de2de710b7e95d6c0d99b3bfe4",
+        "revCount": 12,
+        "type": "git",
+        "url": "https://github.com/pan-mroku/edmcoverlay2"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/pan-mroku/edmcoverlay2"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -302,11 +318,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1779357205,
-        "narHash": "sha256-cCO8aTqss5x9Ky8GWkpY0Hy5fyTZEbtifSUV8QjSzic=",
+        "lastModified": 1779508470,
+        "narHash": "sha256-Ap9KJX+5xHIn3bPIpfNgT6MEXdAECECwo4/rmlQD74M=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+        "rev": "29916453413845e54a65b8a1cf996842300cd299",
         "type": "github"
       },
       "original": {
@@ -369,6 +385,7 @@
         "dms-plugins": "dms-plugins",
         "dms-plugins-taylan": "dms-plugins-taylan",
         "edmc-discord-presence": "edmc-discord-presence",
+        "edmcoverlay2": "edmcoverlay2",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
         "nixcord": "nixcord",

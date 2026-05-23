@@ -36,6 +36,10 @@
       url = "git+https://github.com/elite-kode/edmc-discord-presence?submodules=1";
       flake = false;
     };
+    edmcoverlay2 = {
+      url = "git+https://github.com/pan-mroku/edmcoverlay2";
+      flake = false;
+    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";

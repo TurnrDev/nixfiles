@@ -86,14 +86,12 @@ in
   };
 
   fileSystems."/mnt/slow" = {
-    device = "/dev/disk/by-uuid/FFF9-F750";
-    fsType = "exfat";
+    device = "/dev/disk/by-label/slow";
+    fsType = "ext4";
     options = [
       "nofail"
       "noauto"
       "x-systemd.automount"
-      "uid=${config.my.identity.username}"
-      "gid=users"
     ];
   };
 

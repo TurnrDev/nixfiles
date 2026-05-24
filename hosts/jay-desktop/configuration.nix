@@ -35,9 +35,6 @@ in
     ../../modules/nixos/roles/gaming.nix
   ];
 
-  boot.lanzaboote.enable = lib.mkForce false;
-  boot.loader.systemd-boot.enable = lib.mkForce true;
-
   fileSystems."/mnt/win" = {
     device = "/dev/disk/by-uuid/9AFC2B85FC2B5AB1";
     fsType = "ntfs3";

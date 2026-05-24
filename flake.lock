@@ -443,11 +443,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1779000518,
-        "narHash": "sha256-wdtytSnzMe85J/qeXJALMzSLRFTZ1gBHwn81l1PtT8k=",
+        "lastModified": 1779567740,
+        "narHash": "sha256-nmNLrkM0uO3gqwNgg8l4XxLnEE9S37jWD5Qv60dgyEE=",
         "owner": "Gerg-L",
         "repo": "spicetify-nix",
-        "rev": "5dde76b38418892ccb3d99e99bed7f8a43ac294c",
+        "rev": "bcfc51ca18c0a65774dc4639ea971ed5cca57c48",
         "type": "github"
       },
       "original": {

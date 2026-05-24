@@ -76,4 +76,14 @@ in
 
   home.file.".local/share/EDMarketConnector/plugins/edmcoverlay".source =
     "${edmcoverlay2}/edmcoverlay";
+
+  wayland.windowManager.hyprland.settings.windowrule = [
+    {
+      name = "float-edmarketconnector";
+      "match:initial_class" = "^(Edmarketconnector)$";
+
+      float = "on";
+      opacity = "0.8";
+    }
+  ];
 }

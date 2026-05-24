@@ -121,7 +121,7 @@ in
   wayland.windowManager.hyprland.settings = {
     env = [
       "DMS_DANKBAR_LAYER,overlay"
-      "DMS_HIDE_TRAYIDS,discord,spotify"
+      "DMS_HIDE_TRAYIDS,spotify"
       "QT_QPA_PLATFORMTHEME,gtk3"
       "QT_QPA_PLATFORMTHEME_QT6,gtk3"
       "QS_ICON_THEME,Adwaita"

@@ -146,6 +146,7 @@
     p7zip
     jq
     yq
+    nixfmt
     smartmontools
     android-tools
   ];

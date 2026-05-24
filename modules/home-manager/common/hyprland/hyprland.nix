@@ -78,6 +78,10 @@
       binds = {
         scroll_event_delay = 0;
       };
+
+      "exec-once" = [
+        "${pkgs.setxkbmap}/bin/setxkbmap -layout gb -variant colemak"
+      ];
     };
 
     # Keep the external Logitech K120 on plain QWERTY while the main

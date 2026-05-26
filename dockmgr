@@ -4,7 +4,13 @@
 
 # Profile USB IDs. Space-separated vendor:product pairs.
 # Work profile, from your connected lsusb output:
-WORK_PROFILE_USB_IDS="${WORK_PROFILE_USB_IDS:-}"
+# Bus 002 Device 002: ID 05e3:0625 Genesys Logic, Inc. USB3.2 Hub
+# Bus 002 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
+# Bus 003 Device 006: ID 05e3:0610 Genesys Logic, Inc. Hub
+# Bus 003 Device 007: ID 05e3:0608 Genesys Logic, Inc. Hub
+# Bus 003 Device 008: ID 05e3:0608 Genesys Logic, Inc. Hub
+# Bus 003 Device 009: ID 258a:003a SINO WEALTH Gaming KB
+WORK_PROFILE_USB_IDS="${WORK_PROFILE_USB_IDS:-258a:003a}"
 
 # Home profile placeholder. Fill this in later, for example:
 # HOME_PROFILE_USB_IDS="abcd:1234 dead:beef"
@@ -257,7 +263,7 @@ Usage:
   dockmgr once       Run the current profile activation hook once
 
 Environment overrides:
-  WORK_PROFILE_USB_IDS   default: unset
+  WORK_PROFILE_USB_IDS   default: 258a:003a
   HOME_PROFILE_USB_IDS   default: 046d:c342 046d:c548
   DOCK_POLL_INTERVAL   default: 2 unit: seconds
 EOF

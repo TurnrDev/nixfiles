@@ -78,16 +78,12 @@
       binds = {
         scroll_event_delay = 0;
       };
-    };
 
-    # Keep the external Logitech K120 on plain QWERTY while the main
-    # keyboard stays on the global Colemak layout.
-    extraConfig = ''
-      device {
-        name = logitech-usb-keyboard
-        kb_layout = gb
-        kb_variant =
-      }
-    '';
+      # Hyprland's input block covers Wayland clients; XWayland/Proton
+      # clients such as Elite Dangerous need their XKB variant set too.
+      "exec-once" = [
+        "${pkgs.setxkbmap}/bin/setxkbmap -layout gb -variant colemak"
+      ];
+    };
   };
 }

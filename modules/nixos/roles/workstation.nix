@@ -63,11 +63,6 @@ in
               numlock_by_default = true
           }
 
-          device {
-              name = logitech-usb-keyboard
-              kb_layout = gb
-              kb_variant =
-          }
         '';
       };
     };
@@ -85,15 +80,6 @@ in
     layout = "gb";
     variant = "colemak";
   };
-
-  services.xserver.extraConfig = ''
-    Section "InputClass"
-      Identifier "Logitech K120 QWERTY"
-      MatchProduct "Logitech USB Keyboard"
-      Option "XkbLayout" "gb"
-      Option "XkbVariant" ""
-    EndSection
-  '';
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -175,7 +161,7 @@ in
           id = "D6Y3JIQ-HCGMVPG-K6YLKDK-7X4D7YI-4BSGQ5J-WJW3WNY-ZHCJYT5-2VMAKAT";
         };
         "jay-desktop" = {
-          id = "IVDUYVG-C3BMCUT-SKGGMUW-GC5BVZP-GOZ6E6K-VGICOE2-C4ZGYEE-BWVY4QY";
+          id = "6U7MTAP-I2W2B7O-F7D73JH-PKPBJXW-2NRDBP6-BHOKMS7-B5YTIBQ-2JGQLQL";
         };
         "jay-framework" = {
           id = "VUUG6YN-SHPRRSW-44UADVY-VQ4MQZX-3T5PPN5-65MCQ6K-GIP4Y5T-CXH2UAQ";

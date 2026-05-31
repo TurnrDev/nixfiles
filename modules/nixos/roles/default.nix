@@ -128,27 +128,27 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    tpm2-tss
-    busybox
-    sbctl
-    wget
-    screen
-    pciutils
-    usbutils
-    dmidecode
-    dig
-    zstd
-    btop
-    mtr
-    nmap
-    unzip
-    whois
-    p7zip
-    jq
-    yq
-    nixfmt
-    smartmontools
     android-tools
+    btop
+    busybox
+    dig
+    dmidecode
+    jq
+    mtr
+    nixfmt
+    nmap
+    p7zip
+    pciutils
+    sbctl
+    screen
+    smartmontools
+    tpm2-tss
+    unzip
+    usbutils
+    wget
+    whois
+    yq
+    zstd
   ];
 
   users.users = lib.mkIf config.my.identity.enable {

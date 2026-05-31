@@ -4,20 +4,20 @@
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
+      bzip2
+      curl
+      expat
+      libffi
+      libxcrypt-legacy
+      ncurses
+      openssl
+      readline
+      sqlite
       stdenv.cc.cc
+      util-linux
+      xz
       zlib
       zstd
-      openssl
-      curl
-      bzip2
-      xz
-      libffi
-      sqlite
-      readline
-      ncurses
-      expat
-      util-linux
-      libxcrypt-legacy
     ];
   };
 

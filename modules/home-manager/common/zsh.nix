@@ -2,11 +2,11 @@
 
 {
   home.packages = with pkgs; [
-    fastfetch
-    fzf
-    eza
     bat
+    eza
+    fastfetch
     fd
+    fzf
   ];
 
   programs.zsh = {
@@ -17,17 +17,17 @@
       size = 99999999;
     };
     shellAliases = {
+      b = "cd /etc/nixos && sudo nix flake update && sudo nixos-rebuild switch --show-trace";
+      d = "docker";
       dc = "docker compose";
       dcu = "docker compose up -d --remove-orphans";
-      d = "docker";
-      dl = "docker logs --tail 1000 --follow";
       de = "docker exec -it";
-      ls = "eza --icons=auto --group-directories-first";
-      ll = "eza -lag --icons=auto --group-directories-first";
+      dl = "docker logs --tail 1000 --follow";
       la = "eza -a --icons=auto --group-directories-first";
+      ll = "eza -lag --icons=auto --group-directories-first";
+      ls = "eza --icons=auto --group-directories-first";
       lt = "eza --tree --level=2 --icons=auto";
       random = "openssl rand -hex 12";
-      b = "cd /etc/nixos && sudo nix flake update && sudo nixos-rebuild switch --show-trace";
     };
     enableCompletion = true;
     autosuggestion = {
@@ -40,13 +40,13 @@
       enable = true;
       theme = "robbyrussell";
       plugins = [
-        "git"
-        "sudo"
-        "extract"
-        "fzf"
-        "docker"
         "colored-man-pages"
         "copypath"
+        "docker"
+        "extract"
+        "fzf"
+        "git"
+        "sudo"
         "zsh-interactive-cd"
       ];
     };

@@ -2,10 +2,10 @@
 
 {
   environment.systemPackages = with pkgs; [
+    eslint
     nodejs
-    vite
     typescript
     typescript-language-server
-    eslint
+    vite
   ];
 }

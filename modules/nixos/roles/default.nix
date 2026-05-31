@@ -139,6 +139,7 @@
     nmap
     p7zip
     pciutils
+    pwvucontrol
     sbctl
     screen
     smartmontools

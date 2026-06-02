@@ -37,10 +37,5 @@
 
       float = "on";
     }
-    {
-      name = "transparency-test";
-      "match:class" = "(.*)";
-      opacity = "1.0 0.8";
-    }
   ];
 }

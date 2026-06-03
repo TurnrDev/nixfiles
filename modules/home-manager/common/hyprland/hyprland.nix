@@ -55,6 +55,11 @@
           kb_layout = "gb";
           kb_variant = "";
         }
+        {
+          name = "keychron--keychron-link--keyboard";
+          kb_layout = "gb";
+          kb_variant = "";
+        }
       ];
 
       decoration = {

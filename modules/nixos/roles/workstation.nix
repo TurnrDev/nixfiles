@@ -63,6 +63,18 @@ in
               numlock_by_default = true
           }
 
+          device {
+              name = keychron-keychron-v6-max
+              kb_layout = gb
+              kb_variant =
+          }
+
+          device {
+              name = keychron--keychron-link--keyboard
+              kb_layout = gb
+              kb_variant =
+          }
+
         '';
       };
     };

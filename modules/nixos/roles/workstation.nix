@@ -59,7 +59,6 @@ in
 
           input {
               kb_layout = gb
-              kb_variant = colemak
               numlock_by_default = true
           }
 
@@ -78,7 +77,6 @@ in
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "gb";
-    variant = "colemak";
   };
 
   # Enable CUPS to print documents.

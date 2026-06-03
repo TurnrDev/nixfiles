@@ -34,6 +34,28 @@ in
 
   networking.hostName = "jay-framework";
 
+  services.displayManager.dms-greeter.compositor.customConfig = lib.mkForce ''
+    env = DMS_RUN_GREETER,1
+    source = /var/lib/dms-greeter/outputs.conf
+
+    misc {
+        disable_hyprland_logo = true
+        disable_splash_rendering = true
+    }
+
+    input {
+        kb_layout = gb
+        kb_variant = colemak
+        numlock_by_default = true
+    }
+
+  '';
+
+  services.xserver.xkb = {
+    layout = "gb";
+    variant = "colemak";
+  };
+
   # Framework laptop has an AMD Radeon iGPU; pin the matching stack explicitly.
   services.xserver.videoDrivers = [ "amdgpu" ];
   hardware.graphics = {

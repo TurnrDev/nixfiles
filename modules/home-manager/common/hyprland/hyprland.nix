@@ -46,7 +46,6 @@
           tap-to-click = false;
         };
         kb_layout = "gb";
-        kb_variant = "colemak";
       };
 
       device = [
@@ -88,9 +87,9 @@
       };
 
       # Hyprland's input block covers Wayland clients; XWayland/Proton
-      # clients such as Elite Dangerous need their XKB variant set too.
+      # clients such as Elite Dangerous need their XKB layout set too.
       "exec-once" = [
-        "${pkgs.setxkbmap}/bin/setxkbmap -layout gb -variant colemak"
+        "${pkgs.setxkbmap}/bin/setxkbmap -layout gb"
       ];
     };
   };

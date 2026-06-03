@@ -61,18 +61,21 @@ in
               kb_layout = gb
               kb_variant = colemak
               numlock_by_default = true
+              resolve_binds_by_sym = true
           }
 
           device {
               name = keychron-keychron-v6-max
               kb_layout = gb
               kb_variant =
+              resolve_binds_by_sym = true
           }
 
           device {
               name = keychron--keychron-link--keyboard
               kb_layout = gb
               kb_variant =
+              resolve_binds_by_sym = true
           }
 
         '';

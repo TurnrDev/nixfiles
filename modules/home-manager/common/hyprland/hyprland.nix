@@ -47,6 +47,9 @@
         };
         kb_layout = "gb";
         kb_variant = "colemak";
+        # Let binds follow the typed symbol instead of the first layout's
+        # physical key positions when multiple layouts are in play.
+        resolve_binds_by_sym = true;
       };
 
       device = [
@@ -54,11 +57,13 @@
           name = "keychron-keychron-v6-max";
           kb_layout = "gb";
           kb_variant = "";
+          resolve_binds_by_sym = true;
         }
         {
           name = "keychron--keychron-link--keyboard";
           kb_layout = "gb";
           kb_variant = "";
+          resolve_binds_by_sym = true;
         }
       ];
 

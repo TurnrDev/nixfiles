@@ -13,7 +13,7 @@
   imports = [
     ./workstation.nix
     ../hardware/bluetooth.nix
-    ../hardware/logitech-g512.nix
+    ../hardware/keychron.nix
     ../hardware/logitech-mx-master-3s.nix
     ../services/tailscale.nix
   ];

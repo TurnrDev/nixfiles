@@ -49,6 +49,14 @@
         kb_variant = "colemak";
       };
 
+      device = [
+        {
+          name = "keychron-keychron-v6-max";
+          kb_layout = "gb";
+          kb_variant = "";
+        }
+      ];
+
       decoration = {
         rounding = 10;
         blur = {

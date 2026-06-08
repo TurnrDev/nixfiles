@@ -1,6 +1,8 @@
 { pkgs, inputs, ... }:
 
 let
+  eliteIntel = pkgs.callPackage ../../../pkgs/elite-intel.nix { };
+
   edmcDiscordPresence = pkgs.stdenvNoCC.mkDerivation {
     pname = "edmc-discord-presence";
     version = "unstable";
@@ -69,6 +71,7 @@ in
 {
   home.packages = [
     pkgs.edmarketconnector
+    eliteIntel
   ];
 
   home.file.".local/share/EDMarketConnector/plugins/DiscordPresence".source =

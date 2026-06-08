@@ -151,7 +151,7 @@ in
     imagemagick
     josm
     nerd-fonts.fira-code
-    openscad
+    openscad-unstable
     postman
     prusa-slicer
     vlc

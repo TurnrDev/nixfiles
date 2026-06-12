@@ -19,9 +19,9 @@
     config = {
       plugins = {
         alwaysTrust.enable = true;
-        ClearURLs.enable = true;
+        clearUrls.enable = true;
         copyFileContents.enable = true;
-        CustomRPC.enable = true;
+        customRpc.enable = true;
         forceOwnerCrown.enable = true;
         imageZoom.enable = true;
         memberCount.enable = true;
@@ -29,7 +29,7 @@
         messageLogger.enable = true;
         noF1.enable = true;
         permissionsViewer.enable = true;
-        PinDMs.enable = true;
+        pinDms.enable = true;
         previewMessage.enable = true;
         serverInfo.enable = true;
         showHiddenChannels.enable = true;

@@ -138,8 +138,10 @@
     busybox
     dig
     dmidecode
+    gh
     jq
     mtr
+    nano
     nixfmt
     nmap
     p7zip

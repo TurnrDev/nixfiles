@@ -142,12 +142,13 @@ in
     android-studio
     cameractrls-gtk4
     dbeaver-bin
-    gh
     ghostty
     gimp
     gitkraken
     grimblast
     imagemagick
+    jetbrains.pycharm
+    jetbrains.pycharm-oss
     josm
     nerd-fonts.fira-code
     openscad-unstable

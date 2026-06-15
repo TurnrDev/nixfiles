@@ -31,6 +31,11 @@ in
     ./wallpaper-automation.nix
   ];
 
+  systemd.user.services.dms.Service = {
+    Restart = "on-failure";
+    RestartSec = "2s";
+  };
+
   programs.dank-material-shell = {
     enable = true;
     inherit settings;
@@ -125,13 +130,6 @@ in
       "QT_QPA_PLATFORMTHEME,gtk3"
       "QT_QPA_PLATFORMTHEME_QT6,gtk3"
       "QS_ICON_THEME,Adwaita"
-    ];
-    source = [
-      "~/.config/hypr/dms/colors.conf"
-      "~/.config/hypr/dms/cursor.conf"
-      "~/.config/hypr/dms/layout.conf"
-      "~/.config/hypr/dms/outputs.conf"
-      "~/.config/hypr/dms/windowrules.conf"
     ];
     bindd = [
       (mkBind {

@@ -150,7 +150,6 @@ in
     jetbrains.pycharm
     jetbrains.pycharm-oss
     josm
-    nerd-fonts.fira-code
     openscad-unstable
     postman
     prusa-slicer
@@ -159,8 +158,14 @@ in
   ];
 
   fonts = {
-    packages = [
-      pkgs.font-awesome
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      fira-code-symbols
+      font-awesome
+      nerd-fonts.fira-code
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-color-emoji
     ];
   };
 

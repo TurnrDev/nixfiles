@@ -10,4 +10,9 @@
     ../common/kdeconnect.nix
     ../common/spotify.nix
   ];
+
+  fonts.fontconfig = {
+    enable = true;
+    antialiasing = true;
+  };
 }

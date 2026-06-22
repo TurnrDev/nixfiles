@@ -67,6 +67,7 @@
       nixosConfigurations = {
         jay-framework = mkHost ./hosts/jay-framework/configuration.nix;
         jay-desktop = mkHost ./hosts/jay-desktop/configuration.nix;
+        jay-mopo = mkHost ./hosts/jay-mopo/configuration.nix;
 
         # Compatibility alias so plain `nixos-rebuild` works on hosts named "nixos".
         # nixos = mkHost ./hosts/<newhost>/configuration.nix;

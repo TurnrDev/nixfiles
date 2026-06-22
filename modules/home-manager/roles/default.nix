@@ -1,6 +1,8 @@
 {
   config,
   inputs,
+  identity,
+  lib,
   pkgs,
   ...
 }:
@@ -24,6 +26,10 @@
   # changes in each release.
   home.stateVersion = "25.11";
   nixpkgs.config.allowUnfree = true;
+
+  sops.age.sshKeyPaths = lib.mkDefault [
+    "${identity.homeDirectory}/.ssh/id_ed25519"
+  ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

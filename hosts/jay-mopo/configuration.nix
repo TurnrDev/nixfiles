@@ -33,6 +33,8 @@ in
 
   networking.hostName = "jay-mopo";
 
+  my.identity.email = lib.mkForce "jay.turner@mopo.co";
+
   services.displayManager.dms-greeter.compositor.customConfig = lib.mkForce ''
     env = DMS_RUN_GREETER,1
     source = /var/lib/dms-greeter/outputs.conf
@@ -58,6 +60,7 @@ in
   # Per-device borgmatic overrides live in the host config. The shared module
   # provides the defaults and translates this block into borgmatic YAML.
   #
+  my.backups.borgmatic.enable = false;
 #   my.backups.borgmatic = {
 #     frequency = "daily";
 #     sourceDirectories = [ config.my.identity.homeDirectory ];

@@ -150,6 +150,7 @@
     sbctl
     screen
     smartmontools
+    sops
     tpm2-tss
     unzip
     usbutils

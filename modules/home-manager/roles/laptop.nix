@@ -7,6 +7,7 @@
 
 {
   imports = [
+    ../common/dockmgr.nix
     ./gaming.nix
     ./workstation.nix
   ];

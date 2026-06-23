@@ -141,6 +141,7 @@ in
   environment.systemPackages = with pkgs; [
     android-studio
     cameractrls-gtk4
+    codex
     dbeaver-bin
     ghostty
     gimp

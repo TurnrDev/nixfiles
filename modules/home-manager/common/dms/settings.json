@@ -79,7 +79,7 @@
       "rightWidgets": [
         {
           "enabled": true,
-          "id": "homeAssistantMonitor"
+          "id": "tailscale"
         },
         {
           "enabled": true,

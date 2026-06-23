@@ -119,22 +119,6 @@
         "url": "https://github.com/elite-kode/edmc-discord-presence"
       }
     },
-    "edmcoverlay2": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1706389079,
-        "narHash": "sha256-fk4Unudhq2w6VUMRlhYSxsFR0/rfRLv99sfqS6B8qkU=",
-        "ref": "refs/heads/main",
-        "rev": "81f8cb3c2eb556de2de710b7e95d6c0d99b3bfe4",
-        "revCount": 12,
-        "type": "git",
-        "url": "https://github.com/pan-mroku/edmcoverlay2"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://github.com/pan-mroku/edmcoverlay2"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -385,7 +369,6 @@
         "dms-plugins": "dms-plugins",
         "dms-plugins-taylan": "dms-plugins-taylan",
         "edmc-discord-presence": "edmc-discord-presence",
-        "edmcoverlay2": "edmcoverlay2",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
         "nixcord": "nixcord",

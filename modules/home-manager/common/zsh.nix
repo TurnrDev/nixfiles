@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -8,6 +8,8 @@
     fd
     fzf
   ];
+
+  home.file.".oh-my-zsh/custom/plugins/command-time".source = inputs.zsh-command-time;
 
   programs.zsh = {
     enable = true;
@@ -38,9 +40,11 @@
     };
     oh-my-zsh = {
       enable = true;
+      custom = "${config.home.homeDirectory}/.oh-my-zsh/custom";
       theme = "robbyrussell";
       plugins = [
         "colored-man-pages"
+        "command-time"
         "copypath"
         "docker"
         "extract"

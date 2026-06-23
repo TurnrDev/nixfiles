@@ -391,7 +391,8 @@
         "nixcord": "nixcord",
         "nixpkgs": "nixpkgs_2",
         "sops-nix": "sops-nix",
-        "spicetify-nix": "spicetify-nix"
+        "spicetify-nix": "spicetify-nix",
+        "zsh-command-time": "zsh-command-time"
       }
     },
     "rust-overlay": {
@@ -469,6 +470,22 @@
         "owner": "nix-systems",
         "repo": "default",
         "type": "github"
+      }
+    },
+    "zsh-command-time": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771855972,
+        "narHash": "sha256-6Dy5uCzLgBJZIepFvylPhsaK4URinAwbJW7XmSBGj7M=",
+        "ref": "refs/heads/master",
+        "rev": "f163ac1d41f8645d1d055393e52692e2ee185e5f",
+        "revCount": 30,
+        "type": "git",
+        "url": "https://github.com/popstas/zsh-command-time"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/popstas/zsh-command-time"
       }
     }
   },

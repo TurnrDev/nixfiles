@@ -25,6 +25,7 @@
       dcu = "docker compose up -d --remove-orphans";
       de = "docker exec -it";
       dl = "docker logs --tail 1000 --follow";
+      git-prune = "git fetch --prune && git branch -vv | grep 'gone]' | awk '{print $1}' | xargs -r git branch -D";
       la = "eza -a --icons=auto --group-directories-first";
       ll = "eza -lag --icons=auto --group-directories-first";
       ls = "eza --icons=auto --group-directories-first";

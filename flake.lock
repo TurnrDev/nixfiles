@@ -69,6 +69,22 @@
         "url": "https://github.com/xxyangyoulin/dms-plugin-hass"
       }
     },
+    "dms-plugin-tailscale": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1766981404,
+        "narHash": "sha256-cXuljANI8aO5cb7xwIs/ttucJD/y9s9PXuUw7LS+BGI=",
+        "ref": "refs/heads/main",
+        "rev": "f035c3a0923e5872f912fc9bd4cc0c7f161fbe2a",
+        "revCount": 7,
+        "type": "git",
+        "url": "https://github.com/cglavin50/dms-tailscale"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/cglavin50/dms-tailscale"
+      }
+    },
     "dms-plugins": {
       "flake": false,
       "locked": {
@@ -196,11 +212,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782233665,
-        "narHash": "sha256-h/xOtrByoA/Ak1lWHn0O1lVZz4qWYbwOSLQ8YSwQO0I=",
+        "lastModified": 1782423922,
+        "narHash": "sha256-qPNd6lUohHP5gcJhqQ7rLV87RwIx0xYR2A4Frb9Zjc4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "062581938b4a378a82dfbb294b494808157153a1",
+        "rev": "5d320ab301cfaaca7d32514f13815d19d109f5f4",
         "type": "github"
       },
       "original": {
@@ -240,11 +256,11 @@
         "nixpkgs-nixcord": "nixpkgs-nixcord"
       },
       "locked": {
-        "lastModified": 1782292863,
-        "narHash": "sha256-rFrF8ytrLA2NicRRwHzxScwQtLLm2L7fz6oRoInDK4c=",
+        "lastModified": 1782436508,
+        "narHash": "sha256-F91/VTVJmeERWwiJMHfEjkCEXWcNECSOiBsil3TlX9k=",
         "owner": "FlameFlag",
         "repo": "nixcord",
-        "rev": "d014fb9a39a39f4e34fe15071ad3b3f1e9e709d2",
+        "rev": "9c530d99735c236db405f6a1ed58de0872ff9a19",
         "type": "github"
       },
       "original": {
@@ -366,6 +382,7 @@
         "dms": "dms",
         "dms-plugin-docker-manager": "dms-plugin-docker-manager",
         "dms-plugin-hass": "dms-plugin-hass",
+        "dms-plugin-tailscale": "dms-plugin-tailscale",
         "dms-plugins": "dms-plugins",
         "dms-plugins-taylan": "dms-plugins-taylan",
         "edmc-discord-presence": "edmc-discord-presence",

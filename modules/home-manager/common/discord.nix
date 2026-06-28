@@ -15,6 +15,7 @@
   ];
 
   programs.nixcord = {
+    discord.vencord.enable = true;
     enable = true;
     config = {
       plugins = {

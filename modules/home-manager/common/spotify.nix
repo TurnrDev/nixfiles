@@ -18,17 +18,4 @@
     enable = true;
   };
 
-  wayland.windowManager.hyprland.settings = {
-    "exec-once" = lib.mkAfter [
-      "[workspace 9 silent] uwsm app -- spotify"
-    ];
-
-    windowrule = lib.mkAfter [
-      {
-        name = "workspace-spotify";
-        "match:initial_class" = "^([sS]potify)$";
-        workspace = "9";
-      }
-    ];
-  };
 }

@@ -25,13 +25,4 @@ in
   home.file.".local/share/EDMarketConnector/plugins/DiscordPresence".source =
     "${edmcDiscordPresence}/DiscordPresence";
 
-  wayland.windowManager.hyprland.settings.windowrule = [
-    {
-      name = "float-edmarketconnector";
-      "match:initial_class" = "^(Edmarketconnector)$";
-
-      float = "on";
-      opacity = "0.8";
-    }
-  ];
 }

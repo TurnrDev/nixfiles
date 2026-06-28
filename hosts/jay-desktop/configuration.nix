@@ -61,6 +61,15 @@ in
 
   networking.hostName = "jay-desktop";
 
+  my.hyprland.monitors = [
+    {
+      output = "DP-2";
+      mode = "5120x1440@240";
+      position = "0x0";
+      scale = 1;
+    }
+  ];
+
   # Per-device borgmatic overrides live in the host config. The shared module
   # provides the defaults and translates this block into borgmatic YAML.
   #

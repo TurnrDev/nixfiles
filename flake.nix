@@ -13,7 +13,7 @@
     };
     nixcord.url = "github:FlameFlag/nixcord";
     dms = {
-      url = "github:AvengeMedia/DankMaterialShell/stable";
+      url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     dms-plugins = {

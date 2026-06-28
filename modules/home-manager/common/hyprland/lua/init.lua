@@ -2,9 +2,10 @@ require("generated")
 require("config.core")
 
 -- DMS owns these writable visual fragments. Monitor configuration remains
--- Nix-owned and is applied by config.core from generated.lua.
+-- Nix-backed by config.core, with DMS outputs taking runtime precedence.
 require("dms.colors")
 require("dms.layout")
+require("dms.outputs")
 require("dms.cursor")
 
 require("config.rules")

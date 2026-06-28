@@ -93,11 +93,16 @@ in
       "$HOME/.config/hypr/dms/colors.lua" \
       "$HOME/.config/hypr/dms/cursor.lua" \
       "$HOME/.config/hypr/dms/layout.lua" \
+      "$HOME/.config/hypr/dms/outputs.lua" \
       "$HOME/.config/hypr/dms/windowrules.lua"
     do
       if [ ! -f "$f" ]; then
         mkdir -p "$(dirname "$f")"
-        touch "$f"
+        if [ "$(basename "$f")" = "outputs.lua" ]; then
+          echo 'hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto" })' > "$f"
+        else
+          touch "$f"
+        fi
       fi
     done
   '';

@@ -3,15 +3,16 @@ local function raw_dispatch(command)
     hl.exec_cmd("hyprctl dispatch " .. command)
   end
 end
+-- hyprctl eval "hl.config({ cursor = { zoom_factor = $(hyprctl getoption cursor:zoom_factor | awk '/^float/ {print $2 * 0.9}') }})"
 
 local zoom_in =
-  "hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | "
+  "hyprctl eval \"hl.config({ cursor = { zoom_factor = $(hyprctl getoption cursor:zoom_factor -j | "
   .. nix.pkgs.jq
-  .. " '.float * 1.1')"
+  .. " '.float * 1.1') }})\""
 local zoom_out =
-  "hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | "
+  "hyprctl eval \"hl.config({ cursor = { zoom_factor = $(hyprctl getoption cursor:zoom_factor -j | "
   .. nix.pkgs.jq
-  .. " '(.float / 1.1) | if . < 1 then 1 else . end')"
+  .. " '(.float / 1.1) | if . < 1 then 1 else . end') }})\""
 
 -- Applications and session management.
 hl.bind("SUPER + Super_L", hl.dsp.exec_cmd("dms ipc call spotlight toggle"), { description = "Launch Spotlight" })
@@ -64,24 +65,6 @@ hl.bind("SUPER + SHIFT + CTRL + J", hl.dsp.window.move({ monitor = "d" }), { des
 hl.bind("SUPER + SHIFT + CTRL + K", hl.dsp.window.move({ monitor = "u" }), { description = "Move Window To Upper Monitor" })
 hl.bind("SUPER + SHIFT + CTRL + L", hl.dsp.window.move({ monitor = "r" }), { description = "Move Window To Right Monitor" })
 
--- Workspace navigation.
-hl.bind("SUPER + Page_Down", hl.dsp.focus({ workspace = "e+1" }), { description = "Next Workspace" })
-hl.bind("SUPER + Page_Up", hl.dsp.focus({ workspace = "e-1" }), { description = "Previous Workspace" })
-hl.bind("SUPER + U", hl.dsp.focus({ workspace = "e+1" }), { description = "Next Workspace" })
-hl.bind("SUPER + I", hl.dsp.focus({ workspace = "e-1" }), { description = "Previous Workspace" })
-hl.bind("SUPER + CTRL + down", hl.dsp.window.move({ workspace = "e+1" }), { description = "Send Window To Next Workspace" })
-hl.bind("SUPER + CTRL + up", hl.dsp.window.move({ workspace = "e-1" }), { description = "Send Window To Previous Workspace" })
-hl.bind("SUPER + CTRL + U", hl.dsp.window.move({ workspace = "e+1" }), { description = "Send Window To Next Workspace" })
-hl.bind("SUPER + CTRL + I", hl.dsp.window.move({ workspace = "e-1" }), { description = "Send Window To Previous Workspace" })
-hl.bind("SUPER + SHIFT + Page_Down", hl.dsp.window.move({ workspace = "e+1" }), { description = "Move Window To Next Workspace" })
-hl.bind("SUPER + SHIFT + Page_Up", hl.dsp.window.move({ workspace = "e-1" }), { description = "Move Window To Previous Workspace" })
-hl.bind("SUPER + SHIFT + U", hl.dsp.window.move({ workspace = "e+1" }), { description = "Move Window To Next Workspace" })
-hl.bind("SUPER + SHIFT + I", hl.dsp.window.move({ workspace = "e-1" }), { description = "Move Window To Previous Workspace" })
-hl.bind("SUPER + mouse_down", hl.dsp.focus({ workspace = "e+1" }), { description = "Next Workspace" })
-hl.bind("SUPER + mouse_up", hl.dsp.focus({ workspace = "e-1" }), { description = "Previous Workspace" })
-hl.bind("SUPER + CTRL + mouse_down", hl.dsp.window.move({ workspace = "e+1" }), { description = "Send Window To Next Workspace" })
-hl.bind("SUPER + CTRL + mouse_up", hl.dsp.window.move({ workspace = "e-1" }), { description = "Send Window To Previous Workspace" })
-
 hl.bind("SUPER + 1", hl.dsp.focus({ workspace = "1" }), { description = "Workspace 1" })
 hl.bind("SUPER + 2", hl.dsp.focus({ workspace = "2" }), { description = "Workspace 2" })
 hl.bind("SUPER + 3", hl.dsp.focus({ workspace = "3" }), { description = "Workspace 3" })
@@ -105,19 +88,14 @@ hl.bind("SUPER + SHIFT + 9", hl.dsp.window.move({ workspace = "9" }), { descript
 hl.bind("SUPER + bracketleft", hl.dsp.layout("preselect l"), { description = "Preselect Left Column" })
 hl.bind("SUPER + bracketright", hl.dsp.layout("preselect r"), { description = "Preselect Right Column" })
 hl.bind("SUPER + R", hl.dsp.layout("togglesplit"), { description = "Toggle Split" })
-hl.bind("SUPER + CTRL + F", raw_dispatch("resizeactive exact 100%"), { description = "Reset Window Size" })
 hl.bind("SUPER + code:20", hl.dsp.window.resize({ x = -100, y = 0, relative = true }), { description = "Expand Window Left" })
 hl.bind("SUPER + code:21", hl.dsp.window.resize({ x = 100, y = 0, relative = true }), { description = "Shrink Window Left" })
 hl.bind("SUPER + SHIFT + P", hl.dsp.dpms({ action = "toggle" }), { description = "Toggle DPMS" })
-hl.bind("SUPER + ALT + mouse_down", hl.dsp.exec_cmd(zoom_in), { description = "Zoom In" })
-hl.bind("SUPER + ALT + mouse_up", hl.dsp.exec_cmd(zoom_out), { description = "Zoom Out" })
-hl.bind("SUPER + ALT + 0", hl.dsp.exec_cmd("hyprctl -q keyword cursor:zoom_factor 1"), { description = "Reset Zoom" })
-hl.bind("SUPER + minus", raw_dispatch("resizeactive -10% 0"), { description = "Resize Narrower", repeating = true })
-hl.bind("SUPER + equal", raw_dispatch("resizeactive 10% 0"), { description = "Resize Wider", repeating = true })
-hl.bind("SUPER + SHIFT + minus", raw_dispatch("resizeactive 0 -10%"), { description = "Resize Shorter", repeating = true })
-hl.bind("SUPER + SHIFT + equal", raw_dispatch("resizeactive 0 10%"), { description = "Resize Taller", repeating = true })
-hl.bind("SUPER + ALT + equal", hl.dsp.exec_cmd(zoom_in), { description = "Zoom In", repeating = true })
-hl.bind("SUPER + ALT + minus", hl.dsp.exec_cmd(zoom_out), { description = "Zoom Out", repeating = true })
+hl.bind("SUPER + mouse_down", hl.dsp.exec_cmd(zoom_in), { description = "Zoom In" })
+hl.bind("SUPER + mouse_up", hl.dsp.exec_cmd(zoom_out), { description = "Zoom Out" })
+hl.bind("SUPER + 0", hl.dsp.exec_cmd("hyprctl eval \"hl.config({ cursor = { zoom_factor = 1 } })\""), { description = "Reset Zoom" })
+hl.bind("SUPER + equal", hl.dsp.exec_cmd(zoom_in), { description = "Zoom In", repeating = true })
+hl.bind("SUPER + minus", hl.dsp.exec_cmd(zoom_out), { description = "Zoom Out", repeating = true })
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { description = "Move Window", mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { description = "Resize Window", mouse = true })
 

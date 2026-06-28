@@ -69,6 +69,22 @@
         "url": "https://github.com/xxyangyoulin/dms-plugin-hass"
       }
     },
+    "dms-plugin-tailscale": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1766981404,
+        "narHash": "sha256-cXuljANI8aO5cb7xwIs/ttucJD/y9s9PXuUw7LS+BGI=",
+        "ref": "refs/heads/main",
+        "rev": "f035c3a0923e5872f912fc9bd4cc0c7f161fbe2a",
+        "revCount": 7,
+        "type": "git",
+        "url": "https://github.com/cglavin50/dms-tailscale"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/cglavin50/dms-tailscale"
+      }
+    },
     "dms-plugins": {
       "flake": false,
       "locked": {
@@ -196,11 +212,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782522538,
-        "narHash": "sha256-CvOaUvJ+mXlxU3m2cPWKcOAhtKETsPUYhq+Xa5ewBp4=",
+        "lastModified": 1782657028,
+        "narHash": "sha256-PHTCpYZCMzJYS3phhywqRAZphKVr2zjvlGYa+H20ZZ4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "8d8a6cc50ddc60748791a14ee1163c865ec57635",
+        "rev": "4ad9aaae70c9aaab504127f926c0fa9cfbc2b365",
         "type": "github"
       },
       "original": {
@@ -366,6 +382,7 @@
         "dms": "dms",
         "dms-plugin-docker-manager": "dms-plugin-docker-manager",
         "dms-plugin-hass": "dms-plugin-hass",
+        "dms-plugin-tailscale": "dms-plugin-tailscale",
         "dms-plugins": "dms-plugins",
         "dms-plugins-taylan": "dms-plugins-taylan",
         "edmc-discord-presence": "edmc-discord-presence",

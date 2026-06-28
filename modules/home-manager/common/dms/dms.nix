@@ -41,6 +41,7 @@ in
     inherit settings;
 
     plugins = {
+      dankBatteryAlerts.src = inputs.dms-plugins + "/DankBatteryAlerts";
       dankKDEConnect.src = inputs.dms-plugins + "/DankKDEConnect";
       dankLauncherKeys.src = inputs.dms-plugins + "/DankLauncherKeys";
       dankNotepadModule.src = inputs.dms-plugins + "/DankNotepadModule";
@@ -60,6 +61,7 @@ in
           groupByCompose = true;
         };
       };
+      tailscale.src = inputs.dms-plugin-tailscale;
     };
 
     systemd = {

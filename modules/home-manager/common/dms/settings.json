@@ -108,12 +108,17 @@
         },
         {
           "enabled": true,
-          "id": "battery"
+          "id": "controlCenterButton",
+          "showAudioIcon": false,
+          "showAudioPercent": true,
+          "showBatteryIcon": false,
+          "showMicIcon": false,
+          "showMicPercent": true,
+          "showPrinterIcon": false
         },
         {
           "enabled": true,
-          "id": "controlCenterButton",
-          "showBatteryIcon": false
+          "id": "battery"
         }
       ],
       "screenPreferences": [
@@ -341,7 +346,7 @@
   "dockOpenOnOverview": false,
   "dockPosition": 1,
   "dockShowOverflowBadge": true,
-  "dockSmartAutoHide": false,
+  "dockSmartAutoHide": true,
   "dockSpacing": 4,
   "dockTransparency": 1,
   "dwlShowAllTags": false,
@@ -439,7 +444,7 @@
   "muxSessionFilter": "",
   "muxType": "tmux",
   "muxUseCustomCommand": false,
-  "networkPreference": "auto",
+  "networkPreference": "ethernet",
   "nightModeEnabled": false,
   "niriLayoutBorderSize": -1,
   "niriLayoutGapsOverride": -1,
@@ -606,6 +611,7 @@
   "widgetColorMode": "colorful",
   "wifiNetworkPins": {
     "preferredWifi": [
+      "Mobile Power Wi-Fi",
       "Turners-MLO"
     ]
   },

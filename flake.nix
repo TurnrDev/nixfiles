@@ -32,6 +32,10 @@
       url = "git+https://github.com/LuckShiba/DmsDockerManager";
       flake = false;
     };
+    dms-plugin-tailscale = {
+      url = "git+https://github.com/cglavin50/dms-tailscale";
+      flake = false;
+    };
     zsh-command-time = {
       url = "git+https://github.com/popstas/zsh-command-time";
       flake = false;

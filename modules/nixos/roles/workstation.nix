@@ -22,7 +22,6 @@ in
 {
   imports = [
     ./default.nix
-    ../common/hyprland-options.nix
     ../services/dms-home-assistant-monitor.nix
   ];
 
@@ -50,9 +49,11 @@ in
         customConfig = ''
           hl.env("DMS_RUN_GREETER", "1")
 
-          ${lib.concatMapStringsSep "\n" (
-            monitor: "hl.monitor(${toLua monitor})"
-          ) config.my.hyprland.monitors}
+          require("dms.colors")
+          require("dms.layout")
+          require("dms.outputs")
+          require("dms.cursor")
+          require("dms.windowrules")
 
           hl.config({
             misc = {

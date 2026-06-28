@@ -8,7 +8,6 @@
 let
   toLua = lib.generators.toLua { };
   generated = {
-    monitors = osConfig.my.hyprland.monitors;
     pkgs = {
       jq = lib.getExe pkgs.jq;
       setxkbmap = lib.getExe' pkgs.setxkbmap "setxkbmap";

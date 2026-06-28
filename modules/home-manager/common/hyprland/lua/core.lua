@@ -7,10 +7,6 @@ hl.env("QT_QPA_PLATFORMTHEME", "gtk3")
 hl.env("QT_QPA_PLATFORMTHEME_QT6", "gtk3")
 hl.env("QS_ICON_THEME", "Adwaita")
 
-for _, monitor in ipairs(nix.monitors) do
-  hl.monitor(monitor)
-end
-
 hl.config({
   general = {
     gaps_in = 5,

@@ -17,6 +17,7 @@ in
 {
   imports = [
     inputs.dms.homeModules.dank-material-shell
+    ./display-manager.nix
     ./wallpaper-automation.nix
   ];
 

@@ -289,11 +289,15 @@ watch() {
     last_profile_json=""
     check_transition
 
-    if command -v udevadm >/dev/null 2>&1 && watch_udev; then
-        return 0
+    if command -v udevadm >/dev/null 2>&1; then
+        watch_udev &
+        udev_pid=$!
+        trap 'kill "$udev_pid" 2>/dev/null || true; exit 130' INT
+        trap 'kill "$udev_pid" 2>/dev/null || true; exit 143' TERM
+    else
+        printf 'dockmgr: udev monitor unavailable; polling every %ss\n' "$DOCK_POLL_INTERVAL" >&2
     fi
 
-    printf 'dockmgr: udev monitor unavailable; polling every %ss\n' "$DOCK_POLL_INTERVAL" >&2
     watch_poll
 }
 

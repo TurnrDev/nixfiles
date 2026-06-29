@@ -68,6 +68,24 @@
         "url": "https://github.com/xxyangyoulin/dms-plugin-hass"
       }
     },
+    "dms-plugin-sources": {
+      "inputs": {
+        "dms-plugin-docker-manager": "dms-plugin-docker-manager",
+        "dms-plugin-hass": "dms-plugin-hass",
+        "dms-plugin-tailscale": "dms-plugin-tailscale",
+        "dms-plugins": "dms-plugins",
+        "dms-plugins-taylan": "dms-plugins-taylan"
+      },
+      "locked": {
+        "path": "./modules/home-manager/common/dms/plugin-inputs",
+        "type": "path"
+      },
+      "original": {
+        "path": "./modules/home-manager/common/dms/plugin-inputs",
+        "type": "path"
+      },
+      "parent": []
+    },
     "dms-plugin-tailscale": {
       "flake": false,
       "locked": {
@@ -133,6 +151,20 @@
         "type": "git",
         "url": "https://github.com/elite-kode/edmc-discord-presence"
       }
+    },
+    "elite-plugin-sources": {
+      "inputs": {
+        "edmc-discord-presence": "edmc-discord-presence"
+      },
+      "locked": {
+        "path": "./modules/home-manager/common/elite-plugin-inputs",
+        "type": "path"
+      },
+      "original": {
+        "path": "./modules/home-manager/common/elite-plugin-inputs",
+        "type": "path"
+      },
+      "parent": []
     },
     "flake-compat": {
       "flake": false,
@@ -240,6 +272,617 @@
         "type": "github"
       }
     },
+    "josm-plugin-AddrInterpolation": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-j3EYXed2YEm613bcsLuZJ3bVpwEJNadMx+X/52qrthU=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/AddrInterpolation.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/AddrInterpolation.jar"
+      }
+    },
+    "josm-plugin-ColorPlugin": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-caJEOmiQxDTc2PIeAeOw8MPopMz0G/3FPjra/+lq2xM=",
+        "type": "file",
+        "url": "https://github.com/JOSM/Color/releases/latest/download/ColorPlugin.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/JOSM/Color/releases/latest/download/ColorPlugin.jar"
+      }
+    },
+    "josm-plugin-FixAddresses": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-sv56Zyg6R837X64j+6wi9xSv68tcPXhnULIdUO+Bebw=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/FixAddresses.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/FixAddresses.jar"
+      }
+    },
+    "josm-plugin-KartaView": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-6/lfT8vmikkoZrV/WZ7ElNlzU7rw+emUTFRKtjJGs7Q=",
+        "type": "file",
+        "url": "https://github.com/kartaview/josm-plugin/releases/latest/download/KartaView.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/kartaview/josm-plugin/releases/latest/download/KartaView.jar"
+      }
+    },
+    "josm-plugin-MapRoulette": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Kx5yb6IwYb6HHoLx+FJU71yqXHvVF8/pCaU+o7XOzBI=",
+        "type": "file",
+        "url": "https://github.com/JOSM/MapRoulette/releases/latest/download/MapRoulette.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/JOSM/MapRoulette/releases/latest/download/MapRoulette.jar"
+      }
+    },
+    "josm-plugin-Mapillary": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-+9aVGgv+4K5NoCeAie86z54R2hWK/XRoOFeVNHmyph8=",
+        "type": "file",
+        "url": "https://github.com/JOSM/Mapillary/releases/latest/download/Mapillary.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/JOSM/Mapillary/releases/latest/download/Mapillary.jar"
+      }
+    },
+    "josm-plugin-MicrosoftStreetside": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-f4RmFD5cj8Sg9joQ1ZutuK6qY9yMdeuGi1Z5CNOvgyw=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/MicrosoftStreetside.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/MicrosoftStreetside.jar"
+      }
+    },
+    "josm-plugin-PicLayer": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-sqq+uWz3/9tOcXnmxvz21W52hK4G0idgCEB25RDOb4Q=",
+        "type": "file",
+        "url": "https://github.com/JOSM/PicLayer/releases/latest/download/PicLayer.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/JOSM/PicLayer/releases/latest/download/PicLayer.jar"
+      }
+    },
+    "josm-plugin-Review.Changes": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-tqDgPlTKDGRK4rBEd67Bovj1GsQTEq4dZkJrh+6QtNs=",
+        "type": "file",
+        "url": "https://github.com/DavidKarlas/JosmReviewPlugin/releases/latest/download/Review.Changes.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/DavidKarlas/JosmReviewPlugin/releases/latest/download/Review.Changes.jar"
+      }
+    },
+    "josm-plugin-RoadSigns": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-4ExUJr/GsSP2E2mEu0izOM4QYnB0lOh1hIJrSVysoAY=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/RoadSigns.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/RoadSigns.jar"
+      }
+    },
+    "josm-plugin-ShapeTools": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-dIUE8PkaXjzJyXAY0DNnFXZtld5CyYYt59UWZrE9s1M=",
+        "type": "file",
+        "url": "https://github.com/JOSM/ShapeTools/releases/latest/download/ShapeTools.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/JOSM/ShapeTools/releases/latest/download/ShapeTools.jar"
+      }
+    },
+    "josm-plugin-alignways": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Kk296M05LYsB3PkrsAcmIQuKIFiYpXMl3UJbSV2MiMA=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/alignways.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/alignways.jar"
+      }
+    },
+    "josm-plugin-apache-commons": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-RAR0Zce8sQiD1in6qTO2a+hpGVFm/+bF+FaN+nj+/28=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/apache-commons.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/apache-commons.jar"
+      }
+    },
+    "josm-plugin-apache-http": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-/NecG2uPEsJbNSDl6TpclvRvwLK6zc+PdX3mp94L7V8=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/apache-http.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/apache-http.jar"
+      }
+    },
+    "josm-plugin-auto_tools": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-oB7/sJbDZneHTB11ZAiwElBSrFB9X65NymtKOqyPJL0=",
+        "type": "file",
+        "url": "https://github.com/JOSM/auto-tools/releases/latest/download/auto_tools.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/JOSM/auto-tools/releases/latest/download/auto_tools.jar"
+      }
+    },
+    "josm-plugin-buildings_tools": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-RDVv4jjTdLahoiTqtdZecrWuIUV6uHedNCKZN15MDPI=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/buildings_tools.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/buildings_tools.jar"
+      }
+    },
+    "josm-plugin-centernode": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-5s0KS8gjUOqYZWI6qjzvyDNPTJdRQoJEKl4M2dugP/A=",
+        "type": "file",
+        "url": "https://github.com/ubipo/center-node/releases/latest/download/centernode.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/ubipo/center-node/releases/latest/download/centernode.jar"
+      }
+    },
+    "josm-plugin-continuosDownload": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-a97CK62IeZq6WkGtZ5BRqmYa3UvI4Z7DlvO0NS3IWgw=",
+        "type": "file",
+        "url": "https://github.com/JOSM/continuos-download/releases/latest/download/continuosDownload.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/JOSM/continuos-download/releases/latest/download/continuosDownload.jar"
+      }
+    },
+    "josm-plugin-contourmerge": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-zU7pm7dS/ISNc9phoWVxG6j9aSjQ35Ixjx1j+ppQ3kk=",
+        "type": "file",
+        "url": "https://github.com/Gubaer/josm-contourmerge-plugin/releases/latest/download/contourmerge.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/Gubaer/josm-contourmerge-plugin/releases/latest/download/contourmerge.jar"
+      }
+    },
+    "josm-plugin-ejml": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-PxvE8mB6bpFTej0xlqmTuPwvpR5QODEO+675diMNopA=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/ejml.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/ejml.jar"
+      }
+    },
+    "josm-plugin-fhrsPlugin": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-g8+2V0zf7MExc6hwbL2GR958KxGJGjTtqm1vCmRxFIA=",
+        "type": "file",
+        "url": "https://github.com/kmpoppe/fhrsPlugin/releases/latest/download/fhrsPlugin.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/kmpoppe/fhrsPlugin/releases/latest/download/fhrsPlugin.jar"
+      }
+    },
+    "josm-plugin-flatlaf": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Dg+YZfIqR63B8IqTxRhewCxCrZOulOySXIbk8v2nzlM=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/flatlaf.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/flatlaf.jar"
+      }
+    },
+    "josm-plugin-geotools": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-70Y7k2ze7lJvB+L+r3jnNDsxn+fnlhM1WxunojOue+w=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/geotools.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/geotools.jar"
+      }
+    },
+    "josm-plugin-http2": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-sxkBqsl+FjP/5fmu+ZUlJZuT0PzbBvdnLiY76epLa+8=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/http2.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/http2.jar"
+      }
+    },
+    "josm-plugin-imagery_offset_db": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-tgeXNj8fYNBY1lXAaq908Mz2dcFpeeUPmsUyDc7zQO8=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/imagery_offset_db.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/imagery_offset_db.jar"
+      }
+    },
+    "josm-plugin-jackson": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-GE0/F1UTsJlnLpM5mQzX0i/BMKLaj0T1BljmGH55bkI=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/jackson.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/jackson.jar"
+      }
+    },
+    "josm-plugin-javafx": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Q8MeINwYd8IV+oJ9utjEksAcY+0n0S18Gf4YCcvTQPw=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/javafx.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/javafx.jar"
+      }
+    },
+    "josm-plugin-jaxb": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-hztYz43MmUEqN2YXHgcPAPotSb9lHGGt9+YFD/Ls+Vg=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/jaxb.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/jaxb.jar"
+      }
+    },
+    "josm-plugin-jna": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-pjBCxlTLGfNCjvpad5+DUq2aXN1USgtWcJIn2nqbKf4=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/jna.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/jna.jar"
+      }
+    },
+    "josm-plugin-jts": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-hiytLzOw2hrB+905v51YWycAPd9PQ0HwdQ+/GnWL3iQ=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/jts.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/jts.jar"
+      }
+    },
+    "josm-plugin-libphonenumber": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-cnzgKmTzPwbjhs0KrQWHkUTyK8rK8WWuQ7yI7rcLIT4=",
+        "type": "file",
+        "url": "https://github.com/gabortim/josm-libphonenumber/releases/latest/download/libphonenumber.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/gabortim/josm-libphonenumber/releases/latest/download/libphonenumber.jar"
+      }
+    },
+    "josm-plugin-log4j": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-o5lSZ7c65Rxl8V5XRf2wUSc0SSq35AIW6pyMUJjlzIk=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/log4j.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/log4j.jar"
+      }
+    },
+    "josm-plugin-opendata": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-NJyL+6O7uGQaiPylOioBhgGuQ2ayjvByyko81WpD+9Q=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/opendata.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/opendata.jar"
+      }
+    },
+    "josm-plugin-osm-obj-info": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-oijBU0p+n8gZ/n5xV6PZ9Q786wXZUF98/r1BnVzO2AI=",
+        "type": "file",
+        "url": "https://github.com/JOSM/osm-obj-info/releases/latest/download/osm-obj-info.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/JOSM/osm-obj-info/releases/latest/download/osm-obj-info.jar"
+      }
+    },
+    "josm-plugin-pdfimport": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-k6in1k1cWS47YpaGQ7seZNDrbztPfy18dCACAo29i2c=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/pdfimport.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/pdfimport.jar"
+      }
+    },
+    "josm-plugin-phonenumber": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-DzqsrOBEJPL7SyrH6hUcDlV2HwmbyOUoPOWwIP8Rzf0=",
+        "type": "file",
+        "url": "https://github.com/gabortim/josm-phonenumber/releases/latest/download/phonenumber.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/gabortim/josm-phonenumber/releases/latest/download/phonenumber.jar"
+      }
+    },
+    "josm-plugin-rasterfilters": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-EEmrZfb98vmoVqwkYFmxROuB4mkymEy8sSTv1dPtjP8=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/rasterfilters.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/rasterfilters.jar"
+      }
+    },
+    "josm-plugin-reverter": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-m+h4nj20MUje1XcanfJOrJiDKEdx6EmItMGVfRe/v1o=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/reverter.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/reverter.jar"
+      }
+    },
+    "josm-plugin-shrinkwrap": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-7HYvnQkLUNYrgKNvbIJpzrQPDxreGsPbRFH+rxSWwYk=",
+        "type": "file",
+        "url": "https://github.com/ubipo/shrinkwrap/releases/latest/download/shrinkwrap.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/ubipo/shrinkwrap/releases/latest/download/shrinkwrap.jar"
+      }
+    },
+    "josm-plugin-sources": {
+      "inputs": {
+        "josm-plugin-AddrInterpolation": "josm-plugin-AddrInterpolation",
+        "josm-plugin-ColorPlugin": "josm-plugin-ColorPlugin",
+        "josm-plugin-FixAddresses": "josm-plugin-FixAddresses",
+        "josm-plugin-KartaView": "josm-plugin-KartaView",
+        "josm-plugin-MapRoulette": "josm-plugin-MapRoulette",
+        "josm-plugin-Mapillary": "josm-plugin-Mapillary",
+        "josm-plugin-MicrosoftStreetside": "josm-plugin-MicrosoftStreetside",
+        "josm-plugin-PicLayer": "josm-plugin-PicLayer",
+        "josm-plugin-Review.Changes": "josm-plugin-Review.Changes",
+        "josm-plugin-RoadSigns": "josm-plugin-RoadSigns",
+        "josm-plugin-ShapeTools": "josm-plugin-ShapeTools",
+        "josm-plugin-alignways": "josm-plugin-alignways",
+        "josm-plugin-apache-commons": "josm-plugin-apache-commons",
+        "josm-plugin-apache-http": "josm-plugin-apache-http",
+        "josm-plugin-auto_tools": "josm-plugin-auto_tools",
+        "josm-plugin-buildings_tools": "josm-plugin-buildings_tools",
+        "josm-plugin-centernode": "josm-plugin-centernode",
+        "josm-plugin-continuosDownload": "josm-plugin-continuosDownload",
+        "josm-plugin-contourmerge": "josm-plugin-contourmerge",
+        "josm-plugin-ejml": "josm-plugin-ejml",
+        "josm-plugin-fhrsPlugin": "josm-plugin-fhrsPlugin",
+        "josm-plugin-flatlaf": "josm-plugin-flatlaf",
+        "josm-plugin-geotools": "josm-plugin-geotools",
+        "josm-plugin-http2": "josm-plugin-http2",
+        "josm-plugin-imagery_offset_db": "josm-plugin-imagery_offset_db",
+        "josm-plugin-jackson": "josm-plugin-jackson",
+        "josm-plugin-javafx": "josm-plugin-javafx",
+        "josm-plugin-jaxb": "josm-plugin-jaxb",
+        "josm-plugin-jna": "josm-plugin-jna",
+        "josm-plugin-jts": "josm-plugin-jts",
+        "josm-plugin-libphonenumber": "josm-plugin-libphonenumber",
+        "josm-plugin-log4j": "josm-plugin-log4j",
+        "josm-plugin-opendata": "josm-plugin-opendata",
+        "josm-plugin-osm-obj-info": "josm-plugin-osm-obj-info",
+        "josm-plugin-pdfimport": "josm-plugin-pdfimport",
+        "josm-plugin-phonenumber": "josm-plugin-phonenumber",
+        "josm-plugin-rasterfilters": "josm-plugin-rasterfilters",
+        "josm-plugin-reverter": "josm-plugin-reverter",
+        "josm-plugin-shrinkwrap": "josm-plugin-shrinkwrap",
+        "josm-plugin-tageditor": "josm-plugin-tageditor",
+        "josm-plugin-terracer": "josm-plugin-terracer",
+        "josm-plugin-todo": "josm-plugin-todo",
+        "josm-plugin-turnlanes-tagging": "josm-plugin-turnlanes-tagging",
+        "josm-plugin-turnrestrictions": "josm-plugin-turnrestrictions",
+        "josm-plugin-undelete": "josm-plugin-undelete",
+        "josm-plugin-utilsplugin2": "josm-plugin-utilsplugin2"
+      },
+      "locked": {
+        "path": "./modules/home-manager/common/josm-plugin-inputs",
+        "type": "path"
+      },
+      "original": {
+        "path": "./modules/home-manager/common/josm-plugin-inputs",
+        "type": "path"
+      },
+      "parent": []
+    },
+    "josm-plugin-tageditor": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-3FC0oodBiKAzuP6X9TvqwxcHcEgbO1zI2g6mHOSmmTY=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/tageditor.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/tageditor.jar"
+      }
+    },
+    "josm-plugin-terracer": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-F9mABDrgsD6AylhG2RtTMfFsfeZCcNrWNFs2zyh+K2g=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/terracer.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/terracer.jar"
+      }
+    },
+    "josm-plugin-todo": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-NC6szdyJ2jN+rViu5f9pHibpeUk2cHSjeonsgm9aTPU=",
+        "type": "file",
+        "url": "https://github.com/JOSM/todo/releases/latest/download/todo.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/JOSM/todo/releases/latest/download/todo.jar"
+      }
+    },
+    "josm-plugin-turnlanes-tagging": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-c+K8v1IPygX89+yofwofTt+U3ugcRGi+l9nMtlwD/eQ=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/turnlanes-tagging.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/turnlanes-tagging.jar"
+      }
+    },
+    "josm-plugin-turnrestrictions": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-FjWfqjpcwzyQVNhlodb2z7MNu7g6vAjZaWibsiGHAlA=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/turnrestrictions.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/turnrestrictions.jar"
+      }
+    },
+    "josm-plugin-undelete": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-yKn93CFCBkQ89N2d02rtM545lfT+iA6pBa2LJO1qnBc=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/undelete.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/undelete.jar"
+      }
+    },
+    "josm-plugin-utilsplugin2": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-l0Rj3KFRfCUjtVZ2U/Iy4EkZJP7j0NZ7Gu6XlnPm4U8=",
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/utilsplugin2.jar"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://josm.openstreetmap.de/osmsvn/applications/editors/josm/dist/utilsplugin2.jar"
+      }
+    },
     "lanzaboote": {
       "inputs": {
         "crane": "crane",
@@ -271,11 +914,11 @@
         "nixpkgs-nixcord": "nixpkgs-nixcord"
       },
       "locked": {
-        "lastModified": 1782670213,
-        "narHash": "sha256-7IX/sy/gvDxPCBze4q5dbux6kxF90hc5PIO8u2c2tqk=",
+        "lastModified": 1782753146,
+        "narHash": "sha256-25GhG9mieEbJzGil3H+Urqt9RfcX7hc7FM0k50N+ZjQ=",
         "owner": "FlameFlag",
         "repo": "nixcord",
-        "rev": "6db6f545223015523d72e9727811a3569ef4b099",
+        "rev": "1f1c2400db29aa3de2ad3e5c8045b432e6626929",
         "type": "github"
       },
       "original": {
@@ -373,19 +1016,16 @@
     "root": {
       "inputs": {
         "dms": "dms",
-        "dms-plugin-docker-manager": "dms-plugin-docker-manager",
-        "dms-plugin-hass": "dms-plugin-hass",
-        "dms-plugin-tailscale": "dms-plugin-tailscale",
-        "dms-plugins": "dms-plugins",
-        "dms-plugins-taylan": "dms-plugins-taylan",
-        "edmc-discord-presence": "edmc-discord-presence",
+        "dms-plugin-sources": "dms-plugin-sources",
+        "elite-plugin-sources": "elite-plugin-sources",
         "home-manager": "home-manager",
+        "josm-plugin-sources": "josm-plugin-sources",
         "lanzaboote": "lanzaboote",
         "nixcord": "nixcord",
         "nixpkgs": "nixpkgs_2",
         "sops-nix": "sops-nix",
         "spicetify-nix": "spicetify-nix",
-        "zsh-command-time": "zsh-command-time"
+        "zsh-plugin-sources": "zsh-plugin-sources"
       }
     },
     "rust-overlay": {
@@ -480,6 +1120,20 @@
         "type": "git",
         "url": "https://github.com/popstas/zsh-command-time"
       }
+    },
+    "zsh-plugin-sources": {
+      "inputs": {
+        "zsh-command-time": "zsh-command-time"
+      },
+      "locked": {
+        "path": "./modules/home-manager/common/zsh-plugin-inputs",
+        "type": "path"
+      },
+      "original": {
+        "path": "./modules/home-manager/common/zsh-plugin-inputs",
+        "type": "path"
+      },
+      "parent": []
     }
   },
   "root": "root",

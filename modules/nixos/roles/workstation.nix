@@ -148,7 +148,6 @@ in
     imagemagick
     jetbrains.pycharm
     jetbrains.pycharm-oss
-    josm
     openscad-unstable
     postman
     prusa-slicer

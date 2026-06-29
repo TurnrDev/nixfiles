@@ -35,23 +35,6 @@ in
 
   my.identity.email = lib.mkForce "jay.turner@mopo.co";
 
-  services.displayManager.dms-greeter.compositor.customConfig = lib.mkForce ''
-    env = DMS_RUN_GREETER,1
-    source = /var/lib/dms-greeter/outputs.conf
-
-    misc {
-        disable_hyprland_logo = true
-        disable_splash_rendering = true
-    }
-
-    input {
-        kb_layout = gb
-        kb_variant = colemak
-        numlock_by_default = true
-    }
-
-  '';
-
   services.xserver.xkb = {
     layout = "gb";
     variant = "colemak";

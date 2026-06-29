@@ -63,7 +63,6 @@ in
 
   # Per-device borgmatic overrides live in the host config. The shared module
   # provides the defaults and translates this block into borgmatic YAML.
-  #
   my.backups.borgmatic = {
     frequency = "daily";
     sourceDirectories = [ config.my.identity.homeDirectory ];

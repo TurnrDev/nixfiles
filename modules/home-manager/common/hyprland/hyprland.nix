@@ -1,107 +1,71 @@
 {
-  configs,
+  lib,
+  osConfig,
   pkgs,
-  inputs,
   ...
 }:
+
+let
+  toLua = lib.generators.toLua { };
+  generated = {
+    pkgs = {
+      jq = lib.getExe pkgs.jq;
+      setxkbmap = lib.getExe' pkgs.setxkbmap "setxkbmap";
+    };
+    xwayland = {
+      inherit (osConfig.services.xserver.xkb) layout variant;
+    };
+  };
+in
 {
-  # Wrapper module for generic Hyprland config.
-  # Use this file for core compositor settings that don't deserve their own module.
-  #
-  # Example:
-  # wayland.windowManager.hyprland.settings = {
-  #   general.gaps_out = 20;
-  #   input.kb_variant = "colemak";
-  # };
-  imports = [
-    ../dms/dms.nix
-    ./execs.nix
-    ./binds.nix
-    ./rules.nix
-  ];
+  imports = [ ../dms/dms.nix ];
+
+  home.packages = [ pkgs.lua ];
 
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
-    configType = "hyprlang";
-    settings = {
-      general = {
-        gaps_in = 5;
-        gaps_out = 10;
-        border_size = 2;
+    configType = "lua";
+    settings = { };
+
+    extraConfig = ''
+      require("generated")
+      require("config.core")
+
+      -- DMS owns these writable visual fragments. Monitor configuration remains
+      -- Nix-backed by config.core, with DMS outputs taking runtime precedence.
+      require("dms.colors")
+      require("dms.layout")
+      require("dms.outputs")
+      require("dms.cursor")
+
+      require("config.rules")
+      require("config.binds")
+
+      -- User-managed rules from DMS take final precedence.
+      require("dms.windowrules")
+    '';
+
+    extraLuaFiles = {
+      generated = {
+        content = ''
+          _G.nix = ${toLua generated}
+        '';
+        autoLoad = false;
       };
 
-      misc = {
-        disable_hyprland_logo = true;
-        disable_splash_rendering = true;
-        force_default_wallpaper = 0;
+      "config.core" = {
+        content = ./lua/core.lua;
+        autoLoad = false;
       };
-
-      input = {
-        follow_mouse = 1;
-        numlock_by_default = true;
-        touchpad = {
-          natural_scroll = false;
-          disable_while_typing = false;
-          tap-to-click = false;
-        };
-        kb_layout = "gb";
-        kb_variant = "colemak";
-        # Let binds follow the typed symbol instead of the first layout's
-        # physical key positions when multiple layouts are in play.
-        resolve_binds_by_sym = true;
+      "config.binds" = {
+        content = ./lua/binds.lua;
+        autoLoad = false;
       };
-
-      device = [
-        {
-          name = "keychron-keychron-v6-max";
-          kb_layout = "gb";
-          kb_variant = "";
-          resolve_binds_by_sym = true;
-        }
-        {
-          name = "keychron--keychron-link--keyboard";
-          kb_layout = "gb";
-          kb_variant = "";
-          resolve_binds_by_sym = true;
-        }
-      ];
-
-      decoration = {
-        rounding = 10;
-        blur = {
-          enabled = true;
-          size = 3;
-          passes = 1;
-        };
-        shadow = {
-          enabled = true;
-          range = 4;
-          render_power = 3;
-        };
+      "config.rules" = {
+        content = ./lua/rules.lua;
+        autoLoad = false;
       };
-
-      # Constrain a single tiled window on ultrawide displays.
-      # 16:9 yields 2560px width on a 1440px-tall monitor.
-      layout = {
-        single_window_aspect_ratio = "16 9";
-        single_window_aspect_ratio_tolerance = 0.1;
-      };
-
-      xwayland = {
-        force_zero_scaling = true;
-        enabled = true;
-      };
-
-      binds = {
-        scroll_event_delay = 0;
-      };
-
-      # Hyprland's input block covers Wayland clients; XWayland/Proton
-      # clients such as Elite Dangerous need their XKB layout set too.
-      "exec-once" = [
-        "${pkgs.setxkbmap}/bin/setxkbmap -layout gb"
-      ];
     };
   };
 }

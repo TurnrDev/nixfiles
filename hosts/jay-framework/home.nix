@@ -11,10 +11,67 @@
     ../../modules/home-manager/roles/laptop.nix
   ];
 
-  wayland.windowManager.hyprland.settings = {
-    input.kb_variant = "colemak";
-    "exec-once" = lib.mkForce [
-      "${pkgs.setxkbmap}/bin/setxkbmap -layout gb -variant colemak"
-    ];
-  };
+  my.dankMaterialShell.monitors.configurations = [
+    {
+      name = "Docked Home Office with Inbuilt Display";
+
+      outputs = {
+        "eDP-1" = {
+          mode = "2256x1504@59.999";
+
+          scale = 1.0;
+          disabled = false;
+        };
+
+        "desc:Samsung Electric Company LC49G95T H1AK500000" = {
+          mode = "preferred";
+
+          position = {
+            x = 2256;
+            y = 0;
+          };
+
+          scale = 1.0;
+        };
+      };
+    }
+
+    {
+      name = "Docked Home Office w/o Inbuilt Display";
+
+      outputs = {
+        "eDP-1" = {
+          mode = "2256x1504@59.999";
+
+          scale = 1.0;
+          disabled = true;
+        };
+        
+        "desc:Samsung Electric Company LC49G95T H1AK500000" = {
+          mode = "preferred";
+
+          position = {
+            x = 2256;
+            y = 0;
+          };
+
+          scale = 1.0;
+        };
+      };
+    }
+
+    {
+      name = "Undocked";
+
+      outputs = {
+        "eDP-1" = {
+          mode = "2256x1504@59.999";
+
+          scale = 1.0;
+          disabled = false;
+        };
+      };
+    }
+  ];
+
 }

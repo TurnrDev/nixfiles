@@ -12,7 +12,7 @@
 
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
-  dmsGreeterCacheDir = "/var/lib/dms-greeter";
+  toLua = lib.generators.toLua { };
   device_list = [
     "home-server"
     "jay-framework"
@@ -43,50 +43,48 @@ in
       enable = true;
       package = dmsPackages.default;
       configHome = config.my.identity.homeDirectory;
-      # Reuse the same DMS-managed monitor layout that Hyprland sources at runtime.
-      configFiles = [ "${config.my.identity.homeDirectory}/.config/hypr/dms/outputs.conf" ];
-      quickshell.package = dmsPackages.quickshell;
+      quickshell.package = pkgs.quickshell;
       compositor = {
         name = "hyprland";
         customConfig = ''
-          env = DMS_RUN_GREETER,1
-          source = ${dmsGreeterCacheDir}/outputs.conf
+          hl.env("DMS_RUN_GREETER", "1")
 
-          misc {
-              disable_hyprland_logo = true
-              disable_splash_rendering = true
-          }
+          require("dms.colors")
+          require("dms.layout")
+          require("dms.outputs")
+          require("dms.cursor")
+          require("dms.windowrules")
 
-          input {
-              kb_layout = gb
-              numlock_by_default = true
-              resolve_binds_by_sym = true
-          }
+          hl.config({
+            misc = {
+              disable_hyprland_logo = true,
+              disable_splash_rendering = true,
+            },
+            input = {
+              kb_layout = "${config.services.xserver.xkb.layout}",
+              kb_variant = "${config.services.xserver.xkb.variant}",
+              numlock_by_default = true,
+              resolve_binds_by_sym = true,
+            },
+          })
 
-          device {
-              name = keychron-keychron-v6-max
-              kb_layout = gb
-              kb_variant =
-              resolve_binds_by_sym = true
-          }
+          hl.device({
+            name = "keychron-keychron-v6-max",
+            kb_layout = "gb",
+            kb_variant = "",
+            resolve_binds_by_sym = true,
+          })
 
-          device {
-              name = keychron--keychron-link--keyboard
-              kb_layout = gb
-              kb_variant =
-              resolve_binds_by_sym = true
-          }
-
+          hl.device({
+            name = "keychron--keychron-link--keyboard",
+            kb_layout = "gb",
+            kb_variant = "",
+            resolve_binds_by_sym = true,
+          })
         '';
       };
     };
   };
-  systemd.services.greetd.preStart = lib.mkAfter ''
-    if [ ! -f ${dmsGreeterCacheDir}/outputs.conf ]; then
-        : > ${dmsGreeterCacheDir}/outputs.conf
-        chown dms-greeter:dms-greeter ${dmsGreeterCacheDir}/outputs.conf
-    fi
-  '';
   services.desktopManager.plasma6.enable = true;
 
   # Configure keymap in X11

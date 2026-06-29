@@ -1,9 +1,6 @@
 { pkgs, ... }:
-let
-  goHassAgent = pkgs.callPackage ../../../pkgs/go-hass-agent.nix { };
-in
 {
-  home.packages = [ goHassAgent ];
+  home.packages = [ pkgs.go-hass-agent ];
 
   # Run go-hass-agent continuously as a user service so it starts on login.
   systemd.user.services.go-hass-agent = {
@@ -14,7 +11,7 @@ in
     };
 
     Service = {
-      ExecStart = "${goHassAgent}/bin/go-hass-agent run";
+      ExecStart = "${pkgs.go-hass-agent}/bin/go-hass-agent run";
       Restart = "always";
       RestartSec = 5;
     };

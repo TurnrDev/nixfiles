@@ -9,8 +9,7 @@
 let
   settings = (builtins.fromJSON (builtins.readFile ./settings.json)) // {
     gtkThemingEnabled = true;
-    iconTheme = "Adwaita";
-    qtThemingEnabled = false;
+    qtThemingEnabled = true;
   };
 in
 

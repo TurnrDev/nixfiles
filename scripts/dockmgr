@@ -1,74 +1,14 @@
 #!/usr/bin/env bash
-# USB profile watcher.
-# Runs with bash or zsh: bash ~/dockmgr watch, zsh ~/dockmgr watch, or just ~/dockmgr watch.
 
-# Profile USB IDs. Space-separated vendor:product pairs.
-# Work profile, from your connected lsusb output:
-# Bus 002 Device 002: ID 05e3:0625 Genesys Logic, Inc. USB3.2 Hub
-# Bus 002 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
-# Bus 003 Device 006: ID 05e3:0610 Genesys Logic, Inc. Hub
-# Bus 003 Device 007: ID 05e3:0608 Genesys Logic, Inc. Hub
-# Bus 003 Device 008: ID 05e3:0608 Genesys Logic, Inc. Hub
-# Bus 003 Device 009: ID 258a:003a SINO WEALTH Gaming KB
-WORK_PROFILE_USB_IDS="${WORK_PROFILE_USB_IDS:-258a:003a}"
+set -u
 
-# Home profile placeholder. Fill this in later, for example:
-# HOME_PROFILE_USB_IDS="abcd:1234 dead:beef"
-# Bus 002 Device 002: ID 05e3:0625 Genesys Logic, Inc. USB3.2 Hub
-# Bus 002 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
-# Bus 003 Device 006: ID 05e3:0610 Genesys Logic, Inc. Hub
-# Bus 003 Device 007: ID 1a86:8091 QinHeng Electronics USB HUB
-# Bus 003 Device 008: ID 057e:0000 Nintendo Co., Ltd USB BillBoard
-# Bus 003 Device 009: ID 05e3:0610 Genesys Logic, Inc. Hub
-# Bus 003 Device 010: ID 0bda:5411 Realtek Semiconductor Corp. RTS5411 Hub
-# Bus 003 Device 011: ID 046d:c548 Logitech, Inc. Logi Bolt Receiver
-# Bus 003 Device 012: ID 06a3:0762 Saitek PLC Saitek X52 Pro Flight Control System
-# Bus 003 Device 013: ID 3434:0961 Keychron Keychron V6 Max
-# Bus 003 Device 014: ID 291a:3369 Anker PowerConf C200 Anker PowerConf C200
-HOME_PROFILE_USB_IDS="${HOME_PROFILE_USB_IDS:-3434:0961 046d:c548}"
-
+CONFIG_PATH="${CONFIG_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/dockmgr/config.json}"
 DOCK_POLL_INTERVAL="${DOCK_POLL_INTERVAL:-2}"
+DOCK_UDEV_SETTLE_DELAY="${DOCK_UDEV_SETTLE_DELAY:-1}"
+DOCK_NOTIFY_APP="${DOCK_NOTIFY_APP:-dockmgr}"
 
 trap 'exit 130' INT
 trap 'exit 143' TERM
-
-activate_work() {
-    dms ipc outputs listProfiles
-    dms ipc outputs setProfile "Docked Work"
-    notify "Work profile activated"  "Profile switched to Docked Work"
-}
-
-deactivate_work() {
-    quick_notify "Work profile deactivated"
-}
-
-activate_home() {
-    dms ipc outputs listProfiles
-    dms ipc outputs setProfile "Docked Home"
-    notify "Home profile activated" "Profile switched to Docked Home"
-}
-
-deactivate_home() {
-    quick_notify "Home profile deactivated"
-}
-
-activate_undocked() {
-    dms ipc outputs listProfiles
-    dms ipc outputs setProfile "Undocked"
-    notify "Undocked profile activated" "Profile switched to Undocked"
-}
-
-deactivate_undocked() {
-    quick_notify "Undocked profile deactivated"
-}
-
-quick_notify() {
-    dms notify "$@" --app dockmgr
-}
-
-notify() {
-    dms notify "$@" "$@" --app dockmgr
-}
 
 need_cmd() {
     command -v "$1" >/dev/null 2>&1 || {
@@ -77,12 +17,28 @@ need_cmd() {
     }
 }
 
-usb_device_paths_for_id() {
-    want_id="$1"
-    want_vendor="${want_id%%:*}"
-    want_product="${want_id#*:}"
+quick_notify() {
+    if command -v dms >/dev/null 2>&1; then
+        dms notify "$1" --app "$DOCK_NOTIFY_APP" >/dev/null 2>&1 || true
+    fi
+}
 
-    found=1
+notify() {
+    if command -v dms >/dev/null 2>&1; then
+        dms notify "$1" "$2" --app "$DOCK_NOTIFY_APP" >/dev/null 2>&1 || true
+    fi
+}
+
+ensure_config() {
+    [ -r "$CONFIG_PATH" ] || {
+        printf 'dockmgr: missing config: %s\n' "$CONFIG_PATH" >&2
+        exit 1
+    }
+}
+
+read_usb_ids() {
+    local vendor_file device_dir product_file got_vendor got_product
+
     for vendor_file in /sys/bus/usb/devices/*/idVendor; do
         [ -e "$vendor_file" ] || continue
 
@@ -93,159 +49,244 @@ usb_device_paths_for_id() {
 
         read -r got_vendor < "$vendor_file" || continue
         read -r got_product < "$product_file" || continue
+        printf '%s:%s\n' "$got_vendor" "$got_product"
+    done | sort -u
+}
 
-        if [ "$got_vendor:$got_product" = "$want_vendor:$want_product" ]; then
-            found=0
-            printf '%s\n' "$device_dir"
-        fi
+read_connected_display_names() {
+    local status_file output_name status_value
+
+    for status_file in /sys/class/drm/card*-*/status; do
+        [ -r "$status_file" ] || continue
+        read -r status_value < "$status_file" || continue
+        [ "$status_value" = "connected" ] || continue
+
+        output_name="$(basename "${status_file%/status}")"
+        output_name="${output_name#*-}"
+        printf '%s\n' "$output_name"
+    done | sort -u
+}
+
+read_connected_display_descriptions() {
+    command -v hyprctl >/dev/null 2>&1 || return 0
+
+    hyprctl monitors all -j 2>/dev/null \
+        | jq -r '.[] | .description? // empty | select(length > 0) | "desc:" + .' 2>/dev/null \
+        | sort -u || true
+}
+
+read_lid_closed() {
+    local lid_state_file lid_value
+
+    for lid_state_file in /proc/acpi/button/lid/*/state; do
+        [ -r "$lid_state_file" ] || continue
+        lid_value="$(awk '{ print $2 }' "$lid_state_file" 2>/dev/null)" || continue
+        case "$lid_value" in
+            closed)
+                printf 'true\n'
+                return 0
+                ;;
+            open)
+                printf 'false\n'
+                return 0
+                ;;
+        esac
     done
 
-    return "$found"
+    printf 'false\n'
 }
 
-profile_matches() {
-    ids="$1"
+collect_state() {
+    local usb_json display_json description_json merged_display_json lid_closed
 
-    for usb_id in $ids; do
-        if usb_device_paths_for_id "$usb_id" >/dev/null; then
-            return 0
+    usb_json="$(read_usb_ids | jq -R . | jq -s .)"
+    display_json="$(read_connected_display_names | jq -R . | jq -s .)"
+    description_json="$(read_connected_display_descriptions | jq -R . | jq -s .)"
+    merged_display_json="$(jq -cn --argjson names "$display_json" --argjson descriptions "$description_json" '$names + $descriptions | unique')"
+    lid_closed="$(read_lid_closed)"
+
+    jq -cn \
+        --argjson usb "$usb_json" \
+        --argjson displays "$merged_display_json" \
+        --argjson lidClosed "$lid_closed" \
+        '{
+            usb: $usb,
+            displays: $displays,
+            lid: {
+                closed: $lidClosed
+            }
+        }'
+}
+
+select_profile() {
+    local state_json="$1"
+
+    jq -cn \
+        --rawfile configText "$CONFIG_PATH" \
+        --argjson state "$state_json" '
+        ($configText | fromjson) as $config
+        |
+        def containsValue($haystack; $needle):
+            any($haystack[]?; . == $needle);
+        def allContained($haystack; $needles):
+            all($needles[]?; containsValue($haystack; .));
+        def anyContained($haystack; $needles):
+            any($needles[]?; containsValue($haystack; .));
+        def noneContained($haystack; $needles):
+            all($needles[]?; containsValue($haystack; .) | not);
+        def evalExpr($expr; $state):
+            all(
+                $expr
+                | to_entries[];
+                if .key == "and" then
+                    all(.value[]?; evalExpr(.; $state))
+                elif .key == "or" then
+                    any(.value[]?; evalExpr(.; $state))
+                elif .key == "not" then
+                    evalExpr(.value; $state) | not
+                elif .key == "usb" then
+                    (
+                        (.value.anyOf? | if . == null then true else anyContained($state.usb; .) end)
+                        and (.value.allOf? | if . == null then true else allContained($state.usb; .) end)
+                        and (.value.noneOf? | if . == null then true else noneContained($state.usb; .) end)
+                    )
+                elif .key == "displays" then
+                    (
+                        (.value.connectedAnyOf? | if . == null then true else anyContained($state.displays; .) end)
+                        and (.value.connectedAllOf? | if . == null then true else allContained($state.displays; .) end)
+                        and (.value.connectedNoneOf? | if . == null then true else noneContained($state.displays; .) end)
+                    )
+                elif .key == "lid" then
+                    $state.lid.closed == .value.closed
+                else
+                    false
+                end
+            );
+        def rank:
+            [(.specificity // 0), (-(.order // 0))];
+        ($config.profiles // []) as $profiles
+        | ($profiles | map(select(.match != null and evalExpr(.match; $state))) | sort_by(rank) | last) as $matched
+        | ($profiles | map(select(.fallback)) | sort_by(rank) | last) as $fallback
+        | ($matched // $fallback // empty)
+        '
+}
+
+run_hook_list() {
+    local profile_name="$1"
+    local phase="$2"
+    local commands_json="$3"
+
+    jq -r '.[]' <<<"$commands_json" | while IFS= read -r command; do
+        [ -n "$command" ] || continue
+        if ! bash -lc "$command"; then
+            printf 'dockmgr: hook failed: %s %s: %s\n' "$profile_name" "$phase" "$command" >&2
+            notify "dockmgr hook failed" "$profile_name $phase failed"
         fi
     done
-
-    return 1
 }
 
-current_profile() {
-    if profile_matches "$WORK_PROFILE_USB_IDS"; then
-        printf '%s\n' "work"
-        return 0
+apply_profile() {
+    local profile_json="$1"
+    local profile_name
+
+    profile_name="$(jq -r '.name' <<<"$profile_json")"
+    if ! dms ipc outputs setProfile "$profile_name" >/dev/null 2>&1; then
+        printf 'dockmgr: failed to apply DMS profile: %s\n' "$profile_name" >&2
+        notify "dockmgr apply failed" "Unable to activate $profile_name"
+        return 1
     fi
 
-    if [ -n "$HOME_PROFILE_USB_IDS" ] && profile_matches "$HOME_PROFILE_USB_IDS"; then
-        printf '%s\n' "home"
-        return 0
-    fi
-
-    printf '%s\n' "undocked"
-}
-
-print_status() {
-    print_profile_status "work" "$WORK_PROFILE_USB_IDS"
-    print_profile_status "home" "$HOME_PROFILE_USB_IDS"
-    printf 'Current profile: %s\n' "$(current_profile)"
-}
-
-print_profile_status() {
-    profile_name="$1"
-    ids="$2"
-
-    if [ -z "$ids" ]; then
-        printf 'Profile %s IDs: <unset>\n' "$profile_name"
-        return 0
-    fi
-
-    printf 'Profile %s IDs: %s\n' "$profile_name" "$ids"
-
-    for usb_id in $ids; do
-        matches="$(usb_device_paths_for_id "$usb_id" || true)"
-
-        if [ -n "$matches" ]; then
-            printf '%s\n' "$matches" | while IFS= read -r device_dir; do
-                manufacturer=""
-                product=""
-
-                [ -r "$device_dir/manufacturer" ] && read -r manufacturer < "$device_dir/manufacturer"
-                [ -r "$device_dir/product" ] && read -r product < "$device_dir/product"
-
-                printf 'Matched %s device: %s' "$profile_name" "$device_dir"
-                if [ -n "$manufacturer$product" ]; then
-                    printf ' (%s %s)' "$manufacturer" "$product"
-                fi
-                printf '\n'
-            done
-        else
-            printf 'Matched %s device: none for %s\n' "$profile_name" "$usb_id"
-        fi
-    done
-}
-
-check_transition() {
-    current="$(current_profile)"
-
-    if [ "$current" != "$last_state" ]; then
-        transition_profile "$last_state" "$current"
-        last_state="$current"
-    fi
+    return 0
 }
 
 transition_profile() {
-    from_profile="$1"
-    to_profile="$2"
+    local from_json="$1"
+    local to_json="$2"
+    local from_name to_name
 
-    if [ -n "$from_profile" ] && [ "$from_profile" != "unknown" ]; then
-        deactivate_profile "$from_profile"
+    to_name="$(jq -r '.name' <<<"$to_json")"
+
+    if [ -n "$from_json" ]; then
+        from_name="$(jq -r '.name' <<<"$from_json")"
+        notify "Switching profile" "$from_name -> $to_name"
+        run_hook_list "$from_name" "preDown" "$(jq -c '.hooks.preDown // []' <<<"$from_json")"
+    else
+        notify "Activating profile" "$to_name"
     fi
 
-    activate_profile "$to_profile"
+    run_hook_list "$to_name" "preUp" "$(jq -c '.hooks.preUp // []' <<<"$to_json")"
+    apply_profile "$to_json"
+
+    if [ -n "$from_json" ]; then
+        run_hook_list "$from_name" "postDown" "$(jq -c '.hooks.postDown // []' <<<"$from_json")"
+    fi
+
+    run_hook_list "$to_name" "postUp" "$(jq -c '.hooks.postUp // []' <<<"$to_json")"
+    notify "Profile active" "$to_name"
 }
 
-activate_profile() {
-    profile="$1"
-
-    case "$profile" in
-        work)
-            activate_work
-            ;;
-        home)
-            activate_home
-            ;;
-        undocked)
-            activate_undocked
-            ;;
-        *)
-            printf 'dockmgr: unknown profile: %s\n' "$profile" >&2
-            return 1
-            ;;
-    esac
+current_profile_json() {
+    local state_json
+    state_json="$(collect_state)"
+    select_profile "$state_json"
 }
 
-deactivate_profile() {
-    profile="$1"
+print_status() {
+    local state_json profile_json
 
-    case "$profile" in
-        work)
-            deactivate_work
-            ;;
-        home)
-            deactivate_home
-            ;;
-        undocked)
-            deactivate_undocked
-            ;;
-        *)
-            printf 'dockmgr: unknown profile: %s\n' "$profile" >&2
-            return 1
-            ;;
-    esac
+    state_json="$(collect_state)"
+    profile_json="$(select_profile "$state_json")"
+
+    printf 'State:\n'
+    jq . <<<"$state_json"
+    printf '\nSelected profile:\n'
+    if [ -n "$profile_json" ]; then
+        jq . <<<"$profile_json"
+    else
+        printf 'None\n'
+    fi
+}
+
+check_transition() {
+    local current_json current_id
+
+    current_json="$(current_profile_json)"
+    [ -n "$current_json" ] || {
+        printf 'dockmgr: no profile matched and no fallback is configured\n' >&2
+        return 1
+    }
+
+    current_id="$(jq -r '.id' <<<"$current_json")"
+
+    if [ "${last_profile_id:-}" != "$current_id" ]; then
+        transition_profile "${last_profile_json:-}" "$current_json"
+        last_profile_json="$current_json"
+        last_profile_id="$current_id"
+    fi
 }
 
 watch_udev() {
-    udevadm monitor --subsystem-match=usb 2>/dev/null | while IFS= read -r _event; do
-        sleep 1
-        check_transition
+    udevadm monitor --udev 2>/dev/null | while IFS= read -r _event; do
+        sleep "$DOCK_UDEV_SETTLE_DELAY"
+        check_transition || true
     done
     return 1
 }
 
 watch_poll() {
     while :; do
-        check_transition
+        check_transition || true
         sleep "$DOCK_POLL_INTERVAL"
     done
 }
 
 watch() {
-    last_state="unknown"
+    ensure_config
+    need_cmd jq
+    need_cmd dms
+
+    last_profile_id=""
+    last_profile_json=""
     check_transition
 
     if command -v udevadm >/dev/null 2>&1 && watch_udev; then
@@ -256,17 +297,34 @@ watch() {
     watch_poll
 }
 
+once() {
+    local current_json
+
+    ensure_config
+    need_cmd jq
+    need_cmd dms
+
+    current_json="$(current_profile_json)"
+    [ -n "$current_json" ] || {
+        printf 'dockmgr: no profile matched and no fallback is configured\n' >&2
+        exit 1
+    }
+
+    transition_profile "" "$current_json"
+}
+
 usage() {
     cat <<'EOF'
 Usage:
-  dockmgr watch      Watch for profile transitions
-  dockmgr status     Print profile match inputs and current profile
-  dockmgr once       Run the current profile activation hook once
+  dockmgr watch      Watch dock state and switch profiles
+  dockmgr status     Print current state and selected profile
+  dockmgr once       Run the current profile activation once
 
 Environment overrides:
-  WORK_PROFILE_USB_IDS   default: 258a:003a
-  HOME_PROFILE_USB_IDS   default: 046d:c342 046d:c548
-  DOCK_POLL_INTERVAL   default: 2 unit: seconds
+  DOCK_POLL_INTERVAL      default: 2 unit: seconds
+  DOCK_UDEV_SETTLE_DELAY  default: 1 unit: seconds
+  DOCK_NOTIFY_APP         default: dockmgr
+  CONFIG_PATH             default: $XDG_CONFIG_HOME/dockmgr/config.json
 EOF
 }
 
@@ -275,10 +333,12 @@ case "${1:-watch}" in
         watch
         ;;
     status)
+        ensure_config
+        need_cmd jq
         print_status
         ;;
     once)
-        activate_profile "$(current_profile)"
+        once
         ;;
     -h|--help|help)
         usage

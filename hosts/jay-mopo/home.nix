@@ -15,6 +15,25 @@
     {
       name = "Docked Work";
 
+      match = {
+        and = [
+          {
+            displays.connectedAllOf = [
+              "DP-5"
+              "DP-7"
+            ];
+          }
+          {
+            usb.allOf = [
+              "258a:003a"
+              "05e3:0625"
+              "05e3:0610"
+              "05e3:0608"
+            ];
+          }
+        ];
+      };
+
       outputs = {
         "eDP-1" = {
           mode = "2880x1800@90.001";
@@ -49,6 +68,23 @@
     {
       name = "Docked Home Office with Inbuilt Display";
 
+      match = {
+        and = [
+          {
+            displays.connectedAnyOf = [ "desc:Samsung Electric Company LC49G95T H1AK500000" ];
+          }
+          {
+            usb.allOf = [
+              "3434:0961"
+              "046d:c548"
+            ];
+          }
+          {
+            lid.closed = false;
+          }
+        ];
+      };
+
       outputs = {
         "eDP-1" = {
           mode = "2880x1800@90.001";
@@ -73,6 +109,23 @@
     {
       name = "Docked Home Office w/o Inbuilt Display";
 
+      match = {
+        and = [
+          {
+            displays.connectedAnyOf = [ "desc:Samsung Electric Company LC49G95T H1AK500000" ];
+          }
+          {
+            usb.allOf = [
+              "3434:0961"
+              "046d:c548"
+            ];
+          }
+          {
+            lid.closed = true;
+          }
+        ];
+      };
+
       outputs = {
         "eDP-1" = {
           mode = "2880x1800@90.001";
@@ -80,7 +133,7 @@
           scale = 1.0;
           disabled = true;
         };
-        
+
         "desc:Samsung Electric Company LC49G95T H1AK500000" = {
           mode = "preferred";
 

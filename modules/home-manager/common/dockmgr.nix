@@ -2,8 +2,22 @@
 
 let
   sessionTarget = config.wayland.systemd.target;
+  dockMgr = pkgs.writeShellApplication {
+    name = "dockmgr";
+    runtimeInputs = with pkgs; [
+      bash
+      coreutils
+      gawk
+      gnugrep
+      jq
+      systemd
+    ];
+    text = builtins.readFile ../../../scripts/dockmgr;
+  };
 in
 {
+  home.packages = [ dockMgr ];
+
   systemd.user.services.dockmgr = {
     Unit = {
       Description = "Watch dock state and switch DMS profiles";
@@ -23,7 +37,7 @@ in
 
     Service = {
       Type = "simple";
-      ExecStart = "/etc/nixos/scripts/dockmgr watch";
+      ExecStart = "${dockMgr}/bin/dockmgr watch";
       ExecStartPre = "${pkgs.coreutils}/bin/test -r %h/.config/dockmgr/config.json";
       Environment = [
         "PATH=%h/.nix-profile/bin:/etc/profiles/per-user/%u/bin:/run/current-system/sw/bin"

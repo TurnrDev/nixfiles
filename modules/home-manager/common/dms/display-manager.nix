@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   inherit (lib) mkOption types;
@@ -160,5 +160,9 @@ in
       version = cfg.version;
       configurations = generatedConfigurations;
     };
+    
+    home.packages = [
+      pkgs.nwg-displays
+    ];
   };
 }

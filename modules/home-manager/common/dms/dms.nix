@@ -11,6 +11,7 @@ let
     gtkThemingEnabled = true;
     qtThemingEnabled = true;
   };
+  sessionTarget = config.wayland.systemd.target;
 in
 
 {
@@ -20,9 +21,19 @@ in
     ./wallpaper-automation.nix
   ];
 
-  systemd.user.services.dms.Service = {
-    Restart = "on-failure";
-    RestartSec = "2s";
+  systemd.user.services.dms = {
+    Unit = {
+      PartOf = [ sessionTarget ];
+      After = [ sessionTarget ];
+      Requisite = [ sessionTarget ];
+    };
+
+    Service = {
+      Restart = "on-failure";
+      RestartSec = "2s";
+    };
+
+    Install.WantedBy = lib.mkForce [ sessionTarget ];
   };
 
   programs.dank-material-shell = {

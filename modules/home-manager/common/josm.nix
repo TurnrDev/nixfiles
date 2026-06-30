@@ -50,10 +50,6 @@ let
       }) mapSettings;
     };
   };
-
-  managedJosm = pkgs.writeShellScriptBin "josm" ''
-    exec ${lib.getExe cfg.package} --load-preferences=${preferences} "$@"
-  '';
 in
 {
   options.programs.josm = {
@@ -61,8 +57,14 @@ in
 
     package = mkOption {
       type = types.package;
-      default = pkgs.josm;
-      defaultText = lib.literalExpression "pkgs.josm";
+      default = pkgs.josm.override {
+        jre = pkgs.jre.override { enableJavaFX = true; };
+      };
+      defaultText = lib.literalExpression ''
+        pkgs.josm.override {
+          jre = pkgs.jre.override { enableJavaFX = true; };
+        }
+      '';
       description = "JOSM package to run.";
     };
 
@@ -238,9 +240,6 @@ in
           "turnrestrictions.visible" = true;
           "upload.source.obtainautomatically" = true;
           "utilsplugin2.customurl" = "https://www.openstreetmap.org/{#type}/{#id}/history";
-          "validator.ignorelist.version" = 2;
-          "validator.skip" = [ ];
-          "validator.skipBeforeUpload" = [ ];
           "validator.visible" = true;
         };
       };
@@ -254,7 +253,9 @@ in
         }
       ];
 
-      home.packages = [ managedJosm ];
+      home.packages = [ cfg.package ];
+
+      xdg.configFile."JOSM/preferences.xml".source = preferences;
 
       xdg.dataFile = lib.listToAttrs (
         map (plugin: {
@@ -262,27 +263,6 @@ in
           value.source = inputs.josm-plugin-sources.sources."josm-plugin-${plugin}";
         }) cfg.plugins
       );
-
-      xdg.desktopEntries.josm = {
-        name = "JOSM";
-        genericName = "OpenStreetMap Editor";
-        comment = "Edit OpenStreetMap data";
-        icon = "josm";
-        exec = "${lib.getExe managedJosm} %U";
-        terminal = false;
-        categories = [
-          "Graphics"
-          "Geography"
-          "Network"
-        ];
-        mimeType = [
-          "application/geo+json"
-          "application/gpx+xml"
-          "application/vnd.google-earth.kml+xml"
-          "application/x-gpx+xml"
-          "application/x-osm+xml"
-        ];
-      };
     })
   ];
 }

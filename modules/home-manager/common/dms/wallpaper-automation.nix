@@ -73,7 +73,8 @@ in
     Unit = {
       Description = "Set random wallpaper with query 'space'";
       PartOf = [ sessionTarget ];
-      After = [ sessionTarget ];
+      Requires = [ "dms.service" ];
+      After = [ sessionTarget "dms.service" ];
     };
     Service = {
       Type = "oneshot";
@@ -100,7 +101,8 @@ in
     Unit = {
       Description = "Watch Hyprland monitor events and update wallpaper on size/layout changes";
       PartOf = [ sessionTarget ];
-      After = [ sessionTarget ];
+      Requires = [ "dms.service" ];
+      After = [ sessionTarget "dms.service" ];
     };
     Service = {
       Type = "simple";

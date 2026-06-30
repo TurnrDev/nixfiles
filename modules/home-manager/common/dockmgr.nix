@@ -23,13 +23,11 @@ in
       Description = "Watch dock state and switch DMS profiles";
       ConditionPathExists = "%h/.config/dockmgr/config.json";
       PartOf = [ sessionTarget ];
-      Wants = [
-        "default.target"
+      Requires = [
         sessionTarget
         "dms.service"
       ];
       After = [
-        "default.target"
         sessionTarget
         "dms.service"
       ];
@@ -48,7 +46,6 @@ in
     };
 
     Install.WantedBy = [
-      "default.target"
       sessionTarget
     ];
   };

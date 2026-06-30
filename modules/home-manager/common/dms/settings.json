@@ -106,6 +106,10 @@
         },
         {
           "enabled": true,
+          "id": "battery"
+        },
+        {
+          "enabled": true,
           "id": "notificationButton"
         },
         {
@@ -117,10 +121,6 @@
           "showMicIcon": false,
           "showMicPercent": true,
           "showPrinterIcon": false
-        },
-        {
-          "enabled": true,
-          "id": "battery"
         }
       ],
       "screenPreferences": [
@@ -521,6 +521,7 @@
   "maxFprintTries": 15,
   "maxWorkspaceIcons": 2,
   "mediaAdaptiveWidthEnabled": true,
+  "mediaExcludePlayers": [],
   "mediaSize": 1,
   "modalAnimationSpeed": 1,
   "modalCustomAnimationDuration": 150,
@@ -599,7 +600,7 @@
   "privacyShowCameraIcon": false,
   "privacyShowMicIcon": false,
   "privacyShowScreenShareIcon": false,
-  "qtThemingEnabled": false,
+  "qtThemingEnabled": true,
   "registryThemeVariants": {},
   "rememberLastMode": true,
   "rememberLastQuery": false,

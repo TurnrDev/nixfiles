@@ -49,12 +49,6 @@ in
         customConfig = ''
           hl.env("DMS_RUN_GREETER", "1")
 
-          require("dms.colors")
-          require("dms.layout")
-          require("dms.outputs")
-          require("dms.cursor")
-          require("dms.windowrules")
-
           hl.config({
             misc = {
               disable_hyprland_logo = true,

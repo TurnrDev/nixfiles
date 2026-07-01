@@ -36,10 +36,6 @@
       url = "git+https://github.com/cglavin50/dms-tailscale";
       flake = false;
     };
-    edmc-discord-presence = {
-      url = "git+https://github.com/elite-kode/edmc-discord-presence?submodules=1";
-      flake = false;
-    };
     zsh-command-time = {
       url = "git+https://github.com/popstas/zsh-command-time";
       flake = false;

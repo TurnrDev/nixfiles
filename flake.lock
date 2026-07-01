@@ -68,24 +68,6 @@
         "url": "https://github.com/xxyangyoulin/dms-plugin-hass"
       }
     },
-    "dms-plugin-sources": {
-      "inputs": {
-        "dms-plugin-docker-manager": "dms-plugin-docker-manager",
-        "dms-plugin-hass": "dms-plugin-hass",
-        "dms-plugin-tailscale": "dms-plugin-tailscale",
-        "dms-plugins": "dms-plugins",
-        "dms-plugins-taylan": "dms-plugins-taylan"
-      },
-      "locked": {
-        "path": "./modules/home-manager/common/dms/plugin-inputs",
-        "type": "path"
-      },
-      "original": {
-        "path": "./modules/home-manager/common/dms/plugin-inputs",
-        "type": "path"
-      },
-      "parent": []
-    },
     "dms-plugin-tailscale": {
       "flake": false,
       "locked": {
@@ -133,38 +115,6 @@
         "type": "git",
         "url": "https://github.com/TaylanTatli/dms-plugins"
       }
-    },
-    "edmc-discord-presence": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1731584770,
-        "narHash": "sha256-jYMqnLtLxbXmeISqOB6zCpCr62eckB/95XiEv2UmeAw=",
-        "ref": "refs/heads/master",
-        "rev": "1dccdeeb064a1379cafbb67ffa2d389854f784f6",
-        "revCount": 47,
-        "submodules": true,
-        "type": "git",
-        "url": "https://github.com/elite-kode/edmc-discord-presence"
-      },
-      "original": {
-        "submodules": true,
-        "type": "git",
-        "url": "https://github.com/elite-kode/edmc-discord-presence"
-      }
-    },
-    "elite-plugin-sources": {
-      "inputs": {
-        "edmc-discord-presence": "edmc-discord-presence"
-      },
-      "locked": {
-        "path": "./modules/home-manager/common/elite-plugin-inputs",
-        "type": "path"
-      },
-      "original": {
-        "path": "./modules/home-manager/common/elite-plugin-inputs",
-        "type": "path"
-      },
-      "parent": []
     },
     "flake-compat": {
       "flake": false,
@@ -303,11 +253,11 @@
         "nixpkgs-nixcord": "nixpkgs-nixcord"
       },
       "locked": {
-        "lastModified": 1782897737,
-        "narHash": "sha256-v50Ew1LYL4akkN+ZtrPHCcwckI+JxlRRsHpwX2F2DiU=",
+        "lastModified": 1782925005,
+        "narHash": "sha256-/dTTPJ2rRMnWKvACGzuAAUD9RYrCNJFOHbGpK2qaw+g=",
         "owner": "FlameFlag",
         "repo": "nixcord",
-        "rev": "d894fa4836f91b595118a0188ce0ae3cb11d0992",
+        "rev": "1fb96765ab6fd4bd2c67b6c00eb46761ba03c5b2",
         "type": "github"
       },
       "original": {
@@ -410,7 +360,6 @@
         "dms-plugin-tailscale": "dms-plugin-tailscale",
         "dms-plugins": "dms-plugins",
         "dms-plugins-taylan": "dms-plugins-taylan",
-        "edmc-discord-presence": "edmc-discord-presence",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
         "nixcord": "nixcord",
@@ -512,20 +461,6 @@
         "type": "git",
         "url": "https://github.com/popstas/zsh-command-time"
       }
-    },
-    "zsh-plugin-sources": {
-      "inputs": {
-        "zsh-command-time": "zsh-command-time"
-      },
-      "locked": {
-        "path": "./modules/home-manager/common/zsh-plugin-inputs",
-        "type": "path"
-      },
-      "original": {
-        "path": "./modules/home-manager/common/zsh-plugin-inputs",
-        "type": "path"
-      },
-      "parent": []
     }
   },
   "root": "root",

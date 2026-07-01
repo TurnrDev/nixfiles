@@ -13,20 +13,9 @@
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
   toLua = lib.generators.toLua { };
-  personalDeviceList = [
-    "home-server"
-    "jay-framework"
-    "jay-desktop"
-  ];
-  workDeviceList = [ "jay-mopo" ];
-  personalFolderHosts = [
-    "jay-desktop"
-    "jay-framework"
-  ];
-  workFolderHosts = [ "jay-mopo" ];
   hostName = config.networking.hostName;
-  hasPersonalFolders = lib.elem hostName personalFolderHosts;
-  hasWorkFolders = lib.elem hostName workFolderHosts;
+  hasPersonalFolders = lib.elem hostName config.my.syncthing.personalFolderHosts;
+  hasWorkFolders = lib.elem hostName config.my.syncthing.workFolderHosts;
   hasAllFolders = hasPersonalFolders || hasWorkFolders;
 in
 {
@@ -35,6 +24,42 @@ in
     ../services/dms-home-assistant-monitor.nix
   ];
 
+  options.my.syncthing.personalDeviceList = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    readOnly = true;
+    default = [
+      "home-server"
+      "jay-framework"
+      "jay-desktop"
+    ];
+    description = "Internal shared Syncthing device list for personal folders.";
+  };
+
+  options.my.syncthing.workDeviceList = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    readOnly = true;
+    default = [ "jay-mopo" ];
+    description = "Internal shared Syncthing device list for work-only peers.";
+  };
+
+  options.my.syncthing.personalFolderHosts = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    readOnly = true;
+    default = [
+      "jay-desktop"
+      "jay-framework"
+    ];
+    description = "Hosts that should declare personal Syncthing folders locally.";
+  };
+
+  options.my.syncthing.workFolderHosts = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    readOnly = true;
+    default = [ "jay-mopo" ];
+    description = "Hosts that should declare work-only Syncthing folders locally.";
+  };
+
+  config = {
   my.backups.borgmatic.extraExcludePatterns = lib.mkAfter [
     "${config.my.identity.homeDirectory}/.config/Code"
     "${config.my.identity.homeDirectory}/.config/GitKraken"
@@ -197,7 +222,7 @@ in
       } // lib.optionalAttrs hasPersonalFolders {
         "3D Printing" = {
           path = "${config.my.identity.homeDirectory}/3D Printing/";
-          devices = personalDeviceList;
+          devices = config.my.syncthing.personalDeviceList;
           versioning = {
             type = "simple";
             params.keep = "10";
@@ -205,7 +230,7 @@ in
         };
         "Documents" = {
           path = "${config.my.identity.homeDirectory}/Documents/";
-          devices = personalDeviceList;
+          devices = config.my.syncthing.personalDeviceList;
           versioning = {
             type = "simple";
             params.keep = "10";
@@ -214,7 +239,7 @@ in
       } // lib.optionalAttrs hasAllFolders {
         "JOSM" = {
           path = "${config.my.identity.homeDirectory}/.config/JOSM/";
-          devices = personalDeviceList ++ workDeviceList;
+          devices = config.my.syncthing.personalDeviceList ++ config.my.syncthing.workDeviceList;
           versioning = {
             type = "simple";
             params.keep = "10";
@@ -222,5 +247,6 @@ in
         };
       };
     };
+  };
   };
 }

@@ -41,13 +41,13 @@ in
     inherit settings;
 
     plugins = {
-      dankBatteryAlerts.src = inputs.dms-plugin-sources.sources.dms-plugins + "/DankBatteryAlerts";
-      dankKDEConnect.src = inputs.dms-plugin-sources.sources.dms-plugins + "/DankKDEConnect";
-      dankLauncherKeys.src = inputs.dms-plugin-sources.sources.dms-plugins + "/DankLauncherKeys";
-      dankNotepadModule.src = inputs.dms-plugin-sources.sources.dms-plugins + "/DankNotepadModule";
-      grimblast.src = inputs.dms-plugin-sources.sources.dms-plugins-taylan + "/grimblast";
+      dankBatteryAlerts.src = inputs."dms-plugins" + "/DankBatteryAlerts";
+      dankKDEConnect.src = inputs."dms-plugins" + "/DankKDEConnect";
+      dankLauncherKeys.src = inputs."dms-plugins" + "/DankLauncherKeys";
+      dankNotepadModule.src = inputs."dms-plugins" + "/DankNotepadModule";
+      grimblast.src = inputs."dms-plugins-taylan" + "/grimblast";
       homeAssistantMonitor = {
-        src = inputs.dms-plugin-sources.sources.dms-plugin-hass;
+        src = inputs."dms-plugin-hass";
         settings = {
           hassUrl = "https://assistant.home.turnr.dev";
           hassTokenPath = "/run/secrets/hass_token";
@@ -55,13 +55,13 @@ in
         };
       };
       dockerManager = {
-        src = inputs.dms-plugin-sources.sources.dms-plugin-docker-manager;
+        src = inputs."dms-plugin-docker-manager";
         settings = {
           terminalApp = "ghostty --hold";
           groupByCompose = true;
         };
       };
-      tailscale.src = inputs.dms-plugin-sources.sources.dms-plugin-tailscale;
+      tailscale.src = inputs."dms-plugin-tailscale";
     };
 
     systemd = {

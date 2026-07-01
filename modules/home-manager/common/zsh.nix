@@ -15,7 +15,7 @@
   ];
 
   home.file.".oh-my-zsh/custom/plugins/command-time".source =
-    inputs.zsh-plugin-sources.sources.zsh-command-time;
+    inputs."zsh-command-time";
 
   programs.zsh = {
     enable = true;

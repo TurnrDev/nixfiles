@@ -13,11 +13,21 @@
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
   toLua = lib.generators.toLua { };
-  device_list = [
+  personalDeviceList = [
     "home-server"
     "jay-framework"
     "jay-desktop"
   ];
+  workDeviceList = [ "jay-mopo" ];
+  personalFolderHosts = [
+    "jay-desktop"
+    "jay-framework"
+  ];
+  workFolderHosts = [ "jay-mopo" ];
+  hostName = config.networking.hostName;
+  hasPersonalFolders = lib.elem hostName personalFolderHosts;
+  hasWorkFolders = lib.elem hostName workFolderHosts;
+  hasAllFolders = hasPersonalFolders || hasWorkFolders;
 in
 {
   imports = [
@@ -142,6 +152,9 @@ in
     imagemagick
     jetbrains.pycharm
     jetbrains.pycharm-oss
+    (josm.override {
+      jre = pkgs.jre.override { enableJavaFX = true; };
+    })
     openscad-unstable
     postman
     prusa-slicer
@@ -176,11 +189,15 @@ in
         "jay-framework" = {
           id = "VUUG6YN-SHPRRSW-44UADVY-VQ4MQZX-3T5PPN5-65MCQ6K-GIP4Y5T-CXH2UAQ";
         };
+        "jay-mopo" = {
+          id = "SN4ZRBM-SUQN22Q-IM65G3R-XITRUKX-AQAL4AI-RZCIKAJ-7RAPCVC-JO3O5QB";
+        };
       };
       folders = {
+      } // lib.optionalAttrs hasPersonalFolders {
         "3D Printing" = {
           path = "${config.my.identity.homeDirectory}/3D Printing/";
-          devices = device_list;
+          devices = personalDeviceList;
           versioning = {
             type = "simple";
             params.keep = "10";
@@ -188,7 +205,16 @@ in
         };
         "Documents" = {
           path = "${config.my.identity.homeDirectory}/Documents/";
-          devices = device_list;
+          devices = personalDeviceList;
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
+        };
+      } // lib.optionalAttrs hasAllFolders {
+        "JOSM" = {
+          path = "${config.my.identity.homeDirectory}/.config/JOSM/";
+          devices = personalDeviceList ++ workDeviceList;
           versioning = {
             type = "simple";
             params.keep = "10";

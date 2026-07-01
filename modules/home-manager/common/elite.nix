@@ -5,7 +5,7 @@ let
   edmcDiscordPresence = pkgs.stdenvNoCC.mkDerivation {
     pname = "edmc-discord-presence";
     version = "unstable";
-    src = inputs.elite-plugin-sources.sources.edmc-discord-presence;
+    src = inputs."edmc-discord-presence";
 
     installPhase = ''
       runHook preInstall

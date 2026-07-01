@@ -16,10 +16,34 @@
       url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dms-plugin-sources.url = "path:./modules/home-manager/common/dms/plugin-inputs";
-    elite-plugin-sources.url = "path:./modules/home-manager/common/elite-plugin-inputs";
-    josm-plugin-sources.url = "path:./modules/home-manager/common/josm-plugin-inputs";
-    zsh-plugin-sources.url = "path:./modules/home-manager/common/zsh-plugin-inputs";
+    dms-plugins = {
+      url = "git+https://github.com/AvengeMedia/dms-plugins";
+      flake = false;
+    };
+    dms-plugins-taylan = {
+      url = "git+https://github.com/TaylanTatli/dms-plugins";
+      flake = false;
+    };
+    dms-plugin-hass = {
+      url = "git+https://github.com/xxyangyoulin/dms-plugin-hass";
+      flake = false;
+    };
+    dms-plugin-docker-manager = {
+      url = "git+https://github.com/LuckShiba/DmsDockerManager";
+      flake = false;
+    };
+    dms-plugin-tailscale = {
+      url = "git+https://github.com/cglavin50/dms-tailscale";
+      flake = false;
+    };
+    edmc-discord-presence = {
+      url = "git+https://github.com/elite-kode/edmc-discord-presence?submodules=1";
+      flake = false;
+    };
+    zsh-command-time = {
+      url = "git+https://github.com/popstas/zsh-command-time";
+      flake = false;
+    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";

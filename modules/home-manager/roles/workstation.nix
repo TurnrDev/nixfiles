@@ -7,7 +7,6 @@
     ../common/firefox.nix
     ../common/go-hass-agent.nix
     ../common/hyprland/hyprland.nix
-    ../common/josm.nix
     ../common/kdeconnect.nix
     ../common/spotify.nix
   ];

@@ -23,7 +23,6 @@ in
 
   systemd.user.services.dms = {
     Unit = {
-      ConditionEnvironment = [ "HYPRLAND_INSTANCE_SIGNATURE" ];
       PartOf = [ sessionTarget ];
       After = [ sessionTarget ];
       Requisite = [ sessionTarget ];

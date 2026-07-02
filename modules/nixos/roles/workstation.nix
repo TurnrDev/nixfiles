@@ -21,6 +21,7 @@ in
 {
   imports = [
     ./default.nix
+    ../common/virtualisation.nix
     ../services/dms-home-assistant-monitor.nix
   ];
 

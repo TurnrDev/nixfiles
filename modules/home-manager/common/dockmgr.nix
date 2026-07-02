@@ -21,6 +21,7 @@ in
   systemd.user.services.dockmgr = {
     Unit = {
       Description = "Watch dock state and switch DMS profiles";
+      ConditionEnvironment = [ "HYPRLAND_INSTANCE_SIGNATURE" ];
       ConditionPathExists = "%h/.config/dockmgr/config.json";
       PartOf = [ sessionTarget ];
       Requires = [

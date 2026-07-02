@@ -72,6 +72,7 @@ in
   systemd.user.services.random-wallpaper-space = {
     Unit = {
       Description = "Set random wallpaper with query 'space'";
+      ConditionEnvironment = [ "HYPRLAND_INSTANCE_SIGNATURE" ];
       PartOf = [ sessionTarget ];
       Requires = [ "dms.service" ];
       After = [ sessionTarget "dms.service" ];
@@ -85,6 +86,7 @@ in
   systemd.user.timers.random-wallpaper-space = {
     Unit = {
       Description = "Rotate wallpaper every 30 minutes";
+      ConditionEnvironment = [ "HYPRLAND_INSTANCE_SIGNATURE" ];
       PartOf = [ sessionTarget ];
       After = [ sessionTarget ];
     };
@@ -100,6 +102,7 @@ in
   systemd.user.services.random-wallpaper-monitor-watch = {
     Unit = {
       Description = "Watch Hyprland monitor events and update wallpaper on size/layout changes";
+      ConditionEnvironment = [ "HYPRLAND_INSTANCE_SIGNATURE" ];
       PartOf = [ sessionTarget ];
       Requires = [ "dms.service" ];
       After = [ sessionTarget "dms.service" ];

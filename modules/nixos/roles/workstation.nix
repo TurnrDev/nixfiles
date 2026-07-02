@@ -171,6 +171,7 @@ in
     cameractrls-gtk4
     codex
     dbeaver-bin
+    file
     ghostty
     gimp
     gitkraken
@@ -181,6 +182,9 @@ in
     (josm.override {
       jre = pkgs.jre.override { enableJavaFX = true; };
     })
+    kdePackages.ark
+    kdePackages.gwenview
+    kdePackages.kate
     openscad-unstable
     postman
     prusa-slicer

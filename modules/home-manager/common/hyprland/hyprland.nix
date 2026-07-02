@@ -22,6 +22,36 @@ in
 
   home.packages = [ pkgs.lua ];
 
+  xdg.portal = {
+    enable = true;
+
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-hyprland
+      kdePackages.xdg-desktop-portal-kde
+      kdePackages.plasma-workspace
+    ];
+
+    config = {
+      common = {
+        default = [ "hyprland" "kde" "plasmanotify" ];
+
+        "org.freedesktop.impl.portal.Lockdown" = [ "none" ];
+        "org.freedesktop.impl.portal.Notification" = [ "plasmanotify" ];
+        "org.freedesktop.impl.portal.FileChooser" = [ "kde" ];
+        "org.freedesktop.impl.portal.AppChooser" = [ "kde" ];
+      };
+
+      hyprland = {
+        default = [ "hyprland" "kde" "plasmanotify" ];
+
+        "org.freedesktop.impl.portal.Lockdown" = [ "none" ];
+        "org.freedesktop.impl.portal.Notification" = [ "plasmanotify" ];
+        "org.freedesktop.impl.portal.FileChooser" = [ "kde" ];
+        "org.freedesktop.impl.portal.AppChooser" = [ "kde" ];
+      };
+    };
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;

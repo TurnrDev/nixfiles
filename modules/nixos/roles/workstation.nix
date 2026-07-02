@@ -117,6 +117,31 @@ in
   };
   services.desktopManager.plasma6.enable = true;
 
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = false;
+    extraPortals = lib.mkForce (with pkgs; [
+      xdg-desktop-portal-hyprland
+      kdePackages.xdg-desktop-portal-kde
+      kdePackages.plasma-workspace
+    ]);
+    config = {
+      common.default = [
+        "hyprland"
+        "kde"
+      ];
+      hyprland.default = [
+        "hyprland"
+        "kde"
+      ];
+    };
+  };
+
+  # Some KDE utilities launched under Hyprland still look for the generic
+  # applications.menu instead of honoring XDG_MENU_PREFIX=plasma-.
+  environment.etc."xdg/menus/applications.menu".source =
+    "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "gb";

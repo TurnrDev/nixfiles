@@ -6,6 +6,12 @@
 }:
 
 {
+  home.sessionVariables = {
+    EDITOR = "nano";
+    VISUAL = "code --wait";
+    TERMINAL = "ghostty";
+  };
+
   home.packages = with pkgs; [
     bat
     eza

@@ -81,7 +81,7 @@ in
 
   home.packages = with pkgs; [
     adw-gtk3
-    adwaita-icon-theme
+    papirus-icon-theme
 
     # Needed for the Home Assistant Monitor plugin's websocket connection.
     qt6.qtwebsockets
@@ -95,8 +95,28 @@ in
     };
     gtk4.theme = config.gtk.theme;
     iconTheme = {
-      name = "Adwaita";
-      package = pkgs.adwaita-icon-theme;
+      name = "Papirus";
+      package = pkgs.papirus-icon-theme;
+    };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme.name = "qtct";
+    style.name = "breeze";
+    qt5ctSettings = {
+      Appearance = {
+        icon_theme = "Papirus";
+        standard_dialogs = "xdgdesktopportal";
+        style = "breeze";
+      };
+    };
+    qt6ctSettings = {
+      Appearance = {
+        icon_theme = "Papirus";
+        standard_dialogs = "xdgdesktopportal";
+        style = "breeze";
+      };
     };
   };
 

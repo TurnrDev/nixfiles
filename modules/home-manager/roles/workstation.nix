@@ -3,6 +3,7 @@
 {
   imports = [
     ./default.nix
+    ../common/default-apps.nix
     ../common/discord.nix
     ../common/firefox.nix
     ../common/go-hass-agent.nix

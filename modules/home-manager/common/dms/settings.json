@@ -277,7 +277,7 @@
       "hideWhenTyping": false
     },
     "size": 24,
-    "theme": "breeze_cursors"
+    "theme": "Bibata-Modern-Ice"
   },
   "customAnimationDuration": 500,
   "customPowerActionHibernate": "",
@@ -434,8 +434,8 @@
   "gtkThemingEnabled": true,
   "hideBrightnessSlider": false,
   "hyprlandResizeOnBorder": false,
-  "iconThemeDark": "Adwaita",
-  "iconThemeLight": "System Default",
+  "iconThemeDark": "Papirus",
+  "iconThemeLight": "Papirus",
   "iconThemePerMode": false,
   "keybindsFloatingWindow": false,
   "keyboardLayoutNameCompactMode": false,

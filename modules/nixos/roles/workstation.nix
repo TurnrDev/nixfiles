@@ -69,8 +69,6 @@ in
     "${config.my.identity.homeDirectory}/.vscode-server"
   ];
 
-  # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = false;
   # Use Hyprland's built-in UWSM session and let DMS remember whichever
   # session was chosen last, while still defaulting system-side to UWSM.
   services.displayManager = {
@@ -84,6 +82,10 @@ in
         name = "hyprland";
         customConfig = ''
           hl.env("DMS_RUN_GREETER", "1")
+          hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
+          hl.env("XCURSOR_SIZE", "24")
+          hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
+          hl.env("HYPRCURSOR_SIZE", "24")
 
           hl.config({
             misc = {
@@ -115,7 +117,11 @@ in
       };
     };
   };
-  services.desktopManager.plasma6.enable = true;
+  
+  # Keep the full Plasma session easy to restore for troubleshooting, but
+  # don't install it in the normal day-to-day Hyprland setup.
+  services.displayManager.sddm.enable = false;
+  # services.desktopManager.plasma6.enable = true;
 
   xdg.portal = {
     enable = true;
@@ -126,14 +132,14 @@ in
       kdePackages.plasma-workspace
     ]);
     config = {
-      common.default = [
-        "hyprland"
-        "kde"
-      ];
-      hyprland.default = [
-        "hyprland"
-        "kde"
-      ];
+      common = {
+        default = [ "hyprland" ];
+        "org.freedesktop.impl.portal.FileChooser" = [ "kde" ];
+      };
+      hyprland = {
+        default = [ "hyprland" ];
+        "org.freedesktop.impl.portal.FileChooser" = [ "kde" ];
+      };
     };
   };
 
@@ -208,11 +214,16 @@ in
       jre = pkgs.jre.override { enableJavaFX = true; };
     })
     kdePackages.ark
-    kdePackages.gwenview
+    kdePackages.dolphin
     kdePackages.kate
+    kdePackages.kio
+    kdePackages.kio-fuse
+    kdePackages.kio-extras
+    kdePackages.qtsvg
     openscad-unstable
     postman
     prusa-slicer
+    qview
     vlc
     vscode
   ];

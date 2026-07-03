@@ -18,7 +18,10 @@
       # match = {
       #   and = [
       #     {
-      #       displays.connectedAnyOf = [ "desc:Samsung Electric Company LC49G95T H1AK500000" ];
+      #       displays.connectedAnyOf = [
+      #         "desc:Samsung Electric Company LC49G95T H1AK500000" 
+      #         "desc:Samsung Electric Company LC49G95T"
+      #          ];
       #     }
       #     {
       #       usb.anyOf = [
@@ -59,7 +62,10 @@
       # match = {
       #   and = [
       #     {
-      #       displays.connectedAnyOf = [ "desc:Samsung Electric Company LC49G95T H1AK500000" ];
+      #       displays.connectedAnyOf = [
+      #         "desc:Samsung Electric Company LC49G95T H1AK500000" 
+      #         "desc:Samsung Electric Company LC49G95T"
+      #          ];
       #     }
       #     {
       #       usb.anyOf = [
@@ -82,6 +88,17 @@
         };
         
         "desc:Samsung Electric Company LC49G95T H1AK500000" = {
+          mode = "preferred";
+
+          position = {
+            x = 2256;
+            y = 0;
+          };
+
+          scale = 1.0;
+        };
+        
+        "desc:Samsung Electric Company LC49G95T" = {
           mode = "preferred";
 
           position = {

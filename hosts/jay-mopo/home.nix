@@ -71,7 +71,10 @@
       match = {
         and = [
           {
-            displays.connectedAnyOf = [ "desc:Samsung Electric Company LC49G95T H1AK500000" ];
+            displays.connectedAnyOf = [ 
+              "desc:Samsung Electric Company LC49G95T H1AK500000" 
+              "desc:Samsung Electric Company LC49G95T"
+               ];
           }
           {
             usb.allOf = [
@@ -94,7 +97,18 @@
         };
 
         "desc:Samsung Electric Company LC49G95T H1AK500000" = {
-          mode = "preferred";
+          mode = "5120x1440@59.977";
+
+          position = {
+            x = 2880;
+            y = 0;
+          };
+
+          scale = 1.0;
+        };
+
+        "desc:Samsung Electric Company LC49G95T" = {
+          mode = "5120x1440@59.977";
 
           position = {
             x = 2880;
@@ -112,7 +126,10 @@
       match = {
         and = [
           {
-            displays.connectedAnyOf = [ "desc:Samsung Electric Company LC49G95T H1AK500000" ];
+            displays.connectedAnyOf = [
+              "desc:Samsung Electric Company LC49G95T H1AK500000" 
+              "desc:Samsung Electric Company LC49G95T"
+               ];
           }
           {
             usb.allOf = [
@@ -135,10 +152,21 @@
         };
 
         "desc:Samsung Electric Company LC49G95T H1AK500000" = {
-          mode = "preferred";
+          mode = "5120x1440@59.977";
 
           position = {
-            x = 2880;
+            x = 0;
+            y = 0;
+          };
+
+          scale = 1.0;
+        };
+
+        "desc:Samsung Electric Company LC49G95T" = {
+          mode = "5120x1440@59.977";
+
+          position = {
+            x = 0;
             y = 0;
           };
 

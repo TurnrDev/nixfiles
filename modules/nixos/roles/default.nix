@@ -120,16 +120,6 @@
     restartUnits = [ "nix-daemon.service" ];
   };
 
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
-  nix.optimise = {
-    automatic = true;
-    dates = [ "weekly" ];
-  };
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [

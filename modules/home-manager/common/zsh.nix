@@ -31,7 +31,7 @@
       size = 99999999;
     };
     shellAliases = {
-      b = "cd /etc/nixos && sudo nix flake update && sudo nixos-rebuild switch --show-trace";
+      b = "cd /etc/nixos && sudo nix flake update && sudo nixos-rebuild switch --upgrade --show-trace && sudo nix-env --delete-generations +5";
       d = "docker";
       dc = "docker compose";
       dcu = "docker compose up -d --remove-orphans";

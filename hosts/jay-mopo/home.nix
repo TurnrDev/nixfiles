@@ -161,6 +161,6 @@
     }
   ];
 
-  programs.dank-material-shell.settings.customThemeFile = lib.mkForce "/etc/nixos/modules/home-manager/common/dms/themes/mopo.json";
+  stylix.base16Scheme = ../../modules/home-manager/common/dms/themes/mopo.yaml;
 
 }

@@ -11,7 +11,15 @@
       url = "github:nix-community/home-manager/";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixcord.url = "github:FlameFlag/nixcord";
+    orchis-kde = {
+      url = "github:vinceliuice/Orchis-kde";
+      flake = false;
+    };
     dms = {
       url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -59,6 +67,7 @@
           specialArgs = { inherit inputs; };
           modules = [
             hostPath
+            inputs.stylix.nixosModules.stylix
             inputs.home-manager.nixosModules.default
           ];
         };

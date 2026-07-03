@@ -129,7 +129,6 @@ in
     extraPortals = lib.mkForce (with pkgs; [
       xdg-desktop-portal-hyprland
       kdePackages.xdg-desktop-portal-kde
-      kdePackages.plasma-workspace
     ]);
     config = {
       common = {

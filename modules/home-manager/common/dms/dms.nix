@@ -106,14 +106,12 @@ in
     qt5ctSettings = {
       Appearance = {
         icon_theme = "Papirus";
-        standard_dialogs = "xdgdesktopportal";
         style = "breeze";
       };
     };
     qt6ctSettings = {
       Appearance = {
         icon_theme = "Papirus";
-        standard_dialogs = "xdgdesktopportal";
         style = "breeze";
       };
     };

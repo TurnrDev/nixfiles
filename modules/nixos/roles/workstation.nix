@@ -208,8 +208,10 @@ in
     gitkraken
     grimblast
     imagemagick
+    jetbrains.idea
+    jetbrains.jdk
     jetbrains.pycharm
-    jetbrains.pycharm-oss
+    jetbrains.webstorm
     (josm.override {
       jre = pkgs.jre.override { enableJavaFX = true; };
     })
@@ -217,9 +219,10 @@ in
     kdePackages.dolphin
     kdePackages.kate
     kdePackages.kio
-    kdePackages.kio-fuse
     kdePackages.kio-extras
+    kdePackages.kio-fuse
     kdePackages.qtsvg
+    kotlin
     openscad-unstable
     postman
     prusa-slicer

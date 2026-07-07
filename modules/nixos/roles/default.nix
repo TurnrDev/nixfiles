@@ -124,7 +124,6 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     android-tools
-    btop
     busybox
     dig
     dmidecode

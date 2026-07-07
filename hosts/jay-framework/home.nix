@@ -9,6 +9,7 @@
 {
   imports = [
     ../../modules/home-manager/roles/laptop.nix
+    ../../modules/home-manager/hardware/amd.nix
   ];
 
   my.dankMaterialShell.monitors.configurations = [

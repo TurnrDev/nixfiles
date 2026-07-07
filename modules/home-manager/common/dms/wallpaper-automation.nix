@@ -74,7 +74,10 @@ in
       Description = "Set random wallpaper with query 'space'";
       PartOf = [ sessionTarget ];
       Requires = [ "dms.service" ];
-      After = [ sessionTarget "dms.service" ];
+      After = [
+        sessionTarget
+        "dms.service"
+      ];
     };
     Service = {
       Type = "oneshot";
@@ -102,7 +105,10 @@ in
       Description = "Watch Hyprland monitor events and update wallpaper on size/layout changes";
       PartOf = [ sessionTarget ];
       Requires = [ "dms.service" ];
-      After = [ sessionTarget "dms.service" ];
+      After = [
+        sessionTarget
+        "dms.service"
+      ];
     };
     Service = {
       Type = "simple";

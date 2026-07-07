@@ -20,8 +20,7 @@
     fzf
   ];
 
-  home.file.".oh-my-zsh/custom/plugins/command-time".source =
-    inputs."zsh-command-time";
+  home.file.".oh-my-zsh/custom/plugins/command-time".source = inputs."zsh-command-time";
 
   programs.zsh = {
     enable = true;

@@ -20,8 +20,8 @@
         and = [
           {
             displays.connectedAnyOf = [
-              "desc:Samsung Electric Company LC49G95T H1AK500000" 
-               ];
+              "desc:Samsung Electric Company LC49G95T H1AK500000"
+            ];
           }
           # {
           #   usb.anyOf = [
@@ -63,8 +63,8 @@
         and = [
           {
             displays.connectedAnyOf = [
-              "desc:Samsung Electric Company LC49G95T H1AK500000" 
-               ];
+              "desc:Samsung Electric Company LC49G95T H1AK500000"
+            ];
           }
           # {
           #   usb.anyOf = [
@@ -85,7 +85,7 @@
           scale = 1.0;
           disabled = true;
         };
-        
+
         "desc:Samsung Electric Company LC49G95T H1AK500000" = {
           mode = "5120x1440@59.977";
 

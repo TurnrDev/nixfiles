@@ -198,6 +198,7 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     android-studio
+    bibata-cursors
     cameractrls-gtk4
     codex
     dbeaver-bin

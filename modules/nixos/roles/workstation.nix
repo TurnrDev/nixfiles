@@ -226,6 +226,7 @@ in
       kdePackages.kio-fuse
       kdePackages.qtsvg
       kotlin
+      libreoffice
       openscad-unstable
       postman
       prusa-slicer

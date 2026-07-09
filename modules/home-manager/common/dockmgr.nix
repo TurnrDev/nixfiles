@@ -10,6 +10,7 @@ let
       gawk
       gnugrep
       jq
+      libnotify
       systemd
     ];
     text = builtins.readFile ../../../scripts/dockmgr;

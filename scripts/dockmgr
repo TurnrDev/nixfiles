@@ -18,14 +18,14 @@ need_cmd() {
 }
 
 quick_notify() {
-    if command -v dms >/dev/null 2>&1; then
-        dms notify "$1" --app "$DOCK_NOTIFY_APP" >/dev/null 2>&1 || true
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send -a "$DOCK_NOTIFY_APP" "$1" >/dev/null 2>&1 || true
     fi
 }
 
 notify() {
-    if command -v dms >/dev/null 2>&1; then
-        dms notify "$1" "$2" --app "$DOCK_NOTIFY_APP" >/dev/null 2>&1 || true
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send -a "$DOCK_NOTIFY_APP" "$1" "$2" >/dev/null 2>&1 || true
     fi
 }
 

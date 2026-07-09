@@ -23,15 +23,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1783519316,
-        "narHash": "sha256-v8l7WIpPHeTGM2lRPPPdqxgB7ymang0vUUAJwrWOsQ8=",
+        "lastModified": 1783529634,
+        "narHash": "sha256-zdHsPGPE5MVi/y+uIt548XScTfZjQzdF21dME7ISEJM=",
         "owner": "AvengeMedia",
         "repo": "DankMaterialShell",
-        "rev": "e94af2a7aa38fdaac4f80a76c5438d9e41896bbb",
+        "rev": "bdfd565b72cbb416441a9ab828efcac4fd516c70",
         "type": "github"
       },
       "original": {
         "owner": "AvengeMedia",
+        "ref": "stable",
         "repo": "DankMaterialShell",
         "type": "github"
       }
@@ -41,31 +42,31 @@
       "locked": {
         "lastModified": 1783110666,
         "narHash": "sha256-YDCwXF0dyuNy07voKvkLlKfHFfPkhSS4oGopn+EnM+0=",
-        "ref": "refs/heads/main",
+        "owner": "LuckShiba",
+        "repo": "DmsDockerManager",
         "rev": "255f46794b6e3a5f5e842fe1330db3869deddc09",
-        "revCount": 46,
-        "type": "git",
-        "url": "https://github.com/LuckShiba/DmsDockerManager"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://github.com/LuckShiba/DmsDockerManager"
+        "owner": "LuckShiba",
+        "repo": "DmsDockerManager",
+        "type": "github"
       }
     },
     "dms-plugin-hass": {
       "flake": false,
       "locked": {
-        "lastModified": 1780998572,
-        "narHash": "sha256-YScGw1b4OHX3s7f+JUCoCuK+BcWGDLgpYxgSI+N3EPI=",
-        "ref": "refs/heads/master",
-        "rev": "0d3cd45f6a094582db5f9209b3dc1f72c1cfb067",
-        "revCount": 41,
-        "type": "git",
-        "url": "https://github.com/xxyangyoulin/dms-plugin-hass"
+        "lastModified": 1783573579,
+        "narHash": "sha256-c2uWe9i/uxHYtYQ1upOWksadlcmq/VNN+1KMPvfGDAw=",
+        "owner": "xxyangyoulin",
+        "repo": "dms-plugin-hass",
+        "rev": "a90cda73b6e88cbe910fae45d4f12d4d42c17580",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://github.com/xxyangyoulin/dms-plugin-hass"
+        "owner": "xxyangyoulin",
+        "repo": "dms-plugin-hass",
+        "type": "github"
       }
     },
     "dms-plugin-tailscale": {
@@ -73,31 +74,31 @@
       "locked": {
         "lastModified": 1766981404,
         "narHash": "sha256-cXuljANI8aO5cb7xwIs/ttucJD/y9s9PXuUw7LS+BGI=",
-        "ref": "refs/heads/main",
+        "owner": "cglavin50",
+        "repo": "dms-tailscale",
         "rev": "f035c3a0923e5872f912fc9bd4cc0c7f161fbe2a",
-        "revCount": 7,
-        "type": "git",
-        "url": "https://github.com/cglavin50/dms-tailscale"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://github.com/cglavin50/dms-tailscale"
+        "owner": "cglavin50",
+        "repo": "dms-tailscale",
+        "type": "github"
       }
     },
     "dms-plugins": {
       "flake": false,
       "locked": {
-        "lastModified": 1780332225,
-        "narHash": "sha256-QkQPqP7Wmo5DLRyKNSY5NuOau4LSaSfz3DYdHDLxluA=",
-        "ref": "refs/heads/master",
-        "rev": "f4583449f12920e0a2f16808b00a860c27f0173d",
-        "revCount": 102,
-        "type": "git",
-        "url": "https://github.com/AvengeMedia/dms-plugins"
+        "lastModified": 1783532508,
+        "narHash": "sha256-17qZKvH0FDQEdX07HEfUjLLvOUEHGmXMVZ0zRtKoTZA=",
+        "owner": "AvengeMedia",
+        "repo": "dms-plugins",
+        "rev": "5e4038806d8f4ca1fcfd1116c211cc9f1e36a074",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://github.com/AvengeMedia/dms-plugins"
+        "owner": "AvengeMedia",
+        "repo": "dms-plugins",
+        "type": "github"
       }
     },
     "dms-plugins-taylan": {
@@ -105,15 +106,15 @@
       "locked": {
         "lastModified": 1761528751,
         "narHash": "sha256-CA5fjB2KmlBXeh9m1+1ddjNMhZbwR4pQ9PiEPWDcuZs=",
-        "ref": "refs/heads/master",
+        "owner": "TaylanTatli",
+        "repo": "dms-plugins",
         "rev": "2fa71a37f7ba411991a9e76baa3637351830ec6a",
-        "revCount": 6,
-        "type": "git",
-        "url": "https://github.com/TaylanTatli/dms-plugins"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://github.com/TaylanTatli/dms-plugins"
+        "owner": "TaylanTatli",
+        "repo": "dms-plugins",
+        "type": "github"
       }
     },
     "flake-compat": {
@@ -187,11 +188,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783479733,
-        "narHash": "sha256-d/JatqgG+Pmo+IuCTZfnrEAPWU3fdha48GQeXuFO+bE=",
+        "lastModified": 1783550008,
+        "narHash": "sha256-qbbZUk9IG9dLNwCPwdPBs6I5clxwugRpP+1YU+GPK20=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "cee3f0e7fec85d80c149c7afc29926747f7bd3c2",
+        "rev": "f4d01c1d87c7c2ec909549165d5a8338f1bd3315",
         "type": "github"
       },
       "original": {
@@ -231,11 +232,11 @@
         "nixpkgs-nixcord": "nixpkgs-nixcord"
       },
       "locked": {
-        "lastModified": 1783482236,
-        "narHash": "sha256-nuHRE13JbCT+xE76blZIfUEG8rV8eWld+gSVfjqCTZw=",
+        "lastModified": 1783570676,
+        "narHash": "sha256-nprEToIeZ3IQ7udagxsQASOlJ/J27TCirC7xBucy71A=",
         "owner": "FlameFlag",
         "repo": "nixcord",
-        "rev": "6c9dd68b37f50f6db57bea777e92fd67e0b2e0bb",
+        "rev": "ba132526472f74dc0efa75b69e6fc2c03ca0d9d9",
         "type": "github"
       },
       "original": {
@@ -428,15 +429,15 @@
       "locked": {
         "lastModified": 1771855972,
         "narHash": "sha256-6Dy5uCzLgBJZIepFvylPhsaK4URinAwbJW7XmSBGj7M=",
-        "ref": "refs/heads/master",
+        "owner": "popstas",
+        "repo": "zsh-command-time",
         "rev": "f163ac1d41f8645d1d055393e52692e2ee185e5f",
-        "revCount": 30,
-        "type": "git",
-        "url": "https://github.com/popstas/zsh-command-time"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://github.com/popstas/zsh-command-time"
+        "owner": "popstas",
+        "repo": "zsh-command-time",
+        "type": "github"
       }
     }
   },

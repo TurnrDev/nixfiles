@@ -13,31 +13,31 @@
     };
     nixcord.url = "github:FlameFlag/nixcord";
     dms = {
-      url = "github:AvengeMedia/DankMaterialShell";
+      url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     dms-plugins = {
-      url = "git+https://github.com/AvengeMedia/dms-plugins";
+      url = "github:AvengeMedia/dms-plugins";
       flake = false;
     };
     dms-plugins-taylan = {
-      url = "git+https://github.com/TaylanTatli/dms-plugins";
+      url = "github:TaylanTatli/dms-plugins";
       flake = false;
     };
     dms-plugin-hass = {
-      url = "git+https://github.com/xxyangyoulin/dms-plugin-hass";
+      url = "github:xxyangyoulin/dms-plugin-hass";
       flake = false;
     };
     dms-plugin-docker-manager = {
-      url = "git+https://github.com/LuckShiba/DmsDockerManager";
+      url = "github:LuckShiba/DmsDockerManager";
       flake = false;
     };
     dms-plugin-tailscale = {
-      url = "git+https://github.com/cglavin50/dms-tailscale";
+      url = "github:cglavin50/dms-tailscale";
       flake = false;
     };
     zsh-command-time = {
-      url = "git+https://github.com/popstas/zsh-command-time";
+      url = "github:popstas/zsh-command-time";
       flake = false;
     };
     lanzaboote = {

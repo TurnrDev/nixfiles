@@ -23,8 +23,7 @@ in
     Unit = {
       Description = "Watch dock state and switch DMS profiles";
       ConditionPathExists = "%h/.config/dockmgr/config.json";
-      BindsTo = [ "dms.service" ];
-      PartOf = [ "dms.service" ];
+      Wants = [ "dms.service" ];
       After = [ "dms.service" ];
     };
 

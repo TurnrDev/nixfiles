@@ -13,5 +13,4 @@
   ];
 
   programs.dank-material-shell.plugins.dankBatteryAlerts.enable = true;
-  programs.dank-material-shell.plugins.tailscale.enable = true;
 }

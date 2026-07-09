@@ -32,6 +32,10 @@
       url = "github:LuckShiba/DmsDockerManager";
       flake = false;
     };
+    dms-emoji-launcher = {
+      url = "github:devnullvoid/dms-emoji-launcher";
+      flake = false;
+    };
     dms-plugin-tailscale = {
       url = "github:cglavin50/dms-tailscale";
       flake = false;

@@ -37,6 +37,22 @@
         "type": "github"
       }
     },
+    "dms-emoji-launcher": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783139331,
+        "narHash": "sha256-fmIddCvACwO8wbAtLBMtDnEXXQJjb7+o2s4jW3f8VIU=",
+        "owner": "devnullvoid",
+        "repo": "dms-emoji-launcher",
+        "rev": "8ff394e3ddfcb2fd755ed2e7b4c6f01f3e26e596",
+        "type": "github"
+      },
+      "original": {
+        "owner": "devnullvoid",
+        "repo": "dms-emoji-launcher",
+        "type": "github"
+      }
+    },
     "dms-plugin-docker-manager": {
       "flake": false,
       "locked": {
@@ -333,6 +349,7 @@
     "root": {
       "inputs": {
         "dms": "dms",
+        "dms-emoji-launcher": "dms-emoji-launcher",
         "dms-plugin-docker-manager": "dms-plugin-docker-manager",
         "dms-plugin-hass": "dms-plugin-hass",
         "dms-plugin-tailscale": "dms-plugin-tailscale",

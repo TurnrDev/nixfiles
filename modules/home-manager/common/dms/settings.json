@@ -39,10 +39,6 @@
         "weather",
         {
           "enabled": true,
-          "id": "dankPomodoroTimer"
-        },
-        {
-          "enabled": true,
           "id": "dockerManager"
         },
         {

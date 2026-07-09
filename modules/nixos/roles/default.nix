@@ -129,6 +129,7 @@
     dmidecode
     gh
     jq
+    libnotify
     mtr
     nano
     nixfmt

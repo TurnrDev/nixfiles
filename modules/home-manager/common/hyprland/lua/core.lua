@@ -82,3 +82,7 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("uwsm app -- spotify", { workspace = "9 silent" })
   hl.exec_cmd("uwsm app -- discord", { workspace = "9 silent" })
 end)
+
+hl.on("config.reloaded", function()
+  hl.exec_cmd("notify-send 'Hyprland' 'Hyprland configuration loaded successfully!'")
+end)

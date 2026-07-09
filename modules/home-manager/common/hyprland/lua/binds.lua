@@ -20,7 +20,7 @@ hl.bind("SUPER + Super_R", hl.dsp.exec_cmd("dms ipc call spotlight toggle"), { d
 hl.bind("SUPER + W", hl.dsp.exec_cmd("uwsm app -- firefox"), { description = "Launch Firefox" })
 hl.bind("SUPER + C", hl.dsp.exec_cmd("uwsm app -- code"), { description = "Launch IDE" })
 hl.bind("SUPER + G", hl.dsp.exec_cmd("uwsm app -- gitkraken"), { description = "Launch Git Client" })
-hl.bind("SUPER + T", hl.dsp.exec_cmd("ghostty"), { description = "Launch Terminal" })
+hl.bind("SUPER + T", hl.dsp.exec_cmd("uwsm app -- ghostty"), { description = "Launch Terminal" })
 hl.bind("SUPER + SHIFT + E", hl.dsp.exit(), { description = "Exit Hyprland" })
 
 -- Window management.

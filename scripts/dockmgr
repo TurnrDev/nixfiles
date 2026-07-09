@@ -3,6 +3,7 @@
 set -u
 
 CONFIG_PATH="${CONFIG_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/dockmgr/config.json}"
+LOCK_PATH="${LOCK_PATH:-${XDG_RUNTIME_DIR:-/tmp}/dockmgr.lock}"
 DOCK_POLL_INTERVAL="${DOCK_POLL_INTERVAL:-2}"
 DOCK_UDEV_SETTLE_DELAY="${DOCK_UDEV_SETTLE_DELAY:-1}"
 DOCK_NOTIFY_APP="${DOCK_NOTIFY_APP:-dockmgr}"
@@ -34,6 +35,16 @@ ensure_config() {
         printf 'dockmgr: missing config: %s\n' "$CONFIG_PATH" >&2
         exit 1
     }
+}
+
+acquire_watch_lock() {
+    need_cmd flock
+
+    exec 9>"$LOCK_PATH"
+    if ! flock -n 9; then
+        printf 'dockmgr: another watch instance is already running\n' >&2
+        exit 75
+    fi
 }
 
 read_usb_ids() {
@@ -284,6 +295,7 @@ watch() {
     ensure_config
     need_cmd jq
     need_cmd dms
+    acquire_watch_lock
 
     last_profile_id=""
     last_profile_json=""
@@ -329,6 +341,7 @@ Environment overrides:
   DOCK_UDEV_SETTLE_DELAY  default: 1 unit: seconds
   DOCK_NOTIFY_APP         default: dockmgr
   CONFIG_PATH             default: $XDG_CONFIG_HOME/dockmgr/config.json
+  LOCK_PATH               default: $XDG_RUNTIME_DIR/dockmgr.lock or /tmp/dockmgr.lock
 EOF
 }
 

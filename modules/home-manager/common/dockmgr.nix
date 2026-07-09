@@ -12,6 +12,7 @@ let
       jq
       libnotify
       systemd
+      util-linux
     ];
     text = builtins.readFile ../../../scripts/dockmgr;
   };
@@ -43,6 +44,7 @@ in
         "XDG_CONFIG_HOME=%h/.config"
       ];
       Restart = "always";
+      RestartPreventExitStatus = "75";
       RestartSec = "3s";
     };
 

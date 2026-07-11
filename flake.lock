@@ -72,11 +72,11 @@
     "dms-plugin-hass": {
       "flake": false,
       "locked": {
-        "lastModified": 1783573579,
-        "narHash": "sha256-c2uWe9i/uxHYtYQ1upOWksadlcmq/VNN+1KMPvfGDAw=",
+        "lastModified": 1783661224,
+        "narHash": "sha256-ugvnYbZOq/F5pOqnZrNuRhLIOFxASpvUNcWxOJWkaWE=",
         "owner": "xxyangyoulin",
         "repo": "dms-plugin-hass",
-        "rev": "a90cda73b6e88cbe910fae45d4f12d4d42c17580",
+        "rev": "2c3697e44e25bd91315a10aaa746f22289d812c1",
         "type": "github"
       },
       "original": {
@@ -248,11 +248,11 @@
         "nixpkgs-nixcord": "nixpkgs-nixcord"
       },
       "locked": {
-        "lastModified": 1783621249,
-        "narHash": "sha256-IDo+yvIjSczA/bICPUHj4F9z0OBNoePnWca2e3E+cAM=",
+        "lastModified": 1783656718,
+        "narHash": "sha256-j6htXsWnhteRDRClQb4ELzYzXJt/qSucinUpVEBtoH4=",
         "owner": "FlameFlag",
         "repo": "nixcord",
-        "rev": "71e056ca5dc1c57898d3e4c694b0c656449babdb",
+        "rev": "b2b9fdc148a8a52a4c7297c9ce71f38d9402a6f0",
         "type": "github"
       },
       "original": {

@@ -65,6 +65,7 @@
         };
       };
     }
+
     {
       name = "Docked Home Office with Inbuilt Display";
 
@@ -122,6 +123,43 @@
             usb.allOf = [
               "3434:0961"
               "046d:c548"
+            ];
+          }
+          {
+            lid.closed = true;
+          }
+        ];
+      };
+
+      outputs = {
+        "eDP-1" = {
+          mode = "2880x1800@90.001";
+
+          scale = 1.0;
+          disabled = true;
+        };
+
+        "desc:Samsung Electric Company LC49G95T H1AK500000" = {
+          mode = "5120x1440@59.977";
+
+          position = {
+            x = 0;
+            y = 0;
+          };
+
+          scale = 1.0;
+        };
+      };
+    }
+
+    {
+      name = "Alfie Office";
+
+      match = {
+        and = [
+          {
+            displays.connectedAnyOf = [
+              "desc:Samsung Electric Company LC49G95T H1AK500000"
             ];
           }
           {

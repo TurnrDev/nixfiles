@@ -87,6 +87,9 @@
     package = null;
     systemd.enable = false;
     enableZshIntegration = true;
-    settings.command = "${pkgs.zsh}/bin/zsh";
+    settings = {
+      command = "${pkgs.zsh}/bin/zsh";
+      "font-family" = "FiraCode Nerd Font Mono";
+    };
   };
 }

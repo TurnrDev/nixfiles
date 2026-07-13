@@ -206,7 +206,6 @@ in
       codex
       dbeaver-bin
       file
-      ghostty
       gimp
       gitkraken
       grimblast

@@ -18,6 +18,11 @@
     fastfetch
     fd
     fzf
+    (writeShellApplication {
+      name = "nixos-build-and-activate";
+      runtimeInputs = [ nvd ];
+      text = builtins.readFile ../../../scripts/nixos-build-and-activate.sh;
+    })
   ];
 
   home.file.".oh-my-zsh/custom/plugins/command-time".source = inputs."zsh-command-time";
@@ -30,7 +35,7 @@
       size = 99999999;
     };
     shellAliases = {
-      b = "cd /etc/nixos && sudo nix flake update && sudo nixos-rebuild switch --show-trace && sudo nix-env --delete-generations 7d";
+      b = "nixos-build-and-activate";
       d = "docker";
       dc = "docker compose";
       dcu = "docker compose up -d --remove-orphans";

@@ -447,7 +447,7 @@
   "launcherPluginVisibility": {},
   "launcherStyle": "full",
   "launcherUseOverlayLayer": false,
-  "launchPrefix": "uwsm-app",
+  "launchPrefix": "uwsm app --",
   "lockAtStartup": false,
   "lockBeforeSuspend": false,
   "lockDateFormat": "",

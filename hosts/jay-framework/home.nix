@@ -111,7 +111,9 @@
             ];
           }
           {
-            lid.closed = true;
+            usb.noneOf = [
+              "046d:c548"
+            ];
           }
         ];
       };

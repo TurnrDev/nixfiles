@@ -104,11 +104,11 @@
     "dms-plugins": {
       "flake": false,
       "locked": {
-        "lastModified": 1784033605,
-        "narHash": "sha256-NjhR54elmw+O6cFX2rC2xZXFJk45QzQjabyJXIcV+6A=",
+        "lastModified": 1784218055,
+        "narHash": "sha256-q/SGn2/jEZ73qHyvgPgYByn2TRZwdJzJ/uyoRLuuEWk=",
         "owner": "AvengeMedia",
         "repo": "dms-plugins",
-        "rev": "ec1685daf791c5c9d30fd0f3bd7aeafcb063dddd",
+        "rev": "e8c36175a1a8ee4718df5d8ef60d105add94f33e",
         "type": "github"
       },
       "original": {
@@ -248,11 +248,11 @@
         "nixpkgs-nixcord": "nixpkgs-nixcord"
       },
       "locked": {
-        "lastModified": 1784198072,
-        "narHash": "sha256-dEsE7Mgwl0vl4ZtNLdcZ8EXrFD9P1J4CVqqkJE53DPc=",
+        "lastModified": 1784259974,
+        "narHash": "sha256-bTy0XQRNb0UiXdZXh8V6GW+4t/67QIsyAbM7qQ6YPXc=",
         "owner": "FlameFlag",
         "repo": "nixcord",
-        "rev": "c75ae94f560a20216474ac04fc9323718cd617ba",
+        "rev": "beeea803360610a505576675f663a0eea3761b4a",
         "type": "github"
       },
       "original": {

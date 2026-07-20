@@ -206,6 +206,7 @@ in
     gimp
     gitkraken
     grimblast
+    gnome-disk-utility
     imagemagick
     jetbrains.pycharm
     jetbrains.pycharm-oss

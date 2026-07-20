@@ -1,7 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
-  inherit (lib) all imap0 mkOption types;
+  inherit (lib)
+    all
+    imap0
+    mkOption
+    types
+    ;
 
   cfg = config.my.dankMaterialShell.monitors;
 
@@ -12,7 +22,9 @@ let
     builtins.isAttrs value
     && value != { }
     && all (key: builtins.elem key allowedKeys) (builtins.attrNames value)
-    && all (key: builtins.isList value.${key} && all builtins.isString value.${key}) (builtins.attrNames value);
+    && all (key: builtins.isList value.${key} && all builtins.isString value.${key}) (
+      builtins.attrNames value
+    );
 
   validateLidClause =
     value:
@@ -204,7 +216,14 @@ let
   }) resolvedProfiles;
 
   dockmgrConfigurations = map (profile: {
-    inherit (profile) id name match hooks order specificity;
+    inherit (profile)
+      id
+      name
+      match
+      hooks
+      order
+      specificity
+      ;
     fallback = profile.match == null;
   }) resolvedProfiles;
 in

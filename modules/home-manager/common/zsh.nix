@@ -18,10 +18,14 @@
     fastfetch
     fd
     fzf
+    (writeShellApplication {
+      name = "nixos-build-and-activate";
+      runtimeInputs = [ nvd ];
+      text = builtins.readFile ../../../scripts/nixos-build-and-activate.sh;
+    })
   ];
 
-  home.file.".oh-my-zsh/custom/plugins/command-time".source =
-    inputs."zsh-command-time";
+  home.file.".oh-my-zsh/custom/plugins/command-time".source = inputs."zsh-command-time";
 
   programs.zsh = {
     enable = true;
@@ -31,7 +35,7 @@
       size = 99999999;
     };
     shellAliases = {
-      b = "cd /etc/nixos && sudo nix flake update && sudo nixos-rebuild switch --upgrade --show-trace && sudo nix-env --delete-generations 7d";
+      b = "nixos-build-and-activate";
       d = "docker";
       dc = "docker compose";
       dcu = "docker compose up -d --remove-orphans";
@@ -80,9 +84,11 @@
 
   programs.ghostty = {
     enable = true;
-    package = null;
     systemd.enable = false;
     enableZshIntegration = true;
-    settings.command = "${pkgs.zsh}/bin/zsh";
+    settings = {
+      command = "${pkgs.zsh}/bin/zsh";
+      "font-family" = "FiraCode Nerd Font Mono";
+    };
   };
 }

@@ -34,7 +34,6 @@
   boot.extraModulePackages = [ ];
   boot.supportedFilesystems = [ "btrfs" ];
 
-
   fileSystems."/" = {
     device = "/dev/mapper/cryptroot";
     fsType = "btrfs";

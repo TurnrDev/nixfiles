@@ -39,10 +39,6 @@
         "weather",
         {
           "enabled": true,
-          "id": "dankPomodoroTimer"
-        },
-        {
-          "enabled": true,
           "id": "dockerManager"
         },
         {
@@ -349,7 +345,6 @@
   "desktopWidgetGroups": [],
   "desktopWidgetInstances": [],
   "desktopWidgetPositions": {},
-  "displayNameMode": "model",
   "displayProfileAutoSelect": false,
   "displayShowDisconnected": true,
   "displaySnapToEdge": true,
@@ -452,7 +447,7 @@
   "launcherPluginVisibility": {},
   "launcherStyle": "full",
   "launcherUseOverlayLayer": false,
-  "launchPrefix": "uwsm-app",
+  "launchPrefix": "uwsm app --",
   "lockAtStartup": false,
   "lockBeforeSuspend": false,
   "lockDateFormat": "",

@@ -31,6 +31,11 @@
     "${identity.homeDirectory}/.ssh/id_ed25519"
   ];
 
+  home.sessionVariables.SOPS_AGE_KEY_FILE =
+    "${identity.homeDirectory}/.config/sops/age/keys.txt";
+
+  programs.btop.enable = true;
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }

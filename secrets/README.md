@@ -31,16 +31,12 @@ nix shell nixpkgs#ssh-to-age --command ssh-to-age \
 chmod 600 ~/.config/sops/age/keys.txt
 ```
 
-Then export it in your shell:
+Home Manager exports the key path automatically for configured users. After the
+next rebuild, start a new login shell (or source
+`~/.nix-profile/etc/profile.d/hm-session-vars.sh`) before running `sops`:
 
 ```sh
-export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
-```
-
-Optional persistent setup:
-
-```sh
-echo 'export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"' >> ~/.zshrc
+echo "$SOPS_AGE_KEY_FILE"
 ```
 
 Example

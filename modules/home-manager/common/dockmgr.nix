@@ -1,7 +1,6 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 let
-  sessionTarget = config.wayland.systemd.target;
   dockMgr = pkgs.writeShellApplication {
     name = "dockmgr";
     runtimeInputs = with pkgs; [
@@ -10,7 +9,9 @@ let
       gawk
       gnugrep
       jq
+      libnotify
       systemd
+      util-linux
     ];
     text = builtins.readFile ../../../scripts/dockmgr;
   };
@@ -22,15 +23,8 @@ in
     Unit = {
       Description = "Watch dock state and switch DMS profiles";
       ConditionPathExists = "%h/.config/dockmgr/config.json";
-      PartOf = [ sessionTarget ];
-      Requires = [
-        sessionTarget
-        "dms.service"
-      ];
-      After = [
-        sessionTarget
-        "dms.service"
-      ];
+      Wants = [ "dms.service" ];
+      After = [ "dms.service" ];
     };
 
     Service = {
@@ -42,11 +36,12 @@ in
         "XDG_CONFIG_HOME=%h/.config"
       ];
       Restart = "always";
+      RestartPreventExitStatus = "75";
       RestartSec = "3s";
     };
 
     Install.WantedBy = [
-      sessionTarget
+      "dms.service"
     ];
   };
 }

@@ -11,7 +11,13 @@
     ../../modules/home-manager/roles/laptop.nix
   ];
 
-  my.dankMaterialShell.monitors.configurations = [
+  my.dankMaterialShell.monitors.internalDisplay = {
+    width = 2880;
+    height = 1800;
+    freq = "90.001";
+  };
+
+  my.dankMaterialShell.monitors.configurations = lib.mkBefore [
     {
       name = "Docked Work";
 
@@ -35,136 +41,26 @@
       };
 
       outputs = {
-        "eDP-1" = {
-          mode = "2880x1800@90.001";
-
-          scale = 1.5;
-          disabled = false;
-        };
+        ${config.my.dankMaterialShell.monitors.internalDisplay.identifier} =
+          config.my.dankMaterialShell.monitors.internalOutput // {
+            scale = 1.5;
+          };
 
         "DP-5" = {
           mode = "1920x1200@59.950";
-
-          position = {
-            x = 1920;
-            y = 0;
-          };
-
+          position = { x = 1920; y = 0; };
           scale = 1.0;
         };
 
         "DP-7" = {
           mode = "1920x1200@59.950";
-
-          position = {
-            x = 3840;
-            y = 0;
-          };
-
+          position = { x = 3840; y = 0; };
           scale = 1.0;
-        };
-      };
-    }
-    {
-      name = "Docked Home Office with Inbuilt Display";
-
-      match = {
-        and = [
-          {
-            displays.connectedAnyOf = [ 
-              "desc:Samsung Electric Company LC49G95T H1AK500000" 
-               ];
-          }
-          {
-            usb.allOf = [
-              "3434:0961"
-              "046d:c548"
-            ];
-          }
-          {
-            lid.closed = false;
-          }
-        ];
-      };
-
-      outputs = {
-        "eDP-1" = {
-          mode = "2880x1800@90.001";
-
-          scale = 1.0;
-          disabled = false;
-        };
-
-        "desc:Samsung Electric Company LC49G95T H1AK500000" = {
-          mode = "5120x1440@59.977";
-
-          position = {
-            x = 2880;
-            y = 0;
-          };
-
-          scale = 1.0;
-        };
-      };
-    }
-
-    {
-      name = "Docked Home Office w/o Inbuilt Display";
-
-      match = {
-        and = [
-          {
-            displays.connectedAnyOf = [
-              "desc:Samsung Electric Company LC49G95T H1AK500000" 
-               ];
-          }
-          {
-            usb.allOf = [
-              "3434:0961"
-              "046d:c548"
-            ];
-          }
-          {
-            lid.closed = true;
-          }
-        ];
-      };
-
-      outputs = {
-        "eDP-1" = {
-          mode = "2880x1800@90.001";
-
-          scale = 1.0;
-          disabled = true;
-        };
-
-        "desc:Samsung Electric Company LC49G95T H1AK500000" = {
-          mode = "5120x1440@59.977";
-
-          position = {
-            x = 0;
-            y = 0;
-          };
-
-          scale = 1.0;
-        };
-      };
-    }
-
-    {
-      name = "Undocked";
-
-      outputs = {
-        "eDP-1" = {
-          mode = "2880x1800@90.001";
-
-          scale = 1.0;
-          disabled = false;
         };
       };
     }
   ];
 
-  programs.dank-material-shell.settings.customThemeFile = lib.mkForce "/etc/nixos/modules/home-manager/common/dms/themes/mopo.json";
-
+  programs.dank-material-shell.settings.customThemeFile =
+    lib.mkForce "/etc/nixos/modules/home-manager/common/dms/themes/mopo.json";
 }

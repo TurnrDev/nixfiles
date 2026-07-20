@@ -17,6 +17,7 @@
     ../common/gradle.nix
     ../common/identity.nix
     ../common/node.nix
+    ../common/obojima-glyph.nix
     ../common/python.nix
     ../common/systemd-boot.nix
   ];
@@ -124,12 +125,12 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     android-tools
-    btop
     busybox
     dig
     dmidecode
     gh
     jq
+    libnotify
     mtr
     nano
     nixfmt

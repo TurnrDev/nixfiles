@@ -29,6 +29,7 @@ in
   imports = [
     ./hardware-configuration.nix
     ../../modules/nixos/roles/laptop.nix
+    ../../modules/nixos/hardware/intel-arc.nix
   ];
 
   networking.hostName = "jay-mopo";

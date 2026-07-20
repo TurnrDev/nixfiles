@@ -81,6 +81,7 @@ hl.on("hyprland.start", function()
   hl.exec_cmd(nix.pkgs.setxkbmap .. " -layout " .. nix.xwayland.layout .. variant)
   hl.exec_cmd("uwsm app -- spotify", { workspace = "9 silent" })
   hl.exec_cmd("uwsm app -- discord", { workspace = "9 silent" })
+  hl.exec_cmd("dockmgr once")
 end)
 
 hl.on("config.reloaded", function()

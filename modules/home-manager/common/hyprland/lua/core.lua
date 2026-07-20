@@ -84,6 +84,3 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("dockmgr once")
 end)
 
-hl.on("config.reloaded", function()
-  hl.exec_cmd("notify-send 'Hyprland' 'Hyprland configuration loaded successfully!'")
-end)

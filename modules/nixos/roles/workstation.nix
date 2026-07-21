@@ -247,7 +247,7 @@ in
       kdePackages.qtsvg
       kotlin
       libreoffice
-      openscad-unstable
+      # openscad-unstable
       postman
       prusa-slicer
       qview

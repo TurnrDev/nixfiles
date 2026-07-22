@@ -26,6 +26,10 @@
   # boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  boot.kernelModules = [ "fuse" ];
+  programs.fuse.enable = true;
+  programs.fuse.userAllowOther = true;
+
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 

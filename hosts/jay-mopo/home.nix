@@ -9,6 +9,7 @@
 {
   imports = [
     ../../modules/home-manager/roles/laptop.nix
+    ./google-drive.nix
   ];
 
   my.dankMaterialShell.monitors.internalDisplay = {

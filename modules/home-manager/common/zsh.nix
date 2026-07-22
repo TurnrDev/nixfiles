@@ -89,6 +89,7 @@
     settings = {
       command = "${pkgs.zsh}/bin/zsh";
       "font-family" = "FiraCode Nerd Font Mono";
+      "shell-integration-features" = "ssh-env,ssh-terminfo,sudo";
     };
   };
 }

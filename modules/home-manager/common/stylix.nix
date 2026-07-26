@@ -46,7 +46,6 @@
     targets = {
       dank-material-shell.enable = true;
       firefox.profileNames = [ "default" ];
-      vscode.colors.enable = false;
     };
   };
 

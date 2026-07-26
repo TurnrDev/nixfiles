@@ -211,7 +211,6 @@ in
       settings = {
         main = {
           shell = "zsh";
-          font = "FiraCode Nerd Font Mono";
         };
       };
     };

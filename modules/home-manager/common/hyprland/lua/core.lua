@@ -4,10 +4,6 @@ hl.env("UV_PROJECT_ENVIRONMENT", ".venv")
 hl.env("DMS_DANKBAR_LAYER", "overlay")
 hl.env("DMS_HIDE_TRAYIDS", "spotify")
 hl.env("QS_ICON_THEME", "Papirus")
-hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
-hl.env("XCURSOR_SIZE", "24")
-hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
-hl.env("HYPRCURSOR_SIZE", "24")
 
 hl.config({
   general = {
@@ -83,4 +79,3 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("uwsm app -- discord", { workspace = "9 silent" })
   hl.exec_cmd("dockmgr once")
 end)
-

@@ -43,25 +43,33 @@
 
       outputs = {
         ${config.my.dankMaterialShell.monitors.internalDisplay.identifier} =
-          config.my.dankMaterialShell.monitors.internalOutput // {
+          config.my.dankMaterialShell.monitors.internalOutput
+          // {
             scale = 1.5;
           };
 
         "DP-5" = {
           mode = "1920x1200@59.950";
-          position = { x = 1920; y = 0; };
+          position = {
+            x = 1920;
+            y = 0;
+          };
           scale = 1.0;
         };
 
         "DP-7" = {
           mode = "1920x1200@59.950";
-          position = { x = 3840; y = 0; };
+          position = {
+            x = 3840;
+            y = 0;
+          };
           scale = 1.0;
         };
       };
     }
   ];
 
-  programs.dank-material-shell.settings.customThemeFile =
-    lib.mkForce "/etc/nixos/modules/home-manager/common/dms/themes/mopo.json";
+  stylix = {
+    base16Scheme = ../../modules/home-manager/common/stylix/themes/mopo.yaml;
+  };
 }

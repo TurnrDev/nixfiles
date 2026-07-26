@@ -7,10 +7,7 @@
 }:
 
 let
-  settings = (builtins.fromJSON (builtins.readFile ./settings.json)) // {
-    gtkThemingEnabled = true;
-    qtThemingEnabled = true;
-  };
+  settings = builtins.fromJSON (builtins.readFile ./settings.json);
   sessionTarget = config.wayland.systemd.target;
 in
 
@@ -18,7 +15,6 @@ in
   imports = [
     inputs.dms.homeModules.dank-material-shell
     ./display-manager.nix
-    ./wallpaper-automation.nix
   ];
 
   systemd.user.services.dms = {
@@ -79,50 +75,16 @@ in
     # Core features
     enableSystemMonitoring = true; # System monitoring widgets (dgop)
     enableVPN = true; # VPN management widget
-    enableDynamicTheming = true; # Wallpaper-based theming (matugen)
+    enableDynamicTheming = false;
     enableAudioWavelength = true; # Audio visualizer (cava)
     enableCalendarEvents = false; # Calendar integration (khal)
     enableClipboardPaste = true; # Pasting items from the clipboard (wtype)
   };
 
   home.packages = with pkgs; [
-    adw-gtk3
-    papirus-icon-theme
-
     # Needed for the Home Assistant Monitor plugin's websocket connection.
     qt6.qtwebsockets
   ];
-
-  gtk = {
-    enable = true;
-    theme = {
-      name = "adw-gtk3";
-      package = pkgs.adw-gtk3;
-    };
-    gtk4.theme = config.gtk.theme;
-    iconTheme = {
-      name = "Papirus";
-      package = pkgs.papirus-icon-theme;
-    };
-  };
-
-  qt = {
-    enable = true;
-    platformTheme.name = "qtct";
-    style.name = "breeze";
-    qt5ctSettings = {
-      Appearance = {
-        icon_theme = "Papirus";
-        style = "breeze";
-      };
-    };
-    qt6ctSettings = {
-      Appearance = {
-        icon_theme = "Papirus";
-        style = "breeze";
-      };
-    };
-  };
 
   home.activation.createDmsLuaFiles = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     for f in \

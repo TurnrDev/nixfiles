@@ -1,8 +1,9 @@
-{ ... }:
+{ inputs, ... }:
 
 {
   imports = [
     ./default.nix
+    inputs.stylix.homeModules.stylix
     ../common/default-apps.nix
     ../common/discord.nix
     ../common/firefox.nix
@@ -10,6 +11,7 @@
     ../common/hyprland/hyprland.nix
     ../common/kdeconnect.nix
     ../common/spotify.nix
+    ../common/stylix.nix
   ];
 
   fonts.fontconfig = {

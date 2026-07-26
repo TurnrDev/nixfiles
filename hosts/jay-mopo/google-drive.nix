@@ -14,7 +14,10 @@ in
   systemd.user.services.rclone-gdrive = {
     Unit = {
       Description = "Mount Google Drive at ~/GDrive";
-      After = [ "sops-nix.service" "network-online.target" ];
+      After = [
+        "sops-nix.service"
+        "network-online.target"
+      ];
       Requires = [ "sops-nix.service" ];
       Wants = [ "network-online.target" ];
     };

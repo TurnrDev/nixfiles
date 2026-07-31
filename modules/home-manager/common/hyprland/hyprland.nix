@@ -22,17 +22,7 @@ in
 
   home.packages = [
     pkgs.lua
-    pkgs.bibata-cursors
   ];
-
-  home.pointerCursor = {
-    enable = true;
-    package = pkgs.bibata-cursors;
-    name = "Bibata-Modern-Ice";
-    size = 24;
-    gtk.enable = true;
-    x11.enable = true;
-  };
 
   # Let NixOS own XDG portal services/config for this host. Keeping a second
   # Home Manager portal configuration in the same session makes debugging much

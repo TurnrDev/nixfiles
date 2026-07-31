@@ -11,14 +11,16 @@ let
   homeOfficeDisplay = "desc:Samsung Electric Company LC49G95T H1AK500000";
   homeOfficeMode = "5120x1440@59.977";
 
-  internalMode =
-    "${toString internal.width}x${toString internal.height}@${internal.freq}";
+  internalMode = "${toString internal.width}x${toString internal.height}@${internal.freq}";
 
   scaledWidth = scale: builtins.floor (internal.width * scale);
 
   generatedInternalOutput = {
     mode = internalMode;
-    position = { x = 0; y = 0; };
+    position = {
+      x = 0;
+      y = 0;
+    };
     scale = 1.0;
     disabled = false;
   };
@@ -38,7 +40,12 @@ let
       match = {
         and = [
           { displays.connectedAnyOf = [ homeOfficeDisplay ]; }
-          { usb.allOf = [ "3434:0961" "046d:c548" ]; }
+          {
+            usb.allOf = [
+              "3434:0961"
+              "046d:c548"
+            ];
+          }
           { lid.closed = false; }
         ];
       };
@@ -53,12 +60,19 @@ let
       match = {
         and = [
           { displays.connectedAnyOf = [ homeOfficeDisplay ]; }
-          { usb.allOf = [ "3434:0961" "046d:c548" ]; }
+          {
+            usb.allOf = [
+              "3434:0961"
+              "046d:c548"
+            ];
+          }
           { lid.closed = true; }
         ];
       };
       outputs = {
-        ${internal.identifier} = cfg.internalOutput // { disabled = true; };
+        ${internal.identifier} = cfg.internalOutput // {
+          disabled = true;
+        };
         ${homeOfficeDisplay} = externalOutput 0.0;
       };
     }
@@ -72,7 +86,9 @@ let
         ];
       };
       outputs = {
-        ${internal.identifier} = cfg.internalOutput // { disabled = true; };
+        ${internal.identifier} = cfg.internalOutput // {
+          disabled = true;
+        };
         ${homeOfficeDisplay} = externalOutput 0.0;
       };
     }
@@ -87,18 +103,20 @@ let
 in
 {
   options.my.dankMaterialShell.monitors.internalDisplay = mkOption {
-    type = types.nullOr (types.submodule {
-      options = {
-        identifier = mkOption {
-          type = types.str;
-          default = "eDP-1";
-          description = "The laptop's internal display identifier.";
+    type = types.nullOr (
+      types.submodule {
+        options = {
+          identifier = mkOption {
+            type = types.str;
+            default = "eDP-1";
+            description = "The laptop's internal display identifier.";
+          };
+          width = mkOption { type = types.int; };
+          height = mkOption { type = types.int; };
+          freq = mkOption { type = types.str; };
         };
-        width = mkOption { type = types.int; };
-        height = mkOption { type = types.int; };
-        freq = mkOption { type = types.str; };
-      };
-    });
+      }
+    );
     default = null;
     description = "Specification used by the standard laptop monitor profiles.";
   };

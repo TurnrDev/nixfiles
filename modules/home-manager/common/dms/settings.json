@@ -258,7 +258,6 @@
   ],
   "cornerRadius": 12,
   "currentThemeCategory": "custom",
-  "currentThemeName": "custom",
   "cursorSettings": {
     "dwl": {
       "cursorHideTimeout": 0
@@ -282,7 +281,6 @@
   "customPowerActionPowerOff": "",
   "customPowerActionReboot": "",
   "customPowerActionSuspend": "",
-  "customThemeFile": "/etc/nixos/modules/home-manager/common/dms/themes/trainerdex.json",
   "dankLauncherV2BorderColor": "primary",
   "dankLauncherV2BorderEnabled": false,
   "dankLauncherV2BorderThickness": 2,
@@ -375,7 +373,6 @@
   "dockShowTrash": false,
   "dockSmartAutoHide": true,
   "dockSpacing": 4,
-  "dockTransparency": 0.8,
   "dockTrashCustomCommand": "",
   "dockTrashFileManager": "default",
   "dockUseOverlayLayer": false,
@@ -392,7 +389,6 @@
   "firstDayOfWeek": 1,
   "focusedWindowCompactMode": false,
   "focusedWindowSize": 1,
-  "fontFamily": "Inter Variable",
   "fontScale": 1,
   "fontWeight": 400,
   "frameBarInsetPadding": -1,
@@ -426,7 +422,7 @@
   "greeterWallpaperPath": "",
   "groupActiveWorkspaceApps": false,
   "groupWorkspaceApps": true,
-  "gtkThemingEnabled": true,
+  "gtkThemingEnabled": false,
   "hideBrightnessSlider": false,
   "hyprlandResizeOnBorder": false,
   "iconThemeDark": "Papirus",
@@ -518,7 +514,6 @@
   "modalCustomAnimationDuration": 150,
   "modalDarkenBackground": true,
   "modalElevationEnabled": true,
-  "monoFontFamily": "FiraCode Nerd Font",
   "motionEffect": 0,
   "muteSoundsWhenMediaPlaying": true,
   "muxCustomCommand": "",
@@ -575,7 +570,6 @@
   "popoutAnimationSpeed": 1,
   "popoutCustomAnimationDuration": 150,
   "popoutElevationEnabled": true,
-  "popupTransparency": 1,
   "powerActionConfirm": true,
   "powerActionHoldDuration": 0.5,
   "powerMenuActions": [
@@ -591,17 +585,16 @@
   "privacyShowCameraIcon": false,
   "privacyShowMicIcon": false,
   "privacyShowScreenShareIcon": false,
-  "qtThemingEnabled": true,
   "registryThemeVariants": {},
   "rememberLastMode": true,
   "rememberLastQuery": false,
   "reverseScrolling": false,
-  "runDmsMatugenTemplates": true,
+  "runDmsMatugenTemplates": false,
   "runningAppsCompactMode": true,
   "runningAppsCurrentMonitor": false,
   "runningAppsCurrentWorkspace": true,
   "runningAppsGroupByApp": false,
-  "runUserMatugenTemplates": true,
+  "runUserMatugenTemplates": false,
   "screenPreferences": {
     "wallpaper": [
       "all"

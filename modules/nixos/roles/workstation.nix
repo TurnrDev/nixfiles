@@ -40,6 +40,7 @@ in
 {
   imports = [
     ./default.nix
+    ../common/stylix.nix
     ../common/virtualisation.nix
     ../services/dms-home-assistant-monitor.nix
   ];
@@ -211,7 +212,6 @@ in
       settings = {
         main = {
           shell = "zsh";
-          font = "FiraCode Nerd Font Mono";
         };
       };
     };

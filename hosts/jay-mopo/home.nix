@@ -69,7 +69,4 @@
     }
   ];
 
-  stylix = {
-    base16Scheme = ../../modules/home-manager/common/stylix/themes/mopo.yaml;
-  };
 }

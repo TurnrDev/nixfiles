@@ -1,9 +1,8 @@
-{ inputs, ... }:
+{ ... }:
 
 {
   imports = [
     ./default.nix
-    inputs.stylix.homeModules.stylix
     ../common/default-apps.nix
     ../common/discord.nix
     ../common/firefox.nix

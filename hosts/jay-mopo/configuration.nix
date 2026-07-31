@@ -36,6 +36,8 @@ in
 
   my.identity.email = lib.mkForce "jay.turner@mopo.co";
 
+  stylix.base16Scheme = ../../modules/home-manager/common/stylix/themes/mopo.yaml;
+
   services.xserver.xkb = {
     layout = "gb";
     variant = "colemak";

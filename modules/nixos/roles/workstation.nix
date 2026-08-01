@@ -175,6 +175,7 @@ in
     };
 
     # Enable CUPS to print documents.
+    services.avahi.enable = true;
     services.printing.enable = true;
 
     # Define workstation-specific groups and packages for the shared user.

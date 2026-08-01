@@ -31,7 +31,9 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    systemd.enable = true;
+    # UWSM owns the graphical-session.target and D-Bus activation environment.
+    # Home Manager's integration conflicts with that ownership.
+    systemd.enable = false;
     configType = "lua";
     settings = { };
 

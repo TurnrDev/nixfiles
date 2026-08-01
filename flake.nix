@@ -11,6 +11,10 @@
       url = "github:nix-community/home-manager/";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixcord.url = "github:FlameFlag/nixcord";
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
@@ -63,6 +67,7 @@
           specialArgs = { inherit inputs; };
           modules = [
             hostPath
+            inputs.stylix.nixosModules.stylix
             inputs.home-manager.nixosModules.default
           ];
         };

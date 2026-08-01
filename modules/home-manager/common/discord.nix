@@ -33,7 +33,6 @@
         pinDms.enable = true;
         previewMessage.enable = true;
         serverInfo.enable = true;
-        showHiddenChannels.enable = true;
         unlockedAvatarZoom.enable = true;
         viewRaw.enable = true;
         voiceDownload.enable = true;

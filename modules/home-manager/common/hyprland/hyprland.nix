@@ -41,18 +41,12 @@ in
       require("generated")
       require("config.core")
 
-      -- DMS owns these writable visual fragments. Monitor configuration remains
-      -- Nix-backed by config.core, with DMS outputs taking runtime precedence.
-      require("dms.colors")
-      require("dms.layout")
+      -- Keep only DMS's writable monitor overrides. The rest remains
+      -- declaratively owned by Nix/Home Manager.
       require("dms.outputs")
-      require("dms.cursor")
 
       require("config.rules")
       require("config.binds")
-
-      -- User-managed rules from DMS take final precedence.
-      require("dms.windowrules")
     '';
 
     extraLuaFiles = {

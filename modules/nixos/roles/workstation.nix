@@ -40,6 +40,7 @@ in
 {
   imports = [
     ./default.nix
+    # ./cad.nix
     ../common/stylix.nix
     ../common/virtualisation.nix
     ../services/dms-home-assistant-monitor.nix
@@ -248,17 +249,7 @@ in
       kdePackages.qtsvg
       kotlin
       libreoffice
-      # Workaround for OpenSCAD 2024.03.01+ failing to link with LLD.
-      # See https://github.com/NixOS/nixpkgs/issues/543373#issuecomment-5038917801
-      (openscad-unstable.overrideAttrs (oldAttrs: {
-        cmakeFlags =
-          (builtins.filter (flag: !(lib.hasPrefix "-DCMAKE_EXE_LINKER_FLAGS=" flag)) (
-            oldAttrs.cmakeFlags or [ ]
-          ))
-          ++ [ "-DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=bfd" ];
-      }))
       postman
-      prusa-slicer
       qview
       vlc
       vscode

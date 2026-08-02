@@ -59,7 +59,14 @@ in
     ];
   };
 
-  networking.hostName = "jay-desktop";
+  networking = {
+    hostName = "jay-desktop";
+    # interfaces = {
+    #   ens3 = {
+    #     wakeOnLan.enable = true;
+    #   };
+    # };
+  };
 
   # Per-device borgmatic overrides live in the host config. The shared module
   # provides the defaults and translates this block into borgmatic YAML.

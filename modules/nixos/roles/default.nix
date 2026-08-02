@@ -149,6 +149,7 @@
     tpm2-tss
     unzip
     usbutils
+    wakeonlan
     wget
     whois
     yq
@@ -180,8 +181,6 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-
-  networking.interfaces."*".wakeOnLan.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

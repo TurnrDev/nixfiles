@@ -61,11 +61,11 @@ in
 
   networking = {
     hostName = "jay-desktop";
-    # interfaces = {
-    #   ens3 = {
-    #     wakeOnLan.enable = true;
-    #   };
-    # };
+    interfaces = {
+      enp13s0 = {
+        wakeOnLan.enable = true;
+      };
+    };
   };
 
   # Per-device borgmatic overrides live in the host config. The shared module

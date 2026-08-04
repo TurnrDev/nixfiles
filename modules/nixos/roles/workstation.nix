@@ -250,6 +250,7 @@ in
       kotlin
       libreoffice
       postman
+      protonmail-desktop
       qview
       vlc
       vscode

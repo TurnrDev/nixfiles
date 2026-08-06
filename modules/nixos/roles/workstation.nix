@@ -145,6 +145,14 @@ in
       };
     };
 
+    # The greeter owns a separate Hyprland instance. Restart it on a dockmgr
+    # update so its compositor-local watcher immediately uses the new package
+    # and generated profile configuration.
+    systemd.services.greetd.restartTriggers = [
+      config.my.dockmgr.package
+      config.my.dockmgr.configFile
+    ];
+
     # Keep the full Plasma session easy to restore for troubleshooting, but
     # don't install it in the normal day-to-day Hyprland setup.
     services.displayManager.sddm.enable = false;

@@ -62,24 +62,28 @@
     { self, nixpkgs, ... }@inputs:
     let
       mkHost =
-        hostPath:
+        hostDirectory:
         nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; };
+          specialArgs = {
+            inherit inputs;
+            homeModule = hostDirectory + "/home.nix";
+          };
           modules = [
-            hostPath
+            (hostDirectory + "/configuration.nix")
             inputs.stylix.nixosModules.stylix
             inputs.home-manager.nixosModules.default
+            ./modules/nixos/common/home-manager.nix
           ];
         };
     in
     {
       nixosConfigurations = {
-        jay-framework = mkHost ./hosts/jay-framework/configuration.nix;
-        jay-desktop = mkHost ./hosts/jay-desktop/configuration.nix;
-        jay-mopo = mkHost ./hosts/jay-mopo/configuration.nix;
+        jay-framework = mkHost ./hosts/jay-framework;
+        jay-desktop = mkHost ./hosts/jay-desktop;
+        jay-mopo = mkHost ./hosts/jay-mopo;
 
         # Compatibility alias so plain `nixos-rebuild` works on hosts named "nixos".
-        # nixos = mkHost ./hosts/<newhost>/configuration.nix;
+        # nixos = mkHost ./hosts/<newhost>;
       };
     };
 }

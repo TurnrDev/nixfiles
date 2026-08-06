@@ -8,6 +8,7 @@ DOCK_POLL_INTERVAL="${DOCK_POLL_INTERVAL:-2}"
 DOCK_UDEV_SETTLE_DELAY="${DOCK_UDEV_SETTLE_DELAY:-1}"
 DOCK_NOTIFY_APP="${DOCK_NOTIFY_APP:-dockmgr}"
 CONTEXT="${DOCKMGR_CONTEXT:-session}"
+DOCKMGR_VERSION="2.1.0"
 
 trap 'exit 130' INT
 trap 'exit 143' TERM
@@ -392,6 +393,7 @@ once() {
 }
 
 usage() {
+    printf 'dockmgr %s\n\n' "$DOCKMGR_VERSION"
     cat <<'EOF'
 Usage:
   dockmgr watch      Watch dock state and switch profiles
@@ -412,6 +414,11 @@ EOF
 }
 
 command="watch"
+if [ "${1:-}" = "--version" ]; then
+    printf '%s\n' "$DOCKMGR_VERSION"
+    exit 0
+fi
+
 if [ "$#" -gt 0 ] && [ "${1#-}" = "$1" ]; then
     command="$1"
     shift
@@ -459,6 +466,9 @@ case "$command" in
         ;;
     once)
         once
+        ;;
+    --version)
+        printf '%s\n' "$DOCKMGR_VERSION"
         ;;
     -h|--help|help)
         usage

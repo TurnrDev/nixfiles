@@ -17,6 +17,8 @@ let
 
   cfg = config.my.dockmgr;
   stringListType = types.listOf types.str;
+  script = builtins.readFile ../../../scripts/dockmgr;
+  version = builtins.head (builtins.elemAt (builtins.split ''DOCKMGR_VERSION="([^"]+)"'' script) 1);
 
   dockMgr =
     (pkgs.writeShellApplication {
@@ -32,12 +34,12 @@ let
         systemd
         util-linux
       ];
-      text = builtins.readFile ../../../scripts/dockmgr;
+      text = script;
     }).overrideAttrs
-      (old: {
+      (_: {
         pname = "dockmgr";
-        version = "2.1.0";
-        name = "dockmgr-2.1.0";
+        inherit version;
+        name = "dockmgr-${version}";
       });
 
   validateTypedStringListAttrs =

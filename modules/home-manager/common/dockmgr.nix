@@ -1,20 +1,29 @@
 { pkgs, ... }:
 
 let
-  dockMgr = pkgs.writeShellApplication {
-    name = "dockmgr";
-    runtimeInputs = with pkgs; [
-      bash
-      coreutils
-      gawk
-      gnugrep
-      jq
-      libnotify
-      systemd
-      util-linux
-    ];
-    text = builtins.readFile ../../../scripts/dockmgr;
-  };
+  script = builtins.readFile ../../../scripts/dockmgr;
+  version = builtins.head (builtins.elemAt (builtins.split ''DOCKMGR_VERSION="([^"]+)"'' script) 1);
+
+  dockMgr =
+    (pkgs.writeShellApplication {
+      name = "dockmgr";
+      runtimeInputs = with pkgs; [
+        bash
+        coreutils
+        gawk
+        gnugrep
+        jq
+        libnotify
+        systemd
+        util-linux
+      ];
+      text = script;
+    }).overrideAttrs
+      (_: {
+        pname = "dockmgr";
+        inherit version;
+        name = "dockmgr-${version}";
+      });
 in
 {
   home.packages = [ dockMgr ];

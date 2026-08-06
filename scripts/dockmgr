@@ -7,6 +7,7 @@ LOCK_PATH="${LOCK_PATH:-${XDG_RUNTIME_DIR:-/tmp}/dockmgr.lock}"
 DOCK_POLL_INTERVAL="${DOCK_POLL_INTERVAL:-2}"
 DOCK_UDEV_SETTLE_DELAY="${DOCK_UDEV_SETTLE_DELAY:-1}"
 DOCK_NOTIFY_APP="${DOCK_NOTIFY_APP:-dockmgr}"
+DOCKMGR_VERSION="2.0.1"
 
 trap 'exit 130' INT
 trap 'exit 143' TERM
@@ -330,6 +331,7 @@ once() {
 }
 
 usage() {
+    printf 'dockmgr %s\n\n' "$DOCKMGR_VERSION"
     cat <<'EOF'
 Usage:
   dockmgr watch      Watch dock state and switch profiles
@@ -356,6 +358,9 @@ case "${1:-watch}" in
         ;;
     once)
         once
+        ;;
+    --version)
+        printf '%s\n' "$DOCKMGR_VERSION"
         ;;
     -h|--help|help)
         usage

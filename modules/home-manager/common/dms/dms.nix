@@ -14,7 +14,6 @@ in
 {
   imports = [
     inputs.dms.homeModules.dank-material-shell
-    ./display-manager.nix
   ];
 
   systemd.user.services.dms = {
@@ -85,14 +84,6 @@ in
     # Needed for the Home Assistant Monitor plugin's websocket connection.
     qt6.qtwebsockets
   ];
-
-  home.activation.createDmsLuaFiles = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    outputFile="$HOME/.config/hypr/dms/outputs.lua"
-    if [ ! -f "$outputFile" ]; then
-      mkdir -p "$(dirname "$outputFile")"
-      echo 'hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto" })' > "$outputFile"
-    fi
-  '';
 
   xdg.configFile =
     let

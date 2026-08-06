@@ -5,6 +5,7 @@
     ./default.nix
     ../common/default-apps.nix
     ../common/discord.nix
+    ../common/dockmgr.nix
     ../common/firefox.nix
     ../common/go-hass-agent.nix
     ../common/hyprland/hyprland.nix

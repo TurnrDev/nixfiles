@@ -1,56 +1,46 @@
-{ pkgs, ... }:
+{
+  lib,
+  osConfig,
+  pkgs,
+  ...
+}:
 
 let
-  script = builtins.readFile ../../../scripts/dockmgr;
-  version = builtins.head (builtins.elemAt (builtins.split ''DOCKMGR_VERSION="([^"]+)"'' script) 1);
-
-  dockMgr =
-    (pkgs.writeShellApplication {
-      name = "dockmgr";
-      runtimeInputs = with pkgs; [
-        bash
-        coreutils
-        gawk
-        gnugrep
-        jq
-        libnotify
-        systemd
-        util-linux
-      ];
-      text = script;
-    }).overrideAttrs
-      (_: {
-        pname = "dockmgr";
-        inherit version;
-        name = "dockmgr-${version}";
-      });
+  startDockMgr = pkgs.writeShellScript "start-dockmgr" ''
+    ${pkgs.systemd}/bin/systemctl --user import-environment \
+      HYPRLAND_INSTANCE_SIGNATURE \
+      WAYLAND_DISPLAY \
+      XDG_RUNTIME_DIR
+    exec ${pkgs.systemd}/bin/systemctl --user restart dockmgr.service
+  '';
 in
 {
-  home.packages = [ dockMgr ];
+  config = lib.mkIf osConfig.my.dockmgr.enable {
+    systemd.user.services.dockmgr = {
+      Unit = {
+        Description = "Watch dock state and apply Hyprland display profiles";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+        X-Restart-Triggers = [
+          osConfig.my.dockmgr.package
+          osConfig.my.dockmgr.configFile
+        ];
+        X-SwitchMethod = "restart";
+      };
 
-  systemd.user.services.dockmgr = {
-    Unit = {
-      Description = "Watch dock state and switch DMS profiles";
-      ConditionPathExists = "%h/.config/dockmgr/config.json";
-      Wants = [ "dms.service" ];
-      After = [ "dms.service" ];
+      Service = {
+        Type = "simple";
+        ExecStart = "${osConfig.my.dockmgr.package}/bin/dockmgr watch --config ${osConfig.my.dockmgr.configFile} --context session";
+        Restart = "always";
+        RestartPreventExitStatus = "75";
+        RestartSec = "3s";
+      };
     };
 
-    Service = {
-      Type = "simple";
-      ExecStart = "${dockMgr}/bin/dockmgr watch";
-      ExecStartPre = "${pkgs.coreutils}/bin/test -r %h/.config/dockmgr/config.json";
-      Environment = [
-        "PATH=%h/.nix-profile/bin:/etc/profiles/per-user/%u/bin:/run/current-system/sw/bin"
-        "XDG_CONFIG_HOME=%h/.config"
-      ];
-      Restart = "always";
-      RestartPreventExitStatus = "75";
-      RestartSec = "3s";
-    };
-
-    Install.WantedBy = [
-      "dms.service"
-    ];
+    wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
+      hl.on("hyprland.start", function()
+        hl.exec_cmd("${startDockMgr}")
+      end)
+    '';
   };
 }

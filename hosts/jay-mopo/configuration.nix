@@ -14,6 +14,57 @@
 
   networking.hostName = "jay-mopo";
 
+  my.dockmgr = {
+    internalDisplay = {
+      width = 2880;
+      height = 1800;
+      freq = "90.001";
+    };
+
+    profiles = lib.mkBefore [
+      {
+        name = "Docked Work";
+        match.and = [
+          {
+            displays.connectedAllOf = [
+              "DP-5"
+              "DP-7"
+            ];
+          }
+          {
+            usb.allOf = [
+              "258a:003a"
+              "05e3:0625"
+              "05e3:0610"
+              "05e3:0608"
+            ];
+          }
+        ];
+        outputs = {
+          ${config.my.dockmgr.internalDisplay.identifier} = config.my.dockmgr.internalOutput // {
+            scale = 1.5;
+          };
+          "DP-5" = {
+            mode = "1920x1200@59.950";
+            position = {
+              x = 1920;
+              y = 0;
+            };
+            scale = 1.0;
+          };
+          "DP-7" = {
+            mode = "1920x1200@59.950";
+            position = {
+              x = 3840;
+              y = 0;
+            };
+            scale = 1.0;
+          };
+        };
+      }
+    ];
+  };
+
   my.identity.email = lib.mkForce "jay.turner@mopo.co";
 
   stylix.base16Scheme = ../../modules/home-manager/common/stylix/themes/mopo.yaml;

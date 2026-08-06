@@ -9,13 +9,38 @@ let
   inherit (lib)
     all
     imap0
+    mkEnableOption
+    mkIf
     mkOption
     types
     ;
 
-  cfg = config.my.dankMaterialShell.monitors;
-
+  cfg = config.my.dockmgr;
   stringListType = types.listOf types.str;
+  script = builtins.readFile ../../../scripts/dockmgr;
+  version = builtins.head (builtins.elemAt (builtins.split ''DOCKMGR_VERSION="([^"]+)"'' script) 1);
+
+  dockMgr =
+    (pkgs.writeShellApplication {
+      name = "dockmgr";
+      runtimeInputs = with pkgs; [
+        bash
+        coreutils
+        gawk
+        gnugrep
+        hyprland
+        jq
+        libnotify
+        systemd
+        util-linux
+      ];
+      text = script;
+    }).overrideAttrs
+      (_: {
+        pname = "dockmgr";
+        inherit version;
+        name = "dockmgr-${version}";
+      });
 
   validateTypedStringListAttrs =
     allowedKeys: value:
@@ -57,26 +82,36 @@ let
 
   matchExpressionType = types.addCheck types.attrs validateMatchExpression;
 
-  hooksType = types.submodule {
+  phaseHooksType = types.submodule {
     options = {
       preUp = mkOption {
         type = stringListType;
         default = [ ];
       };
-
       postUp = mkOption {
         type = stringListType;
         default = [ ];
       };
-
       preDown = mkOption {
         type = stringListType;
         default = [ ];
       };
-
       postDown = mkOption {
         type = stringListType;
         default = [ ];
+      };
+    };
+  };
+
+  hooksType = types.submodule {
+    options = {
+      session = mkOption {
+        type = phaseHooksType;
+        default = { };
+      };
+      greeter = mkOption {
+        type = phaseHooksType;
+        default = { };
       };
     };
   };
@@ -87,7 +122,6 @@ let
         type = types.int;
         default = 0;
       };
-
       y = mkOption {
         type = types.int;
         default = 0;
@@ -101,35 +135,17 @@ let
         type = types.str;
         default = "preferred";
       };
-
       position = mkOption {
         type = positionType;
         default = { };
       };
-
       scale = mkOption {
         type = types.float;
         default = 1.0;
       };
-
-      transform = mkOption {
-        type = types.str;
-        default = "Normal";
-      };
-
-      vrr = mkOption {
-        type = types.bool;
-        default = false;
-      };
-
       disabled = mkOption {
         type = types.bool;
         default = false;
-      };
-
-      hyprland = mkOption {
-        type = types.attrs;
-        default = { };
       };
     };
   };
@@ -139,36 +155,31 @@ let
       id = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = "Optional DMS profile ID. If null, generated from profile name and profile contents.";
+        description = "Optional stable dockmgr profile ID.";
       };
-
-      name = mkOption {
-        type = types.str;
-      };
-
+      name = mkOption { type = types.str; };
       match = mkOption {
         type = types.nullOr matchExpressionType;
         default = null;
-        description = ''
-          Profile activation expression for dock state matching.
-
-          Supported expression keys are `and`, `or`, `not`, `usb`, `displays`, and `lid`.
-        '';
+        description = "Activation expression supporting and, or, not, usb, displays, and lid.";
       };
-
       hooks = mkOption {
         type = hooksType;
         default = { };
       };
-
       outputs = mkOption {
         type = types.attrsOf outputType;
         default = { };
       };
+      disableUnspecifiedOutputs = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Disable connected outputs not listed in this profile.";
+      };
     };
   };
 
-  profileNames = map (profile: profile.name) cfg.configurations;
+  profileNames = map (profile: profile.name) cfg.profiles;
 
   matchSpecificity =
     expr:
@@ -208,103 +219,56 @@ let
       id = if profile.id != null then profile.id else "profile_${profile.name}_${hash}";
       order = index;
       specificity = matchSpecificity profile.match;
+      fallback = profile.match == null;
     }
-  ) cfg.configurations;
-
-  dmsConfigurations = map (profile: {
-    inherit (profile) id name outputs;
-  }) resolvedProfiles;
-
-  dockmgrConfigurations = map (profile: {
-    inherit (profile)
-      id
-      name
-      match
-      hooks
-      order
-      specificity
-      ;
-    fallback = profile.match == null;
-  }) resolvedProfiles;
+  ) cfg.profiles;
 in
 {
-  options.my.dankMaterialShell.monitors = {
-    version = mkOption {
-      type = types.int;
-      default = 1;
+  options.my.dockmgr = {
+    enable = mkEnableOption "dockmgr display profile manager";
+    package = mkOption {
+      type = types.package;
+      readOnly = true;
     };
-
-    configurations = mkOption {
+    configFile = mkOption {
+      type = types.path;
+      readOnly = true;
+    };
+    profiles = mkOption {
       type = types.listOf profileType;
       default = [ ];
-
-      description = ''
-        DankMaterialShell monitor profiles.
-
-        Example:
-
-        ```nix
-        my.dankMaterialShell.monitors.configurations = [
-          {
-            name = "Docked";
-
-            outputs = {
-              "desc:Samsung Electric Company LC49G95T H1AK500000" = {
-                mode = "5120x1440@59.977";
-
-                position = {
-                  x = 0;
-                  y = 0;
-                };
-
-                scale = 1.0;
-              };
-            };
-          }
-
-          {
-            name = "Undocked";
-
-            match = null;
-
-            outputs = {
-              "eDP-1" = {
-                mode = "2256x1504@59.999";
-                scale = 1.3333333333333333;
-              };
-            };
-          }
-        ];
-        ```
-
-        Profile IDs are optional and will be generated automatically if omitted.
-
-        Profile names must be unique.
-      '';
+      description = "Hyprland display profiles selected from dock, display, and lid state.";
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     assertions = [
       {
         assertion = lib.length profileNames == lib.length (lib.unique profileNames);
-        message = "DMS monitor profile names must be unique.";
+        message = "dockmgr profile names must be unique.";
+      }
+      {
+        assertion = builtins.any (profile: profile.match == null) cfg.profiles;
+        message = "dockmgr requires a fallback profile with match = null.";
       }
     ];
 
-    xdg.configFile."DankMaterialShell/monitors.json".text = builtins.toJSON {
-      version = cfg.version;
-      configurations = dmsConfigurations;
+    my.dockmgr = {
+      package = dockMgr;
+      configFile = pkgs.writeText "dockmgr-config.json" (
+        builtins.toJSON {
+          version = 2;
+          profiles = resolvedProfiles;
+        }
+      );
     };
 
-    xdg.configFile."dockmgr/config.json".text = builtins.toJSON {
-      version = 1;
-      profiles = dockmgrConfigurations;
+    environment = {
+      systemPackages = [
+        dockMgr
+        pkgs.nwg-displays
+      ];
+      etc."dockmgr/config.json".source = config.my.dockmgr.configFile;
     };
-
-    home.packages = [
-      pkgs.jq
-      pkgs.nwg-displays
-    ];
   };
 }

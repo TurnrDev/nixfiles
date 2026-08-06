@@ -43,6 +43,7 @@ in
     # ./cad.nix
     ../common/stylix.nix
     ../common/virtualisation.nix
+    ../common/dockmgr.nix
     ../services/dms-home-assistant-monitor.nix
   ];
 
@@ -82,6 +83,7 @@ in
   };
 
   config = {
+    my.dockmgr.enable = true;
     my.backups.borgmatic.extraExcludePatterns = lib.mkAfter [
       "${config.my.identity.homeDirectory}/.config/Code"
       "${config.my.identity.homeDirectory}/.config/GitKraken"
@@ -134,10 +136,22 @@ in
               kb_variant = "",
               resolve_binds_by_sym = true,
             })
+
+            hl.on("hyprland.start", function()
+              hl.exec_cmd("${config.my.dockmgr.package}/bin/dockmgr watch --config ${config.my.dockmgr.configFile} --context greeter")
+            end)
           '';
         };
       };
     };
+
+    # The greeter owns a separate Hyprland instance. Restart it on a dockmgr
+    # update so its compositor-local watcher immediately uses the new package
+    # and generated profile configuration.
+    systemd.services.greetd.restartTriggers = [
+      config.my.dockmgr.package
+      config.my.dockmgr.configFile
+    ];
 
     # Keep the full Plasma session easy to restore for troubleshooting, but
     # don't install it in the normal day-to-day Hyprland setup.

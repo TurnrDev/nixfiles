@@ -1,0 +1,39 @@
+[project]
+name = "dockmgr"
+version = "3.0.0"
+description = "Hyprland dock and display profile manager"
+requires-python = ">=3.13"
+dependencies = [
+  "pydantic>=2.12,<3",
+  "pyudev>=0.24,<1",
+  "typer>=0.21,<1",
+]
+
+[project.scripts]
+dockmgr = "dockmgr.cli:app"
+
+[dependency-groups]
+dev = [
+  "mypy>=1.18,<2",
+  "pytest>=8.4,<9",
+  "ruff>=0.14,<1",
+]
+
+[build-system]
+requires = ["uv_build>=0.9,<0.13"]
+build-backend = "uv_build"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+files = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

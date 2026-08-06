@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -18,21 +19,19 @@ let
   cfg = config.my.dockmgr;
   stringListType = types.listOf types.str;
 
-  dockMgr = pkgs.writeShellApplication {
-    name = "dockmgr";
-    runtimeInputs = with pkgs; [
-      bash
-      coreutils
-      gawk
-      gnugrep
-      hyprland
-      jq
-      libnotify
-      systemd
-      util-linux
-    ];
-    text = builtins.readFile ../../../scripts/dockmgr;
+  workspace = inputs.uv2nix.lib.workspace.loadWorkspace {
+    workspaceRoot = ../../../packages/dockmgr;
   };
+  overlay = workspace.mkPyprojectOverlay {
+    sourcePreference = "wheel";
+  };
+  pythonSet = (pkgs.callPackage inputs.pyproject-nix.build.packages {
+    python = pkgs.python313;
+  }).overrideScope (lib.composeManyExtensions [
+    inputs.pyproject-build-systems.overlays.default
+    overlay
+  ]);
+  dockMgr = pythonSet.mkVirtualEnv "dockmgr" workspace.deps.default;
 
   validateTypedStringListAttrs =
     allowedKeys: value:

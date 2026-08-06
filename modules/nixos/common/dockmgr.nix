@@ -18,21 +18,27 @@ let
   cfg = config.my.dockmgr;
   stringListType = types.listOf types.str;
 
-  dockMgr = pkgs.writeShellApplication {
-    name = "dockmgr";
-    runtimeInputs = with pkgs; [
-      bash
-      coreutils
-      gawk
-      gnugrep
-      hyprland
-      jq
-      libnotify
-      systemd
-      util-linux
-    ];
-    text = builtins.readFile ../../../scripts/dockmgr;
-  };
+  dockMgr =
+    (pkgs.writeShellApplication {
+      name = "dockmgr";
+      runtimeInputs = with pkgs; [
+        bash
+        coreutils
+        gawk
+        gnugrep
+        hyprland
+        jq
+        libnotify
+        systemd
+        util-linux
+      ];
+      text = builtins.readFile ../../../scripts/dockmgr;
+    }).overrideAttrs
+      (old: {
+        pname = "dockmgr";
+        version = "2.1.0";
+        name = "dockmgr-2.1.0";
+      });
 
   validateTypedStringListAttrs =
     allowedKeys: value:

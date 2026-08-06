@@ -8,7 +8,7 @@ DOCK_POLL_INTERVAL="${DOCK_POLL_INTERVAL:-2}"
 DOCK_UDEV_SETTLE_DELAY="${DOCK_UDEV_SETTLE_DELAY:-1}"
 DOCK_NOTIFY_APP="${DOCK_NOTIFY_APP:-dockmgr}"
 CONTEXT="${DOCKMGR_CONTEXT:-session}"
-DOCKMGR_VERSION="2.1.0"
+DOCKMGR_VERSION="2.1.1"
 
 trap 'exit 130' INT
 trap 'exit 143' TERM
@@ -199,13 +199,13 @@ run_hook_list() {
     local phase="$2"
     local commands_json="$3"
 
-    jq -r '.[]' <<<"$commands_json" | while IFS= read -r command; do
+    while IFS= read -r -d '' command; do
         [ -n "$command" ] || continue
         if ! bash -lc "$command"; then
             printf 'dockmgr: hook failed: %s %s: %s\n' "$profile_name" "$phase" "$command" >&2
             notify "dockmgr hook failed" "$profile_name $phase failed"
         fi
-    done
+    done < <(jq -jr '.[] + "\u0000"' <<<"$commands_json")
 }
 
 run_profile_hooks() {

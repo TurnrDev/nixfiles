@@ -68,6 +68,20 @@ in
     };
   };
 
+  my.dockmgr.profiles = [
+    {
+      name = "Default";
+      outputs."DP-2" = {
+        mode = "5120x1440@240";
+        position = {
+          x = 0;
+          y = 0;
+        };
+        scale = 1.0;
+      };
+    }
+  ];
+
   # Per-device borgmatic overrides live in the host config. The shared module
   # provides the defaults and translates this block into borgmatic YAML.
   my.backups.borgmatic = {

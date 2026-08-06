@@ -1,47 +1,15 @@
-{ pkgs, ... }:
-
-let
-  dockMgr = pkgs.writeShellApplication {
-    name = "dockmgr";
-    runtimeInputs = with pkgs; [
-      bash
-      coreutils
-      gawk
-      gnugrep
-      jq
-      libnotify
-      systemd
-      util-linux
-    ];
-    text = builtins.readFile ../../../scripts/dockmgr;
-  };
-in
 {
-  home.packages = [ dockMgr ];
+  lib,
+  osConfig,
+  ...
+}:
 
-  systemd.user.services.dockmgr = {
-    Unit = {
-      Description = "Watch dock state and switch DMS profiles";
-      ConditionPathExists = "%h/.config/dockmgr/config.json";
-      Wants = [ "dms.service" ];
-      After = [ "dms.service" ];
-    };
-
-    Service = {
-      Type = "simple";
-      ExecStart = "${dockMgr}/bin/dockmgr watch";
-      ExecStartPre = "${pkgs.coreutils}/bin/test -r %h/.config/dockmgr/config.json";
-      Environment = [
-        "PATH=%h/.nix-profile/bin:/etc/profiles/per-user/%u/bin:/run/current-system/sw/bin"
-        "XDG_CONFIG_HOME=%h/.config"
-      ];
-      Restart = "always";
-      RestartPreventExitStatus = "75";
-      RestartSec = "3s";
-    };
-
-    Install.WantedBy = [
-      "dms.service"
-    ];
+{
+  config = lib.mkIf osConfig.my.dockmgr.enable {
+    wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
+      hl.on("hyprland.start", function()
+        hl.exec_cmd("${osConfig.my.dockmgr.package}/bin/dockmgr watch --config ${osConfig.my.dockmgr.configFile} --context session")
+      end)
+    '';
   };
 }

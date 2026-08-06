@@ -15,6 +15,7 @@
     ../hardware/bluetooth.nix
     ../hardware/keychron.nix
     ../hardware/logitech-mx-master-3s.nix
+    ../common/dockmgr-laptop-monitors.nix
     ../services/tailscale.nix
   ];
 

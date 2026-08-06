@@ -41,10 +41,6 @@ in
       require("generated")
       require("config.core")
 
-      -- Keep only DMS's writable monitor overrides. The rest remains
-      -- declaratively owned by Nix/Home Manager.
-      require("dms.outputs")
-
       require("config.rules")
       require("config.binds")
     '';

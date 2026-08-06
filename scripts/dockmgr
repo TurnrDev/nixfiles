@@ -2,11 +2,12 @@
 
 set -u
 
-CONFIG_PATH="${CONFIG_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/dockmgr/config.json}"
+CONFIG_PATH="${CONFIG_PATH:-/etc/dockmgr/config.json}"
 LOCK_PATH="${LOCK_PATH:-${XDG_RUNTIME_DIR:-/tmp}/dockmgr.lock}"
 DOCK_POLL_INTERVAL="${DOCK_POLL_INTERVAL:-2}"
 DOCK_UDEV_SETTLE_DELAY="${DOCK_UDEV_SETTLE_DELAY:-1}"
 DOCK_NOTIFY_APP="${DOCK_NOTIFY_APP:-dockmgr}"
+CONTEXT="${DOCKMGR_CONTEXT:-session}"
 
 trap 'exit 130' INT
 trap 'exit 143' TERM
@@ -79,11 +80,21 @@ read_connected_display_names() {
 }
 
 read_connected_display_descriptions() {
-    command -v hyprctl >/dev/null 2>&1 || return 0
-
     hyprctl monitors all -j 2>/dev/null \
         | jq -r '.[] | .description? // empty | select(length > 0) | "desc:" + .' 2>/dev/null \
         | sort -u || true
+}
+
+resolve_output_names() {
+    local selector="$1"
+
+    hyprctl monitors all -j 2>/dev/null \
+        | jq -r --arg selector "$selector" '
+            .[]
+            | select(.name == $selector or ("desc:" + (.description? // "")) == $selector)
+            | .name
+        ' 2>/dev/null \
+        | sort -u
 }
 
 read_lid_closed() {
@@ -196,13 +207,64 @@ run_hook_list() {
     done
 }
 
+run_profile_hooks() {
+    local profile_json="$1"
+    local profile_name="$2"
+    local phase="$3"
+
+    run_hook_list "$profile_name" "$phase" "$(jq -c --arg context "$CONTEXT" --arg phase "$phase" '.hooks[$context][$phase] // []' <<<"$profile_json")"
+}
+
+apply_output() {
+    local selector="$1"
+    local output_json="$2"
+    local disabled mode x y scale monitor_rule
+
+    disabled="$(jq -r '.disabled' <<<"$output_json")"
+    if [ "$disabled" = "true" ]; then
+        hyprctl keyword monitor "$selector,disable" >/dev/null
+        return
+    fi
+
+    mode="$(jq -r '.mode' <<<"$output_json")"
+    x="$(jq -r '.position.x' <<<"$output_json")"
+    y="$(jq -r '.position.y' <<<"$output_json")"
+    scale="$(jq -r '.scale' <<<"$output_json")"
+    monitor_rule="$selector,$mode,${x}x${y},$scale"
+    hyprctl keyword monitor "$monitor_rule" >/dev/null
+}
+
+disable_unconfigured_outputs() {
+    local profile_json="$1"
+    local configured_names_json connected_name
+
+    configured_names_json="$({
+        jq -r '.outputs | keys[]' <<<"$profile_json" | while IFS= read -r selector; do
+            resolve_output_names "$selector"
+        done
+    } | jq -R . | jq -s 'unique')"
+
+    while IFS= read -r connected_name; do
+        jq -e --arg name "$connected_name" 'index($name) != null' <<<"$configured_names_json" >/dev/null && continue
+        hyprctl keyword monitor "$connected_name,disable" >/dev/null || return 1
+    done < <(read_connected_display_names)
+}
+
 apply_profile() {
     local profile_json="$1"
-    local profile_name
+    local profile_name selector output_json
 
     profile_name="$(jq -r '.name' <<<"$profile_json")"
-    if ! dms ipc outputs setProfile "$profile_name" >/dev/null 2>&1; then
-        printf 'dockmgr: failed to apply DMS profile: %s\n' "$profile_name" >&2
+    while IFS=$'\t' read -r selector output_json; do
+        if ! apply_output "$selector" "$output_json"; then
+            printf 'dockmgr: failed to configure output %s for profile: %s\n' "$selector" "$profile_name" >&2
+            notify "dockmgr apply failed" "Unable to configure $selector"
+            return 1
+        fi
+    done < <(jq -rc '.outputs | to_entries[] | [.key, (.value | tojson)] | @tsv' <<<"$profile_json")
+
+    if [ "$(jq -r '.disableUnspecifiedOutputs' <<<"$profile_json")" = "true" ] && ! disable_unconfigured_outputs "$profile_json"; then
+        printf 'dockmgr: failed to disable unspecified outputs for profile: %s\n' "$profile_name" >&2
         notify "dockmgr apply failed" "Unable to activate $profile_name"
         return 1
     fi
@@ -220,19 +282,19 @@ transition_profile() {
     if [ -n "$from_json" ]; then
         from_name="$(jq -r '.name' <<<"$from_json")"
         notify "Switching profile" "$from_name -> $to_name"
-        run_hook_list "$from_name" "preDown" "$(jq -c '.hooks.preDown // []' <<<"$from_json")"
+        run_profile_hooks "$from_json" "$from_name" "preDown"
     else
         notify "Activating profile" "$to_name"
     fi
 
-    run_hook_list "$to_name" "preUp" "$(jq -c '.hooks.preUp // []' <<<"$to_json")"
-    apply_profile "$to_json"
+    run_profile_hooks "$to_json" "$to_name" "preUp"
+    apply_profile "$to_json" || return 1
 
     if [ -n "$from_json" ]; then
-        run_hook_list "$from_name" "postDown" "$(jq -c '.hooks.postDown // []' <<<"$from_json")"
+        run_profile_hooks "$from_json" "$from_name" "postDown"
     fi
 
-    run_hook_list "$to_name" "postUp" "$(jq -c '.hooks.postUp // []' <<<"$to_json")"
+    run_profile_hooks "$to_json" "$to_name" "postUp"
     notify "Profile active" "$to_name"
 }
 
@@ -294,7 +356,7 @@ watch_poll() {
 watch() {
     ensure_config
     need_cmd jq
-    need_cmd dms
+    need_cmd hyprctl
     acquire_watch_lock
 
     last_profile_id=""
@@ -318,7 +380,7 @@ once() {
 
     ensure_config
     need_cmd jq
-    need_cmd dms
+    need_cmd hyprctl
 
     current_json="$(current_profile_json)"
     [ -n "$current_json" ] || {
@@ -340,12 +402,53 @@ Environment overrides:
   DOCK_POLL_INTERVAL      default: 2 unit: seconds
   DOCK_UDEV_SETTLE_DELAY  default: 1 unit: seconds
   DOCK_NOTIFY_APP         default: dockmgr
-  CONFIG_PATH             default: $XDG_CONFIG_HOME/dockmgr/config.json
+  CONFIG_PATH             default: /etc/dockmgr/config.json
   LOCK_PATH               default: $XDG_RUNTIME_DIR/dockmgr.lock or /tmp/dockmgr.lock
+
+Options:
+  --config PATH           profile configuration path
+  --context NAME          hook context: session or greeter (default: session)
 EOF
 }
 
-case "${1:-watch}" in
+command="watch"
+if [ "$#" -gt 0 ] && [ "${1#-}" = "$1" ]; then
+    command="$1"
+    shift
+fi
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --config)
+            [ "$#" -ge 2 ] || { printf 'dockmgr: --config requires a path\n' >&2; exit 2; }
+            CONFIG_PATH="$2"
+            shift 2
+            ;;
+        --context)
+            [ "$#" -ge 2 ] || { printf 'dockmgr: --context requires a value\n' >&2; exit 2; }
+            CONTEXT="$2"
+            shift 2
+            ;;
+        -h|--help|help)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+            ;;
+    esac
+done
+
+case "$CONTEXT" in
+    session|greeter) ;;
+    *)
+        printf 'dockmgr: unsupported context: %s\n' "$CONTEXT" >&2
+        exit 2
+        ;;
+esac
+
+case "$command" in
     watch)
         watch
         ;;

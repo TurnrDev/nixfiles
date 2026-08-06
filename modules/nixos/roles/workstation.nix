@@ -43,6 +43,7 @@ in
     # ./cad.nix
     ../common/stylix.nix
     ../common/virtualisation.nix
+    ../common/dockmgr.nix
     ../services/dms-home-assistant-monitor.nix
   ];
 
@@ -82,6 +83,7 @@ in
   };
 
   config = {
+    my.dockmgr.enable = true;
     my.backups.borgmatic.extraExcludePatterns = lib.mkAfter [
       "${config.my.identity.homeDirectory}/.config/Code"
       "${config.my.identity.homeDirectory}/.config/GitKraken"
@@ -134,6 +136,10 @@ in
               kb_variant = "",
               resolve_binds_by_sym = true,
             })
+
+            hl.on("hyprland.start", function()
+              hl.exec_cmd("${config.my.dockmgr.package}/bin/dockmgr watch --config ${config.my.dockmgr.configFile} --context greeter")
+            end)
           '';
         };
       };

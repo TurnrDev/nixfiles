@@ -34,6 +34,12 @@ in
 
   networking.hostName = "jay-framework";
 
+  my.dockmgr.internalDisplay = {
+    width = 2256;
+    height = 1504;
+    freq = "59.999";
+  };
+
   services.xserver.xkb = {
     layout = "gb";
     variant = "colemak";

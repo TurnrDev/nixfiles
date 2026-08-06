@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import time
+from importlib.metadata import version
 from pathlib import Path
 from typing import Annotated
 
@@ -14,6 +15,22 @@ from dockmgr.models import Config, Context, Profile
 
 app = typer.Typer(no_args_is_help=True)
 logging.basicConfig(level=logging.INFO, format="%(message)s")
+
+
+def show_version(value: bool) -> None:
+    if value:
+        typer.echo(version("dockmgr"))
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    show_version_flag: Annotated[
+        bool,
+        typer.Option("--version", callback=show_version, is_eager=True),
+    ] = False,
+) -> None:
+    """Manage Hyprland dock and display profiles."""
 
 
 def load_config(path: Path) -> Config:

@@ -22,16 +22,28 @@ let
   workspace = inputs.uv2nix.lib.workspace.loadWorkspace {
     workspaceRoot = ../../../packages/dockmgr;
   };
+  project = (builtins.fromTOML (builtins.readFile ../../../packages/dockmgr/pyproject.toml)).project;
   overlay = workspace.mkPyprojectOverlay {
     sourcePreference = "wheel";
   };
-  pythonSet = (pkgs.callPackage inputs.pyproject-nix.build.packages {
-    python = pkgs.python313;
-  }).overrideScope (lib.composeManyExtensions [
-    inputs.pyproject-build-systems.overlays.default
-    overlay
-  ]);
-  dockMgr = pythonSet.mkVirtualEnv "dockmgr" workspace.deps.default;
+  pythonSet =
+    (pkgs.callPackage inputs.pyproject-nix.build.packages {
+      python = pkgs.python314;
+    }).overrideScope
+      (
+        lib.composeManyExtensions [
+          inputs.pyproject-build-systems.overlays.default
+          overlay
+        ]
+      );
+  dockMgr = (pythonSet.mkVirtualEnv project.name workspace.deps.default).overrideAttrs (old: {
+    pname = project.name;
+    version = project.version;
+    name = "${project.name}-${project.version}";
+    meta = (old.meta or { }) // {
+      mainProgram = project.name;
+    };
+  });
 
   validateTypedStringListAttrs =
     allowedKeys: value:

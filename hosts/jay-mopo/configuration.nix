@@ -27,8 +27,8 @@
         match.and = [
           {
             displays.connectedAllOf = [
-              "DP-5"
-              "DP-7"
+              "desc:Dell Inc. DELL U2413 84K964B5CTTL"
+              "desc:Dell Inc. DELL U2412M YPPY06853EVS"
             ];
           }
           {
@@ -44,7 +44,7 @@
           ${config.my.dockmgr.internalDisplay.identifier} = config.my.dockmgr.internalOutput // {
             scale = 1.5;
           };
-          "DP-5" = {
+          "desc:Dell Inc. DELL U2413 84K964B5CTTL" = {
             mode = "1920x1200@59.950";
             position = {
               x = 1920;
@@ -52,7 +52,7 @@
             };
             scale = 1.0;
           };
-          "DP-7" = {
+          "desc:Dell Inc. DELL U2412M YPPY06853EVS" = {
             mode = "1920x1200@59.950";
             position = {
               x = 3840;

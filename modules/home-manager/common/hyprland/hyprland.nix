@@ -65,6 +65,10 @@ in
         content = ./lua/rules.lua;
         autoLoad = false;
       };
+      "config.workspace-routing" = {
+        content = ./lua/workspace-routing.lua;
+        autoLoad = false;
+      };
     };
   };
 }

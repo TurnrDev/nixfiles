@@ -40,6 +40,18 @@
             ];
           }
         ];
+        hooks.session.postUp = [
+          ''
+            hyprctl eval 'require("config.workspace-routing").apply({
+              "eDP-1",
+              "desc:Dell Inc. DELL U2413 84K964B5CTTL",
+              "desc:Dell Inc. DELL U2412M YPPY06853EVS",
+            })'
+          ''
+        ];
+        hooks.session.postDown = [
+          ''hyprctl eval 'require("config.workspace-routing").clear()' ''
+        ];
         outputs = {
           ${config.my.dockmgr.internalDisplay.identifier} = config.my.dockmgr.internalOutput // {
             scale = 1.5;

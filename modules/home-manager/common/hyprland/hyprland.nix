@@ -39,7 +39,6 @@ in
 
     extraConfig = ''
       require("generated")
-      _G.dockmgr = require("config.dockmgr")
       require("config.core")
 
       require("config.rules")

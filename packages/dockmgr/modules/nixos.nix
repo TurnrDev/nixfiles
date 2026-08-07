@@ -15,9 +15,9 @@ let
     types
     ;
 
-  cfg = config.my.dockmgr;
+  cfg = config.programs.dockmgr;
   stringListType = types.listOf types.str;
-  dockMgr = pkgs.callPackage ../../../packages/dockmgr/dockmgr.nix { };
+  dockMgr = pkgs.callPackage ../package.nix { };
 
   validateTypedStringListAttrs =
     allowedKeys: value:
@@ -201,17 +201,13 @@ let
   ) cfg.profiles;
 in
 {
-  options.my.dockmgr = {
+  options.programs.dockmgr = {
     enable = mkEnableOption "dockmgr display profile manager";
     package = mkOption {
       type = types.package;
       readOnly = true;
     };
     configFile = mkOption {
-      type = types.path;
-      readOnly = true;
-    };
-    luaModule = mkOption {
       type = types.path;
       readOnly = true;
     };
@@ -234,9 +230,8 @@ in
       }
     ];
 
-    my.dockmgr = {
+    programs.dockmgr = {
       package = dockMgr;
-      luaModule = dockMgr.luaModule;
       configFile = pkgs.writeText "dockmgr-config.json" (
         builtins.toJSON {
           version = 2;
@@ -248,9 +243,8 @@ in
     environment = {
       systemPackages = [
         dockMgr
-        pkgs.nwg-displays
       ];
-      etc."dockmgr/config.json".source = config.my.dockmgr.configFile;
+      etc."dockmgr/config.json".source = config.programs.dockmgr.configFile;
     };
   };
 }

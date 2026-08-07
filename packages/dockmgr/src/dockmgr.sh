@@ -8,7 +8,8 @@ DOCK_POLL_INTERVAL="${DOCK_POLL_INTERVAL:-2}"
 DOCK_UDEV_SETTLE_DELAY="${DOCK_UDEV_SETTLE_DELAY:-1}"
 DOCK_NOTIFY_APP="${DOCK_NOTIFY_APP:-dockmgr}"
 CONTEXT="${DOCKMGR_CONTEXT:-session}"
-DOCKMGR_VERSION="2.1.2"
+DOCKMGR_LUA_MODULE="${DOCKMGR_LUA_MODULE:-}"
+DOCKMGR_VERSION="2.2.0"
 
 trap 'exit 130' INT
 trap 'exit 143' TERM
@@ -206,7 +207,7 @@ run_profile_hooks() {
 
 apply_profile_with_lua() {
     local profile_json="$1"
-    local profile_id lua_profile_id lua_config_path lua_jq
+    local profile_id lua_profile_id lua_config_path lua_jq lua_module
 
     profile_id="$(jq -r '.id' <<<"$profile_json")"
     [ "$profile_id" != "null" ] && [ -n "$profile_id" ] || {
@@ -217,7 +218,12 @@ apply_profile_with_lua() {
     lua_profile_id="$(jq -Rn --arg value "$profile_id" '$value')"
     lua_config_path="$(jq -Rn --arg value "$CONFIG_PATH" '$value')"
     lua_jq="$(jq -Rn --arg value "$(command -v jq)" '$value')"
-    hyprctl eval "dockmgr.apply($lua_profile_id, $lua_config_path, $lua_jq)"
+    [ -r "$DOCKMGR_LUA_MODULE" ] || {
+        printf 'dockmgr: missing Lua module: %s\n' "$DOCKMGR_LUA_MODULE" >&2
+        return 1
+    }
+    lua_module="$(jq -Rn --arg value "$DOCKMGR_LUA_MODULE" '$value')"
+    hyprctl eval "(function() dofile($lua_module); return dockmgr.apply($lua_profile_id, $lua_config_path, $lua_jq) end)()"
 }
 
 apply_profile() {

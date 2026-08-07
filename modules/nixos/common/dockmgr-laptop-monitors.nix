@@ -6,8 +6,8 @@
 
 let
   inherit (lib) mkIf mkOption types;
-  cfg = config.my.dockmgr;
-  internal = cfg.internalDisplay;
+  cfg = config.my.displays;
+  internal = cfg.internal;
   homeOfficeDisplay = "desc:Samsung Electric Company LC49G95T H1AK500000";
   homeOfficeMode = "5120x1440@59.977";
   internalMode = "${toString internal.width}x${toString internal.height}@${internal.freq}";
@@ -30,8 +30,8 @@ let
   };
 in
 {
-  options.my.dockmgr = {
-    internalDisplay = mkOption {
+  options.my.displays = {
+    internal = mkOption {
       type = types.nullOr (
         types.submodule {
           options = {
@@ -54,8 +54,8 @@ in
   };
 
   config = mkIf (internal != null) {
-    my.dockmgr = {
-      internalOutput = generatedInternalOutput;
+    my.displays.internalOutput = generatedInternalOutput;
+    programs.dockmgr = {
       profiles = [
         {
           name = "Docked Home Office with Inbuilt Display";
@@ -109,6 +109,7 @@ in
         {
           name = "Undocked";
           outputs.${internal.identifier} = cfg.internalOutput;
+          disableUnspecifiedOutputs = false;
         }
       ];
     };

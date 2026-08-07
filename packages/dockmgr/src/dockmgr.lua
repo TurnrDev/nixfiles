@@ -128,4 +128,4 @@ function M.apply(profile_id, config_path, jq)
   end
 end
 
-return M
+_G.dockmgr = M

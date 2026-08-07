@@ -43,7 +43,7 @@ in
     # ./cad.nix
     ../common/stylix.nix
     ../common/virtualisation.nix
-    ../common/dockmgr.nix
+    inputs.dockmgr.nixosModules.default
     ../services/dms-home-assistant-monitor.nix
   ];
 
@@ -83,7 +83,7 @@ in
   };
 
   config = {
-    my.dockmgr.enable = true;
+    programs.dockmgr.enable = true;
     my.backups.borgmatic.extraExcludePatterns = lib.mkAfter [
       "${config.my.identity.homeDirectory}/.config/Code"
       "${config.my.identity.homeDirectory}/.config/GitKraken"
@@ -109,7 +109,6 @@ in
             hl.env("XCURSOR_SIZE", "24")
             hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
             hl.env("HYPRCURSOR_SIZE", "24")
-
             hl.config({
               misc = {
                 disable_hyprland_logo = true,
@@ -138,7 +137,7 @@ in
             })
 
             hl.on("hyprland.start", function()
-              hl.exec_cmd("${config.my.dockmgr.package}/bin/dockmgr watch --config ${config.my.dockmgr.configFile} --context greeter")
+              hl.exec_cmd("${config.programs.dockmgr.package}/bin/dockmgr watch --config ${config.programs.dockmgr.configFile} --context greeter")
             end)
           '';
         };
@@ -149,8 +148,8 @@ in
     # update so its compositor-local watcher immediately uses the new package
     # and generated profile configuration.
     systemd.services.greetd.restartTriggers = [
-      config.my.dockmgr.package
-      config.my.dockmgr.configFile
+      config.programs.dockmgr.package
+      config.programs.dockmgr.configFile
     ];
 
     # Keep the full Plasma session easy to restore for troubleshooting, but
@@ -263,6 +262,7 @@ in
       kdePackages.qtsvg
       kotlin
       libreoffice
+      nwg-displays
       postman
       protonmail-desktop
       qview

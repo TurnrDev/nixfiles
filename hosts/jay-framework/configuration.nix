@@ -13,7 +13,7 @@
 
   networking.hostName = "jay-framework";
 
-  my.dockmgr.internalDisplay = {
+  my.displays.internal = {
     width = 2256;
     height = 1504;
     freq = "59.999";

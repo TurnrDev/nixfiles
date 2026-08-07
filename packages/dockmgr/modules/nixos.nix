@@ -15,32 +15,9 @@ let
     types
     ;
 
-  cfg = config.my.dockmgr;
+  cfg = config.programs.dockmgr;
   stringListType = types.listOf types.str;
-  script = builtins.readFile ../../../scripts/dockmgr;
-  version = builtins.head (builtins.elemAt (builtins.split ''DOCKMGR_VERSION="([^"]+)"'' script) 1);
-
-  dockMgr =
-    (pkgs.writeShellApplication {
-      name = "dockmgr";
-      runtimeInputs = with pkgs; [
-        bash
-        coreutils
-        gawk
-        gnugrep
-        hyprland
-        jq
-        libnotify
-        systemd
-        util-linux
-      ];
-      text = script;
-    }).overrideAttrs
-      (_: {
-        pname = "dockmgr";
-        inherit version;
-        name = "dockmgr-${version}";
-      });
+  dockMgr = pkgs.callPackage ../package.nix { };
 
   validateTypedStringListAttrs =
     allowedKeys: value:
@@ -224,7 +201,7 @@ let
   ) cfg.profiles;
 in
 {
-  options.my.dockmgr = {
+  options.programs.dockmgr = {
     enable = mkEnableOption "dockmgr display profile manager";
     package = mkOption {
       type = types.package;
@@ -253,7 +230,7 @@ in
       }
     ];
 
-    my.dockmgr = {
+    programs.dockmgr = {
       package = dockMgr;
       configFile = pkgs.writeText "dockmgr-config.json" (
         builtins.toJSON {
@@ -266,9 +243,8 @@ in
     environment = {
       systemPackages = [
         dockMgr
-        pkgs.nwg-displays
       ];
-      etc."dockmgr/config.json".source = config.my.dockmgr.configFile;
+      etc."dockmgr/config.json".source = config.programs.dockmgr.configFile;
     };
   };
 }

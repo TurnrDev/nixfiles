@@ -1,11 +1,11 @@
-{ ... }:
+{ inputs, ... }:
 
 {
   imports = [
     ./default.nix
     ../common/default-apps.nix
     ../common/discord.nix
-    ../common/dockmgr.nix
+    inputs.dockmgr.homeManagerModules.default
     ../common/firefox.nix
     ../common/go-hass-agent.nix
     ../common/hyprland/hyprland.nix

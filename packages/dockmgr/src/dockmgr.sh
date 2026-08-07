@@ -8,7 +8,8 @@ DOCK_POLL_INTERVAL="${DOCK_POLL_INTERVAL:-2}"
 DOCK_UDEV_SETTLE_DELAY="${DOCK_UDEV_SETTLE_DELAY:-1}"
 DOCK_NOTIFY_APP="${DOCK_NOTIFY_APP:-dockmgr}"
 CONTEXT="${DOCKMGR_CONTEXT:-session}"
-DOCKMGR_VERSION="2.1.1"
+DOCKMGR_LUA_MODULE="${DOCKMGR_LUA_MODULE:-}"
+DOCKMGR_VERSION="2.2.0"
 
 trap 'exit 130' INT
 trap 'exit 143' TERM
@@ -84,18 +85,6 @@ read_connected_display_descriptions() {
     hyprctl monitors all -j 2>/dev/null \
         | jq -r '.[] | .description? // empty | select(length > 0) | "desc:" + .' 2>/dev/null \
         | sort -u || true
-}
-
-resolve_output_names() {
-    local selector="$1"
-
-    hyprctl monitors all -j 2>/dev/null \
-        | jq -r --arg selector "$selector" '
-            .[]
-            | select(.name == $selector or ("desc:" + (.description? // "")) == $selector)
-            | .name
-        ' 2>/dev/null \
-        | sort -u
 }
 
 read_lid_closed() {
@@ -216,61 +205,37 @@ run_profile_hooks() {
     run_hook_list "$profile_name" "$phase" "$(jq -c --arg context "$CONTEXT" --arg phase "$phase" '.hooks[$context][$phase] // []' <<<"$profile_json")"
 }
 
-apply_output() {
-    local selector="$1"
-    local output_json="$2"
-    local disabled mode x y scale monitor_rule
-
-    disabled="$(jq -r '.disabled' <<<"$output_json")"
-    if [ "$disabled" = "true" ]; then
-        hyprctl keyword monitor "$selector,disable" >/dev/null
-        return
-    fi
-
-    mode="$(jq -r '.mode' <<<"$output_json")"
-    x="$(jq -r '.position.x' <<<"$output_json")"
-    y="$(jq -r '.position.y' <<<"$output_json")"
-    scale="$(jq -r '.scale' <<<"$output_json")"
-    monitor_rule="$selector,$mode,${x}x${y},$scale"
-    hyprctl keyword monitor "$monitor_rule" >/dev/null
-}
-
-disable_unconfigured_outputs() {
+apply_profile_with_lua() {
     local profile_json="$1"
-    local configured_names_json connected_name
+    local profile_id lua_profile_id lua_config_path lua_jq lua_module
 
-    configured_names_json="$({
-        jq -r '.outputs | keys[]' <<<"$profile_json" | while IFS= read -r selector; do
-            resolve_output_names "$selector"
-        done
-    } | jq -R . | jq -s 'unique')"
+    profile_id="$(jq -r '.id' <<<"$profile_json")"
+    [ "$profile_id" != "null" ] && [ -n "$profile_id" ] || {
+        printf 'dockmgr: selected profile has no ID\n' >&2
+        return 1
+    }
 
-    while IFS= read -r connected_name; do
-        jq -e --arg name "$connected_name" 'index($name) != null' <<<"$configured_names_json" >/dev/null && continue
-        hyprctl keyword monitor "$connected_name,disable" >/dev/null || return 1
-    done < <(read_connected_display_names)
+    lua_profile_id="$(jq -Rn --arg value "$profile_id" '$value')"
+    lua_config_path="$(jq -Rn --arg value "$CONFIG_PATH" '$value')"
+    lua_jq="$(jq -Rn --arg value "$(command -v jq)" '$value')"
+    [ -r "$DOCKMGR_LUA_MODULE" ] || {
+        printf 'dockmgr: missing Lua module: %s\n' "$DOCKMGR_LUA_MODULE" >&2
+        return 1
+    }
+    lua_module="$(jq -Rn --arg value "$DOCKMGR_LUA_MODULE" '$value')"
+    hyprctl eval "(function() dofile($lua_module); return dockmgr.apply($lua_profile_id, $lua_config_path, $lua_jq) end)()"
 }
 
 apply_profile() {
     local profile_json="$1"
-    local profile_name selector output_json
+    local profile_name
 
     profile_name="$(jq -r '.name' <<<"$profile_json")"
-    while IFS=$'\t' read -r selector output_json; do
-        if ! apply_output "$selector" "$output_json"; then
-            printf 'dockmgr: failed to configure output %s for profile: %s\n' "$selector" "$profile_name" >&2
-            notify "dockmgr apply failed" "Unable to configure $selector"
-            return 1
-        fi
-    done < <(jq -rc '.outputs | to_entries[] | [.key, (.value | tojson)] | @tsv' <<<"$profile_json")
-
-    if [ "$(jq -r '.disableUnspecifiedOutputs' <<<"$profile_json")" = "true" ] && ! disable_unconfigured_outputs "$profile_json"; then
-        printf 'dockmgr: failed to disable unspecified outputs for profile: %s\n' "$profile_name" >&2
+    if ! apply_profile_with_lua "$profile_json"; then
+        printf 'dockmgr: failed to configure profile with Hyprland Lua: %s\n' "$profile_name" >&2
         notify "dockmgr apply failed" "Unable to activate $profile_name"
         return 1
     fi
-
-    return 0
 }
 
 transition_profile() {

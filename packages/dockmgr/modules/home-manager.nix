@@ -15,22 +15,22 @@ let
   '';
 in
 {
-  config = lib.mkIf osConfig.my.dockmgr.enable {
+  config = lib.mkIf osConfig.programs.dockmgr.enable {
     systemd.user.services.dockmgr = {
       Unit = {
         Description = "Watch dock state and apply Hyprland display profiles";
         PartOf = [ "graphical-session.target" ];
         After = [ "graphical-session.target" ];
         X-Restart-Triggers = [
-          osConfig.my.dockmgr.package
-          osConfig.my.dockmgr.configFile
+          osConfig.programs.dockmgr.package
+          osConfig.programs.dockmgr.configFile
         ];
         X-SwitchMethod = "restart";
       };
 
       Service = {
         Type = "simple";
-        ExecStart = "${osConfig.my.dockmgr.package}/bin/dockmgr watch --config ${osConfig.my.dockmgr.configFile} --context session";
+        ExecStart = "${osConfig.programs.dockmgr.package}/bin/dockmgr watch --config ${osConfig.programs.dockmgr.configFile} --context session";
         Restart = "always";
         RestartPreventExitStatus = "75";
         RestartSec = "3s";

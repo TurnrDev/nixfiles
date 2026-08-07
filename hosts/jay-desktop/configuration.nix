@@ -46,7 +46,7 @@
     };
   };
 
-  my.dockmgr.profiles = [
+  programs.dockmgr.profiles = [
     {
       name = "Default";
       outputs."DP-2" = {

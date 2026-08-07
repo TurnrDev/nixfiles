@@ -17,30 +17,7 @@ let
 
   cfg = config.my.dockmgr;
   stringListType = types.listOf types.str;
-  script = builtins.readFile ../../../scripts/dockmgr;
-  version = builtins.head (builtins.elemAt (builtins.split ''DOCKMGR_VERSION="([^"]+)"'' script) 1);
-
-  dockMgr =
-    (pkgs.writeShellApplication {
-      name = "dockmgr";
-      runtimeInputs = with pkgs; [
-        bash
-        coreutils
-        gawk
-        gnugrep
-        hyprland
-        jq
-        libnotify
-        systemd
-        util-linux
-      ];
-      text = script;
-    }).overrideAttrs
-      (_: {
-        pname = "dockmgr";
-        inherit version;
-        name = "dockmgr-${version}";
-      });
+  dockMgr = pkgs.callPackage ../../../packages/dockmgr/dockmgr.nix { };
 
   validateTypedStringListAttrs =
     allowedKeys: value:
@@ -234,6 +211,10 @@ in
       type = types.path;
       readOnly = true;
     };
+    luaModule = mkOption {
+      type = types.path;
+      readOnly = true;
+    };
     profiles = mkOption {
       type = types.listOf profileType;
       default = [ ];
@@ -255,6 +236,7 @@ in
 
     my.dockmgr = {
       package = dockMgr;
+      luaModule = dockMgr.luaModule;
       configFile = pkgs.writeText "dockmgr-config.json" (
         builtins.toJSON {
           version = 2;

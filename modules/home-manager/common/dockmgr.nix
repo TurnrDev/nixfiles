@@ -24,6 +24,7 @@ in
         X-Restart-Triggers = [
           osConfig.my.dockmgr.package
           osConfig.my.dockmgr.configFile
+          osConfig.my.dockmgr.luaModule
         ];
         X-SwitchMethod = "restart";
       };
@@ -35,6 +36,13 @@ in
         RestartPreventExitStatus = "75";
         RestartSec = "3s";
       };
+    };
+
+    wayland.windowManager.hyprland.extraLuaFiles."config.dockmgr" = {
+      content = ''
+        return dofile("${osConfig.my.dockmgr.luaModule}")
+      '';
+      autoLoad = false;
     };
 
     wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''

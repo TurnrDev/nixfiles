@@ -109,6 +109,7 @@ in
             hl.env("XCURSOR_SIZE", "24")
             hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
             hl.env("HYPRCURSOR_SIZE", "24")
+            _G.dockmgr = dofile("${config.my.dockmgr.luaModule}")
 
             hl.config({
               misc = {
@@ -151,6 +152,7 @@ in
     systemd.services.greetd.restartTriggers = [
       config.my.dockmgr.package
       config.my.dockmgr.configFile
+      config.my.dockmgr.luaModule
     ];
 
     # Keep the full Plasma session easy to restore for troubleshooting, but

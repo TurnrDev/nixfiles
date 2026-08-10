@@ -3,6 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    # Historical Nixpkgs package sets, evaluated only when a version is selected.
+    # Keep `nixpkgs` as the real base input: flake inputs that follow it require
+    # the normal nixpkgs lib and legacyPackages interface.
+    multiverse.url = "github:fzakaria/nixpkgs-multiverse";
     dockmgr = {
       url = "path:./packages/dockmgr";
       inputs.nixpkgs.follows = "nixpkgs";

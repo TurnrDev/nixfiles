@@ -1,6 +1,7 @@
 {
   config,
   identity,
+  inputs,
   lib,
   osConfig ? null,
   pkgs,
@@ -8,7 +9,13 @@
 }:
 
 let
-  borgPackage = pkgs.borgbackup;
+  multiverse = inputs.multiverse.multiverse.${pkgs.stdenv.hostPlatform.system};
+  borgVersion = lib.last (
+    builtins.filter (version: lib.hasPrefix "1.4." version) (multiverse.versionsOf "borgbackup")
+  );
+  # Hetzner Storage Box is accessed with its borg-1.4 server. Follow the latest
+  # indexed Borg 1.4 patch release, but never cross to another release line.
+  borgPackage = multiverse.version "borgbackup" borgVersion;
   homeDirectory = identity.homeDirectory;
   hostName = osConfig.networking.hostName;
   defaultRepositoryPath = "ssh://u551190@u551190.your-storagebox.de:23/./${hostName}";
@@ -85,13 +92,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = lib.hasPrefix "1.4." borgPackage.version;
-        message = "Borg version must be 1.4.x for backup compatibility; got ${borgPackage.version}.";
-      }
-    ];
-
     home.packages = [
       sopsPackage
       borgPackage

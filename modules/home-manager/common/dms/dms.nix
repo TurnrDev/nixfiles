@@ -47,7 +47,7 @@ in
       homeAssistantMonitor = {
         src = inputs."dms-plugin-hass";
         settings = {
-          hassUrl = "https://assistant.home.turnr.dev";
+          hassUrl = "https://assistant.home.turnr.net";
           hassTokenPath = "/run/secrets/hass_token";
           hassToken = "";
         };

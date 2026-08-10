@@ -37,7 +37,7 @@
   my.backups.borgmatic = {
     frequency = "daily";
     sourceDirectories = [ config.my.identity.homeDirectory ];
-    healthchecksUrl = "https://healthchecks.home.turnr.dev/ping/66bb872c-5ff0-4398-ba0c-7db7f3f7b731";
+    healthchecksUrl = "https://healthchecks.home.turnr.net/ping/66bb872c-5ff0-4398-ba0c-7db7f3f7b731";
     repositories = {
       hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
     };

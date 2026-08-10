@@ -183,7 +183,7 @@ ssh-copy-id -s -i ~/.ssh/id_ed25519.pub -p 23 \
 
 ```sh
 ssh-copy-id -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes -p 22 \
-  jay@home.turnr.dev
+  jay@home.turnr.net
 ```
 
 ## 5. Initialize The Borg Repository

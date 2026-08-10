@@ -7,7 +7,10 @@
 }:
 
 let
-  settings = builtins.fromJSON (builtins.readFile ./settings.json);
+  settings = (builtins.fromJSON (builtins.readFile ./settings.json)) // {
+    # dockmgr exclusively owns Hyprland output configuration.
+    hyprlandOutputSettings = { };
+  };
   sessionTarget = config.wayland.systemd.target;
 in
 

@@ -54,7 +54,8 @@ local function profile_outputs(jq, config_path, profile_id)
     outputs[#outputs + 1] = {
       output = fields[1],
       mode = fields[2],
-      position = fields[3] .. "x" .. fields[4],
+      position_x = tonumber(fields[3]),
+      position_y = tonumber(fields[4]),
       scale = tonumber(fields[5]),
       disabled = fields[6] == "true",
     }
@@ -86,6 +87,38 @@ local function output_matches_monitor(output, monitor)
   return output == monitor.name or output == "desc:" .. monitor.description
 end
 
+local function monitor_for_output(output)
+  for _, monitor in ipairs(hl.get_monitors()) do
+    if output_matches_monitor(output, monitor) then
+      return monitor
+    end
+  end
+
+  return nil
+end
+
+local function monitor_matches_output(monitor, output)
+  if output.disabled then
+    return monitor == nil
+  end
+
+  if monitor == nil or output.mode == "preferred" then
+    return false
+  end
+
+  local width, height, refresh_rate = output.mode:match("^(%d+)x(%d+)@([%d.]+)$")
+  if width == nil then
+    return false
+  end
+
+  return monitor.width == tonumber(width)
+    and monitor.height == tonumber(height)
+    and math.abs(monitor.refresh_rate - tonumber(refresh_rate)) < 0.05
+    and monitor.position.x == output.position_x
+    and monitor.position.y == output.position_y
+    and math.abs(monitor.scale - output.scale) < 0.001
+end
+
 ---Apply a dockmgr profile by ID using Hyprland's native monitor API.
 ---@param profile_id string
 ---@param config_path? string
@@ -96,18 +129,20 @@ function M.apply(profile_id, config_path, jq)
   local outputs = profile_outputs(jq, config_path, profile_id)
 
   for _, output in ipairs(outputs) do
-    local monitor = {
-      output = output.output,
-      disabled = output.disabled,
-    }
+    if not monitor_matches_output(monitor_for_output(output.output), output) then
+      local monitor = {
+        output = output.output,
+        disabled = output.disabled,
+      }
 
-    if not output.disabled then
-      monitor.mode = output.mode
-      monitor.position = output.position
-      monitor.scale = output.scale
+      if not output.disabled then
+        monitor.mode = output.mode
+        monitor.position = output.position_x .. "x" .. output.position_y
+        monitor.scale = output.scale
+      end
+
+      hl.monitor(monitor)
     end
-
-    hl.monitor(monitor)
   end
 
   if disables_unconfigured_outputs(jq, config_path, profile_id) then

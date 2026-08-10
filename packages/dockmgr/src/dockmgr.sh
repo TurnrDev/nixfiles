@@ -9,7 +9,7 @@ DOCK_UDEV_SETTLE_DELAY="${DOCK_UDEV_SETTLE_DELAY:-1}"
 DOCK_NOTIFY_APP="${DOCK_NOTIFY_APP:-dockmgr}"
 CONTEXT="${DOCKMGR_CONTEXT:-session}"
 DOCKMGR_LUA_MODULE="${DOCKMGR_LUA_MODULE:-}"
-DOCKMGR_VERSION="2.2.0"
+DOCKMGR_VERSION="2.2.1"
 
 trap 'exit 130' INT
 trap 'exit 143' TERM
@@ -25,6 +25,10 @@ quick_notify() {
     if command -v notify-send >/dev/null 2>&1; then
         notify-send -a "$DOCK_NOTIFY_APP" "$1" >/dev/null 2>&1 || true
     fi
+}
+
+log() {
+    printf 'dockmgr: %s\n' "$*" >&2
 }
 
 notify() {
@@ -287,27 +291,32 @@ print_status() {
 }
 
 check_transition() {
-    local current_json current_id
+    local state_json current_json current_id current_name
 
-    current_json="$(current_profile_json)"
+    state_json="$(collect_state)"
+    current_json="$(select_profile "$state_json")"
     [ -n "$current_json" ] || {
         printf 'dockmgr: no profile matched and no fallback is configured\n' >&2
         return 1
     }
 
     current_id="$(jq -r '.id' <<<"$current_json")"
+    current_name="$(jq -r '.name' <<<"$current_json")"
 
-    if [ "${last_profile_id:-}" != "$current_id" ]; then
-        transition_profile "${last_profile_json:-}" "$current_json"
-        last_profile_json="$current_json"
-        last_profile_id="$current_id"
+    if [ "${last_profile_id:-}" = "$current_id" ]; then
+        return 0
     fi
+
+    log "applying profile: $current_name; state: $(jq -c . <<<"$state_json")"
+    transition_profile "${last_profile_json:-}" "$current_json"
+    last_profile_json="$current_json"
+    last_profile_id="$current_id"
 }
 
 watch_udev() {
     udevadm monitor --udev 2>/dev/null | while IFS= read -r _event; do
         sleep "$DOCK_UDEV_SETTLE_DELAY"
-        check_transition || true
+        kill -USR1 "$watch_parent_pid" 2>/dev/null || exit 0
     done
     return 1
 }
@@ -327,6 +336,8 @@ watch() {
 
     last_profile_id=""
     last_profile_json=""
+    watch_parent_pid="$$"
+    trap 'check_transition || true' USR1
     check_transition
 
     if command -v udevadm >/dev/null 2>&1; then

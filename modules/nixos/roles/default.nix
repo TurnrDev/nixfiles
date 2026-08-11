@@ -16,7 +16,6 @@
     ../common/backups.nix
     ../common/gradle.nix
     ../common/identity.nix
-    ../common/node.nix
     ../common/obojima-glyph.nix
     ../common/python.nix
     ../common/systemd-boot.nix
@@ -132,6 +131,7 @@
     busybox
     dig
     dmidecode
+    file
     gh
     jq
     libnotify

@@ -1,10 +1,14 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
 }:
 
+let
+  mv = inputs.multiverse.multiverse.${pkgs.stdenv.hostPlatform.system};
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -99,6 +103,19 @@
   };
 
   my.backups.borgmatic.enable = false;
+
+  environment.systemPackages = with pkgs; [
+    android-studio
+    (mv.version "borgbackup" "1.4.5")
+    dbeaver-bin
+    (mv.version "go" "1.24.4")
+    jetbrains.idea
+    jetbrains.jdk
+    kotlin
+    (mv.version "nodejs" "24.15.0")
+    (mv.version "python3" "3.11.5")
+    python313
+  ];
 
   users.users = lib.mkIf config.my.identity.enable {
     ${config.my.identity.username} = {

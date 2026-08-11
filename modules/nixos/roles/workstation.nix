@@ -12,25 +12,6 @@
 
 let
   dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
-  codexChatsMcp = pkgs.python3Packages.buildPythonApplication rec {
-    pname = "codex-chats-mcp";
-    version = "0.1.1";
-    pyproject = true;
-
-    src = pkgs.fetchurl {
-      url = "https://files.pythonhosted.org/packages/34/cd/69cf9748c9c03ebde3c1b80c94e7ce54f9f5ed82700d8442d61844324c13/codex_chats_mcp-0.1.1.tar.gz";
-      hash = "sha256-L9+H6ALWmpZSgqDBrXx7KPx0Zvwd4sGnNTsK7lEjJQ8=";
-    };
-
-    build-system = [ pkgs.python3Packages.setuptools ];
-    dependencies = with pkgs.python3Packages; [
-      mcp
-      python-dotenv
-      typer
-    ];
-
-    pythonImportsCheck = [ "codex_chats_mcp" ];
-  };
   toLua = lib.generators.toLua { };
   hostName = config.networking.hostName;
   hasPersonalFolders = lib.elem hostName config.my.syncthing.personalFolderHosts;
@@ -234,22 +215,15 @@ in
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     environment.systemPackages = with pkgs; [
-      android-studio
       bibata-cursors
       cameractrls-gtk4
       codex
-      codexChatsMcp
-      dbeaver-bin
-      file
       gimp
       gitkraken
       gnome-disk-utility
       grimblast
       imagemagick
-      jetbrains.idea
-      jetbrains.jdk
       jetbrains.pycharm
-      jetbrains.webstorm
       (josm.override {
         jre = pkgs.jre.override { enableJavaFX = true; };
       })
@@ -260,7 +234,6 @@ in
       kdePackages.kio-extras
       kdePackages.kio-fuse
       kdePackages.qtsvg
-      kotlin
       libreoffice
       nwg-displays
       postman

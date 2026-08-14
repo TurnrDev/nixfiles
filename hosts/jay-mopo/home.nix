@@ -12,6 +12,4 @@
     ./google-drive.nix
   ];
 
-  programs.borgmatic.enable = false;
-
 }

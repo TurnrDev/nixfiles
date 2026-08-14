@@ -102,8 +102,6 @@ in
     ];
   };
 
-  my.backups.borgmatic.enable = false;
-
   environment.systemPackages = with pkgs; [
     android-studio
     (mv.version "borgbackup" "1.4.5")

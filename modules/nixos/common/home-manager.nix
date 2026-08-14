@@ -27,6 +27,11 @@ let
   '';
 in
 {
+  users.manageLingering = true;
+  users.users = lib.mkIf config.my.identity.enable {
+    ${config.my.identity.username}.linger = true;
+  };
+
   home-manager = {
     inherit backupCommand;
     extraSpecialArgs = {

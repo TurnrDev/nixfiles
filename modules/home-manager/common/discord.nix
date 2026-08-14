@@ -10,7 +10,7 @@
     inputs.nixcord.homeModules.nixcord
   ];
 
-  my.backups.borgmatic.moduleExcludePatterns = lib.mkAfter [
+  programs.borgmatic.backups.shared.location.extraConfig.exclude_patterns = lib.mkAfter [
     "${identity.homeDirectory}/.config/discord"
   ];
 

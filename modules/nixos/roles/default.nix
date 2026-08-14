@@ -13,7 +13,6 @@
 {
   imports = [
     inputs.sops-nix.nixosModules.sops
-    ../common/backups.nix
     ../common/gradle.nix
     ../common/identity.nix
     ../common/obojima-glyph.nix

@@ -15,12 +15,6 @@
     ../common/minecraft.nix
   ];
 
-  my.backups.borgmatic.extraExcludePatterns = lib.mkAfter [
-    "${config.my.identity.homeDirectory}/.local/share/Steam"
-    "${config.my.identity.homeDirectory}/.steam-shared"
-    "${config.my.identity.homeDirectory}/.steam"
-  ];
-
   programs.steam = {
     enable = true;
     extraCompatPackages = with pkgs; [

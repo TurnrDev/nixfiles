@@ -60,15 +60,4 @@
     }
   ];
 
-  # Per-device borgmatic overrides live in the host config. The shared module
-  # provides the defaults and translates this block into borgmatic YAML.
-  my.backups.borgmatic = {
-    frequency = "daily";
-    sourceDirectories = [ config.my.identity.homeDirectory ];
-    healthchecksUrl = "https://healthchecks.home.turnr.net/ping/3864da02-bd3e-4f8f-9685-825959aa6cf9";
-    repositories = {
-      hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./arch";
-    };
-  };
-
 }

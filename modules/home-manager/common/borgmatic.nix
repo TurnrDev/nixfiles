@@ -3,7 +3,7 @@
   identity,
   inputs,
   lib,
-  osConfig ? null,
+  osConfig,
   pkgs,
   ...
 }:
@@ -13,13 +13,19 @@ let
   borgVersion = lib.last (
     builtins.filter (version: lib.hasPrefix "1.4." version) (multiverse.versionsOf "borgbackup")
   );
-  # Hetzner Storage Box is accessed with its borg-1.4 server. Follow the latest
-  # indexed Borg 1.4 patch release, but never cross to another release line.
   borgPackage = multiverse.version "borgbackup" borgVersion;
   homeDirectory = identity.homeDirectory;
   hostName = osConfig.networking.hostName;
-  defaultRepositoryPath = "ssh://u551190@u551190.your-storagebox.de:23/./${hostName}";
-  defaultSourceDirectories = [ homeDirectory ];
+  defaultRepositories = [
+    {
+      label = "hetzner-fsn1";
+      path = "ssh://u551190@u551190.your-storagebox.de:23/./${hostName}";
+    }
+    {
+      label = "hetzner-hel1";
+      path = "ssh://u650719@u650719.your-storagebox.de:23/./${hostName}";
+    }
+  ];
   defaultExcludePatterns = [
     "*.pyc"
     "*.sqlite"
@@ -31,32 +37,6 @@ let
     "${homeDirectory}/.thumbnails"
     "${homeDirectory}/Downloads"
   ];
-  defaults = {
-    enable = true;
-    frequency = "daily";
-    localPath = lib.getExe borgPackage;
-    remotePath = "borg-1.4";
-    sourceDirectories = defaultSourceDirectories;
-    extraSourceDirectories = [ ];
-    excludePatterns = defaultExcludePatterns;
-    extraExcludePatterns = [ ];
-    healthchecksUrl = null;
-    repositories = {
-      hetzner = {
-        label = "hetzner";
-        path = defaultRepositoryPath;
-      };
-    };
-  };
-  # Read per-device overrides from the NixOS module when Home Manager is being
-  # evaluated through a host config. Otherwise fall back to the shared defaults.
-  cfg =
-    if
-      osConfig != null && osConfig ? my && osConfig.my ? backups && osConfig.my.backups ? borgmatic
-    then
-      osConfig.my.backups.borgmatic
-    else
-      defaults;
 
   secretName = "storagebox-borg-passphrase";
   secretFile = ../../../secrets/hosts/${hostName}.yaml;
@@ -64,38 +44,17 @@ let
   sshCommand = "ssh -i ${sshKeyPath} -o IdentitiesOnly=yes -p 23";
   borgmaticPackage = pkgs.borgmatic;
   sopsPackage = pkgs.sops;
-  repositories = lib.mapAttrsToList (_: repo: {
-    inherit (repo) label path;
-  }) cfg.repositories;
-  sourceDirectories = cfg.sourceDirectories ++ cfg.extraSourceDirectories;
-  excludePatterns =
-    cfg.excludePatterns
-    ++ cfg.extraExcludePatterns
-    ++ config.my.backups.borgmatic.moduleExcludePatterns;
-  # Only render the healthchecks section when the host actually configured a
-  # ping URL. borgmatic treats the hook as absent otherwise.
-  healthchecksConfig = lib.optionalAttrs (cfg.healthchecksUrl != null) {
-    healthchecks = {
-      ping_url = cfg.healthchecksUrl;
-      send_logs = true;
-    };
-  };
 in
 {
-  options.my.backups.borgmatic.moduleExcludePatterns = lib.mkOption {
-    type = lib.types.listOf lib.types.str;
-    default = [ ];
-    description = ''
-      Additional borgmatic exclude patterns contributed by Home Manager
-      modules for enabled programs.
-    '';
-  };
-
-  config = lib.mkIf cfg.enable {
-    home.packages = [
-      sopsPackage
-      borgPackage
-    ];
+  config = lib.mkMerge [
+    {
+      programs.borgmatic.enable = lib.mkDefault true;
+    }
+    (lib.mkIf config.programs.borgmatic.enable {
+      home.packages = [
+        sopsPackage
+        borgPackage
+      ];
 
     sops = {
       age.sshKeyPaths = [ sshKeyPath ];
@@ -104,24 +63,23 @@ in
       };
     };
 
-    programs.borgmatic = {
-      enable = true;
-      package = borgmaticPackage;
-      backups.shared = {
+      programs.borgmatic = {
+        package = borgmaticPackage;
+        backups.shared = {
         location = {
-          sourceDirectories = sourceDirectories;
-          repositories = repositories;
+          sourceDirectories = [ homeDirectory ];
+          repositories = defaultRepositories;
           excludeHomeManagerSymlinks = true;
           extraConfig = {
             archive_name_format = "{hostname}-{utcnow}";
-            exclude_patterns = excludePatterns;
+            exclude_patterns = defaultExcludePatterns;
           };
         };
         storage = {
           encryptionPasscommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.${secretName}.path}";
           extraConfig = {
-            local_path = cfg.localPath;
-            remote_path = cfg.remotePath;
+            local_path = lib.getExe borgPackage;
+            remote_path = "borg-1.4";
             ssh_command = sshCommand;
           };
         };
@@ -153,22 +111,22 @@ in
             }
           ];
         };
-        hooks.extraConfig = healthchecksConfig;
+        };
       };
-    };
 
-    services.borgmatic = {
-      enable = true;
-      frequency = cfg.frequency;
-    };
-
-    systemd.user.services.borgmatic = {
-      Unit = {
-        # Ensure the decrypted sops secret is mounted before borgmatic tries to
-        # read the shared encryption passphrase.
-        After = [ "sops-nix.service" ];
-        Requires = [ "sops-nix.service" ];
+      services.borgmatic = {
+        enable = true;
+        frequency = lib.mkDefault "daily";
       };
-    };
-  };
+
+      systemd.user.services.borgmatic = {
+        Unit = {
+          # Ensure the decrypted sops secret is mounted before borgmatic tries to
+          # read the shared encryption passphrase.
+          After = [ "sops-nix.service" ];
+          Requires = [ "sops-nix.service" ];
+        };
+      };
+    })
+  ];
 }

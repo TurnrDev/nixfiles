@@ -10,7 +10,7 @@
     inputs.spicetify-nix.homeManagerModules.spicetify
   ];
 
-  my.backups.borgmatic.moduleExcludePatterns = lib.mkAfter [
+  programs.borgmatic.backups.shared.location.extraConfig.exclude_patterns = lib.mkAfter [
     "${identity.homeDirectory}/.config/spotify"
   ];
 

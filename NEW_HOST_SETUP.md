@@ -6,28 +6,40 @@ during activation.
 
 ## 1. Add The Host Config
 
-Create a new host directory under `hosts/` and add its `configuration.nix`.
-Per-device Borgmatic overrides belong in the host config, for example:
+Create a new host directory under `hosts/` and add its `configuration.nix` and
+`home.nix`. Borgmatic is configured through Home Manager, so put any
+per-device overrides in `home.nix`. The shared module already configures both
+Hetzner repositories using the hostname; only add settings that differ from
+those defaults:
 
 ```nix
-my.backups.borgmatic = {
-  frequency = "daily";
-  sourceDirectories = [ config.my.identity.homeDirectory ];
-  extraSourceDirectories = [ "/srv/projects" ];
-  extraExcludePatterns = [ "${config.my.identity.homeDirectory}/.config/obs-studio" ];
-  healthchecksUrl = "https://hc-ping.com/replace-me";
-  repositories = {
-    hetzner.path = "ssh://u551190@u551190.your-storagebox.de:23/./${config.networking.hostName}";
+programs.borgmatic.backups.shared = {
+  location = {
+    sourceDirectories = lib.mkAfter [ "/srv/projects" ];
+    repositories = lib.mkAfter [
+      {
+        label = "usb";
+        path = "/run/media/jay/BACKUP/${config.networking.hostName}";
+      }
+    ];
+    extraConfig.exclude_patterns = lib.mkAfter [
+      "${config.home.homeDirectory}/.config/obs-studio"
+    ];
+  };
+
+  hooks.extraConfig.healthchecks = {
+    ping_url = "https://hc-ping.com/replace-me";
+    send_logs = true;
   };
 };
+
+services.borgmatic.frequency = "daily";
 ```
 
-Add more repositories later by extending `my.backups.borgmatic.repositories`.
-The shared Borgmatic module already supports multiple repositories per device.
-Use `extraSourceDirectories` and `extraExcludePatterns` when a host needs to
-append more paths without replacing the shared defaults.
-App-specific excludes are also added automatically by the modules that enable
-those programs, so the shared base list can stay focused on generic clutter.
+Use `lib.mkAfter` when appending source directories, repositories, or exclude
+patterns, so the shared defaults remain intact. Application modules append
+their own excludes directly—for example Discord, Spotify, and Steam—so the
+shared base list stays focused on generic clutter.
 
 ## 2. Add The Host SSH Key To SOPS And Create Host Secrets
 
@@ -179,6 +191,8 @@ Run these manually so password prompts and host-key prompts work normally:
 ```sh
 ssh-copy-id -s -i ~/.ssh/id_ed25519.pub -p 23 \
   u551190@u551190.your-storagebox.de
+ssh-copy-id -s -i ~/.ssh/id_ed25519.pub -p 23 \
+  u650719@u650719.your-storagebox.de
 ```
 
 ```sh
@@ -191,14 +205,17 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes -p 22 \
 The repo is pinned to Borg 1.4.x locally and configured to use `borg-1.4` on
 the Storage Box side.
 
-Create the Storage Box repo manually once per host. This setup decrypts the
-host passphrase into the Home Manager `sops-nix` runtime symlink directory:
+Create both Storage Box repositories manually once per host. This setup
+decrypts the host passphrase into the Home Manager `sops-nix` runtime symlink
+directory:
 
 ```sh
 export BORG_PASSPHRASE="$(cat "${HOME}/.config/sops-nix/secrets/storagebox-borg-passphrase")"
 bash -c '
   borg init --remote-path borg-1.4 --encryption=repokey-blake2 \
-  ssh://u551190@u551190.your-storagebox.de:23/./$(hostname)
+  ssh://u551190@u551190.your-storagebox.de:23/./$(hostname) && \
+  borg init --remote-path borg-1.4 --encryption=repokey-blake2 \
+  ssh://u650719@u650719.your-storagebox.de:23/./$(hostname)
 '
 unset BORG_PASSPHRASE
 ```

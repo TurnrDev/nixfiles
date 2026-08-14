@@ -65,14 +65,6 @@ in
 
   config = {
     programs.dockmgr.enable = true;
-    my.backups.borgmatic.extraExcludePatterns = lib.mkAfter [
-      "${config.my.identity.homeDirectory}/.config/Code"
-      "${config.my.identity.homeDirectory}/.config/GitKraken"
-      "${config.my.identity.homeDirectory}/.gitkraken"
-      "${config.my.identity.homeDirectory}/.vscode"
-      "${config.my.identity.homeDirectory}/.vscode-server"
-    ];
-
     # Use Hyprland's built-in UWSM session and let DMS remember whichever
     # session was chosen last, while still defaulting system-side to UWSM.
     services.displayManager = {

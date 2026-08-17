@@ -232,7 +232,6 @@ in
       protonmail-desktop
       qview
       vlc
-      vscode
     ];
 
     fonts = {

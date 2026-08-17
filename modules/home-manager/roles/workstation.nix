@@ -12,6 +12,7 @@
     ../common/kdeconnect.nix
     ../common/spotify.nix
     ../common/stylix.nix
+    ../common/vscode.nix
   ];
 
   fonts.fontconfig = {

@@ -12,4 +12,9 @@
     ./google-drive.nix
   ];
 
+  programs.vscode.profiles.default.userSettings = {
+    "editor.formatOnSave" = lib.mkForce false;
+    "editor.codeActionsOnSave" = lib.mkForce { };
+  };
+
 }

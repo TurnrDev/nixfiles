@@ -7,6 +7,9 @@
   stylix = {
     enable = true;
     autoEnable = true;
+    # Dolphin's Qt/Kvantum integration remains unreliable outside Plasma.
+    # Leave Qt to its native styling rather than mixing incompatible palettes.
+    targets.qt.enable = false;
     polarity = "dark";
     base16Scheme = lib.mkDefault ../../home-manager/common/stylix/themes/trainerdex.yaml;
     image = ../../home-manager/common/stylix/wallpapers/geometric-dual-monitor.png;

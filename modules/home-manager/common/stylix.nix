@@ -6,6 +6,7 @@
   stylix.targets = {
     dank-material-shell.enable = true;
     firefox.profileNames = [ "default" ];
+    qt.enable = false;
   };
 
   home.pointerCursor.enable = true;

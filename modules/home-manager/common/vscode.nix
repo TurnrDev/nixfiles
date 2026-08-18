@@ -113,7 +113,7 @@ in
         "redhat.telemetry.enabled" = false;
         "workbench.enableExperiments" = false;
         "settingsSync.enable" = false;
-        "extensions.autoUpdate" = false;
+        "extensions.autoUpdate" = "off";
         "extensions.autoCheckUpdates" = false;
 
         "editor.formatOnSave" = true;
@@ -196,21 +196,12 @@ in
         "python.languageServer" = "Pylance";
         "python.terminal.activateEnvironment" = false;
 
-        "xml.server.binary.trustedHashes" = [
-          "a1bf296a5263bc63cca97cb46692d0d523edfe9d2d4e79d5b4d245f57c6c623b"
-        ];
         "yaml.schemas"."https://www.schemastore.org/traefik-v3.json" = "**/traefik.yml";
         "vue.hover.rich" = true;
         "js/ts.implicitProjectConfig.checkJs" = true;
         "js/ts.preferences.importModuleSpecifierEnding" = "js";
         "js/ts.preferences.quoteStyle" = "double";
-        "material-code.primaryColor" = "#01030B";
         "cSpell.userWords" = [
-          "colour"
-          "interactable"
-          "leaderboard"
-          "pokemongo"
-          "sqlalchemy"
           "trainerdex"
           "turnr"
         ];

@@ -113,6 +113,7 @@ in
         "redhat.telemetry.enabled" = false;
         "workbench.enableExperiments" = false;
         "settingsSync.enable" = false;
+        "chat.disableAIFeatures" = true;
         "extensions.autoUpdate" = "off";
         "extensions.autoCheckUpdates" = false;
 

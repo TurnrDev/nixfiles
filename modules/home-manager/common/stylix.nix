@@ -4,8 +4,6 @@
   # The NixOS Stylix module supplies the shared scheme, wallpaper, fonts, and
   # cursor to Home Manager. Keep only Home Manager-specific target choices.
   stylix.targets = {
-    dank-material-shell.enable = true;
-    firefox.profileNames = [ "default" ];
     qt.enable = false;
   };
 

@@ -17,11 +17,11 @@
 
       "application/pdf" = [ "firefox.desktop" ];
 
-      "text/plain" = [ "code.desktop" ];
-      "inode/x-empty" = [ "code.desktop" ];
-      "text/markdown" = [ "code.desktop" ];
-      "application/json" = [ "code.desktop" ];
-      "application/xml" = [ "code.desktop" ];
+      "text/plain" = [ "zed.desktop" ];
+      "inode/x-empty" = [ "zed.desktop" ];
+      "text/markdown" = [ "zed.desktop" ];
+      "application/json" = [ "zed.desktop" ];
+      "application/xml" = [ "zed.desktop" ];
 
       "image/png" = [ "qView.desktop" ];
       "image/jpeg" = [ "qView.desktop" ];

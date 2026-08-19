@@ -13,6 +13,7 @@
     ../common/spotify.nix
     ../common/stylix.nix
     ../common/vscode.nix
+    ../common/zed.nix
   ];
 
   fonts.fontconfig = {

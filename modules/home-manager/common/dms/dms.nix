@@ -85,6 +85,8 @@ in
     qt6.qtwebsockets
   ];
 
+  stylix.targets.dank-material-shell.enable = true;
+
   xdg.configFile =
     let
       enabledPlugins = lib.filterAttrs (

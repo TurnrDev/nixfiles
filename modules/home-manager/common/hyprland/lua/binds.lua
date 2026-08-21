@@ -86,6 +86,7 @@ hl.bind("SUPER + SHIFT + 8", hl.dsp.window.move({ workspace = "8" }), { descript
 hl.bind("SUPER + SHIFT + 9", hl.dsp.window.move({ workspace = "9" }), { description = "Move Window To Workspace 9" })
 
 -- Layout, resize, display power, and zoom.
+hl.bind("SUPER + F12", hl.dsp.exec_cmd("dockmgr once"), { description = "Apply DockMgr Profile" })
 hl.bind("SUPER + bracketleft", hl.dsp.layout("preselect l"), { description = "Preselect Left Column" })
 hl.bind("SUPER + bracketright", hl.dsp.layout("preselect r"), { description = "Preselect Right Column" })
 hl.bind("SUPER + R", hl.dsp.layout("togglesplit"), { description = "Toggle Split" })

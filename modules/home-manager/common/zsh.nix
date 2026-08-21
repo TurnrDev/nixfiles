@@ -8,7 +8,8 @@
 {
   home.sessionVariables = {
     EDITOR = "nano";
-    VISUAL = "zeditor --wait";
+    # VISUAL = "zeditor --wait";
+    VISUAL = "code --wait";
     TERMINAL = "ghostty";
   };
 

@@ -1,3 +1,13 @@
+# OBOJIMA GLYPH
+# by 1985 Games Inc © 2026.
+# V.1.0
+# _____________________________________________________________________________
+# This font is free for PERSONAL USE ONLY.
+# IT IS NOT AVAILABLE FOR COMMERCIAL USE!
+# _____________________________________________________________________________
+# info@1985games.com
+# www.1985games.com
+# www.obojima.com
 {
   config,
   lib,

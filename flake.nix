@@ -32,8 +32,8 @@
       url = "github:AvengeMedia/dms-plugins";
       flake = false;
     };
-    dms-plugins-taylan = {
-      url = "github:TaylanTatli/dms-plugins";
+    dms-screenshot = {
+      url = "github:JDKamalakar/DMS-Screenshot";
       flake = false;
     };
     dms-plugin-hass = {

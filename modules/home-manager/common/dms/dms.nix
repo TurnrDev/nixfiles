@@ -43,7 +43,7 @@ in
       dankKDEConnect.src = inputs."dms-plugins" + "/DankKDEConnect";
       dankLauncherKeys.src = inputs."dms-plugins" + "/DankLauncherKeys";
       dankNotepadModule.src = inputs."dms-plugins" + "/DankNotepadModule";
-      grimblast.src = inputs."dms-plugins-taylan" + "/grimblast";
+      dmsScreenshot.src = inputs."dms-screenshot";
       homeAssistantMonitor = {
         src = inputs."dms-plugin-hass";
         settings = {

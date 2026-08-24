@@ -213,7 +213,6 @@ in
       gimp
       gitkraken
       gnome-disk-utility
-      grimblast
       imagemagick
       jetbrains.pycharm
       (josm.override {

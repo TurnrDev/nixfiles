@@ -17,6 +17,8 @@
 
 let
   secretName = "obojima-glyph";
+  # Fontconfig applications (including GIMP and LibreOffice) list this as
+  # “Obojima Glyphs_update_glyphfont”, not the filename or directory name.
   fontDirectory = "${config.my.identity.homeDirectory}/.local/share/fonts/Obojima Glyph";
   fontPath = "${fontDirectory}/ObojimaGlyphs-Regular.ttf";
 in
@@ -36,13 +38,13 @@ in
 
     serviceConfig = {
       Type = "oneshot";
-      User = "root";
+      # Run as the desktop user so fc-cache updates the cache GIMP reads.
+      User = config.my.identity.username;
     };
 
     script = ''
-      install -d -m 0755 -o ${lib.escapeShellArg config.my.identity.username} -g users \
-        ${lib.escapeShellArg fontDirectory}
-      install -m 0644 -o ${lib.escapeShellArg config.my.identity.username} -g users \
+      install -d -m 0755 ${lib.escapeShellArg fontDirectory}
+      install -m 0644 \
         ${lib.escapeShellArg config.sops.secrets.${secretName}.path} \
         ${lib.escapeShellArg fontPath}
       ${pkgs.fontconfig}/bin/fc-cache -f ${lib.escapeShellArg fontDirectory}

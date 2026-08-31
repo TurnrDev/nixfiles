@@ -228,7 +228,7 @@ in
       libreoffice
       nwg-displays
       postman
-      protonmail-desktop
+      plezy
       qview
       vlc
     ];

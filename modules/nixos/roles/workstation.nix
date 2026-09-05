@@ -181,6 +181,7 @@ in
 
     programs.git = {
       enable = true;
+      lfs.enable = true;
       config = {
         core.excludesFile = "/etc/gitignore";
         init.defaultBranch = "main";

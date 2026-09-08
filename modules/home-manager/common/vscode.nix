@@ -94,7 +94,6 @@ in
           ms-python.debugpy
           ms-python.python
           ms-python.vscode-pylance
-          ms-python.vscode-python-envs
           ms-vscode.remote-explorer
           ms-vscode-remote.remote-ssh
           ms-vscode-remote.remote-ssh-edit

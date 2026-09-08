@@ -6,6 +6,9 @@
 }:
 
 {
+  # `uv tool install` places executables in ~/.local/bin by default.
+  home.sessionPath = [ "$HOME/.local/bin" ];
+
   home.sessionVariables = {
     EDITOR = "nano";
     # VISUAL = "zeditor --wait";

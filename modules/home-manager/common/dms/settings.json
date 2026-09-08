@@ -39,8 +39,7 @@
       "innerPadding": 4,
       "leftWidgets": [
         "launcherButton",
-        "workspaceSwitcher",
-        "focusedWindow"
+        "workspaceSwitcher"
       ],
       "maximizeDetection": true,
       "maximizeWidgetIcons": false,
@@ -325,7 +324,6 @@
       "all"
     ]
   },
-  "showDock": true,
   "showWeekNumber": true,
   "showWorkspaceApps": true,
   "showWorkspaceIndex": true,

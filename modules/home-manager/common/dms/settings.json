@@ -37,9 +37,47 @@
       "iconScale": 1,
       "id": "default",
       "innerPadding": 4,
+      "island": true,
+      "islandHomeLayout": [
+        {
+          "enabled": true,
+          "id": "media"
+        },
+        {
+          "enabled": true,
+          "id": "clock"
+        },
+        {
+          "enabled": false,
+          "id": "weather"
+        },
+        {
+          "enabled": false,
+          "id": "status"
+        },
+        {
+          "enabled": false,
+          "id": "brightness"
+        },
+        {
+          "enabled": true,
+          "id": "notifications"
+        },
+        {
+          "enabled": false,
+          "id": "volume"
+        }
+      ],
+      "islandSatelliteBackground": true,
+      "islandSatelliteGap": 16,
+      "islandSatellitePosition": "island",
       "leftWidgets": [
         "launcherButton",
-        "workspaceSwitcher"
+        "workspaceSwitcher",
+        {
+          "enabled": true,
+          "id": "dockerManager"
+        }
       ],
       "maximizeDetection": true,
       "maximizeWidgetIcons": false,
@@ -54,7 +92,11 @@
       "rightWidgets": [
         {
           "enabled": true,
-          "id": "tailscale"
+          "id": "homeAssistantMonitor"
+        },
+        {
+          "enabled": true,
+          "id": "dmsScreenshot"
         },
         {
           "enabled": true,
@@ -137,7 +179,7 @@
   },
   "clockDateFormat": "yyyy-MM-dd (ddd)",
   "clockFormat": "24h",
-  "configVersion": 17,
+  "configVersion": 18,
   "controlCenterShowMicPercent": true,
   "controlCenterWidgets": [
     {
@@ -200,40 +242,6 @@
     "size": 24,
     "theme": "Bibata-Modern-Ice"
   },
-  "dankIslandBarId": "default",
-  "dankIslandHomeLayout": [
-    {
-      "enabled": true,
-      "id": "media"
-    },
-    {
-      "enabled": true,
-      "id": "clock"
-    },
-    {
-      "enabled": false,
-      "id": "weather"
-    },
-    {
-      "enabled": false,
-      "id": "status"
-    },
-    {
-      "enabled": false,
-      "id": "brightness"
-    },
-    {
-      "enabled": true,
-      "id": "notifications"
-    },
-    {
-      "enabled": false,
-      "id": "volume"
-    }
-  ],
-  "dankIslandSatelliteBackground": true,
-  "dankIslandSatelliteGap": 16,
-  "dankIslandSatellitePosition": "island",
   "dashTabs": [
     {
       "enabled": true,

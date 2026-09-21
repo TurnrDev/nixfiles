@@ -73,7 +73,7 @@ in
 
     # Core features
     enableSystemMonitoring = true; # System monitoring widgets (dgop)
-    enableVPN = true; # VPN management widget
+    enableVPN = false; # VPN management widget
     enableDynamicTheming = false;
     enableAudioWavelength = true; # Audio visualizer (cava)
     enableCalendarEvents = false; # Calendar integration (khal)

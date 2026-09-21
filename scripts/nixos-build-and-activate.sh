@@ -81,6 +81,7 @@ fi
 cd /etc/nixos
 
 if [[ "$skip_update" != true ]]; then
+  sudo nix flake update --flake ./packages/dockmgr
   sudo nix flake update
 fi
 

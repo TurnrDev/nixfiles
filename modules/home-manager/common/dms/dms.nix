@@ -26,6 +26,12 @@ in
     Service = {
       Restart = "on-failure";
       RestartSec = "2s";
+      # DMS only adds the QML imports bundled with its own wrapper.  User
+      # packages are not searched automatically, so expose QtWebSockets to
+      # the QML engine that loads the Home Assistant Monitor plugin.
+      Environment = [
+        "NIXPKGS_QT6_QML_IMPORT_PATH=${pkgs.qt6.qtwebsockets}/lib/qt-6/qml"
+      ];
     };
 
     Install.WantedBy = lib.mkForce [ sessionTarget ];

@@ -11,7 +11,6 @@
 }:
 
 let
-  dmsPackages = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system};
   toLua = lib.generators.toLua { };
   hostName = config.networking.hostName;
   hasPersonalFolders = lib.elem hostName config.my.syncthing.personalFolderHosts;
@@ -25,6 +24,7 @@ in
     ../common/stylix.nix
     ../common/virtualisation.nix
     inputs.dockmgr.nixosModules.default
+    inputs.dank-greeter.nixosModules.default
     ../services/dms-home-assistant-monitor.nix
   ];
 
@@ -69,51 +69,51 @@ in
     # session was chosen last, while still defaulting system-side to UWSM.
     services.displayManager = {
       defaultSession = "hyprland-uwsm";
-      dms-greeter = {
-        enable = true;
-        package = dmsPackages.default;
-        configHome = config.my.identity.homeDirectory;
-        quickshell.package = pkgs.quickshell;
-        compositor = {
-          name = "hyprland";
-          customConfig = ''
-            hl.env("DMS_RUN_GREETER", "1")
-            hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
-            hl.env("XCURSOR_SIZE", "24")
-            hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
-            hl.env("HYPRCURSOR_SIZE", "24")
-            hl.config({
-              misc = {
-                disable_hyprland_logo = true,
-                disable_splash_rendering = true,
-              },
-              input = {
-                kb_layout = "${config.services.xserver.xkb.layout}",
-                kb_variant = "${config.services.xserver.xkb.variant}",
-                numlock_by_default = true,
-                resolve_binds_by_sym = true,
-              },
-            })
+    };
 
-            hl.device({
-              name = "keychron-keychron-v6-max",
-              kb_layout = "gb",
-              kb_variant = "",
+    programs.dms-greeter = {
+      enable = true;
+      configHome = config.my.identity.homeDirectory;
+      quickshell.package = pkgs.quickshell;
+      compositor = {
+        name = "hyprland";
+        customConfig = ''
+          hl.env("DMS_RUN_GREETER", "1")
+          hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
+          hl.env("XCURSOR_SIZE", "24")
+          hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
+          hl.env("HYPRCURSOR_SIZE", "24")
+          hl.config({
+            misc = {
+              disable_hyprland_logo = true,
+              disable_splash_rendering = true,
+            },
+            input = {
+              kb_layout = "${config.services.xserver.xkb.layout}",
+              kb_variant = "${config.services.xserver.xkb.variant}",
+              numlock_by_default = true,
               resolve_binds_by_sym = true,
-            })
+            },
+          })
 
-            hl.device({
-              name = "keychron--keychron-link--keyboard",
-              kb_layout = "gb",
-              kb_variant = "",
-              resolve_binds_by_sym = true,
-            })
+          hl.device({
+            name = "keychron-keychron-v6-max",
+            kb_layout = "gb",
+            kb_variant = "",
+            resolve_binds_by_sym = true,
+          })
 
-            hl.on("hyprland.start", function()
-              hl.exec_cmd("${config.programs.dockmgr.package}/bin/dockmgr watch --config ${config.programs.dockmgr.configFile} --context greeter")
-            end)
-          '';
-        };
+          hl.device({
+            name = "keychron--keychron-link--keyboard",
+            kb_layout = "gb",
+            kb_variant = "",
+            resolve_binds_by_sym = true,
+          })
+
+          hl.on("hyprland.start", function()
+            hl.exec_cmd("${config.programs.dockmgr.package}/bin/dockmgr watch --config ${config.programs.dockmgr.configFile} --context greeter")
+          end)
+        '';
       };
     };
 

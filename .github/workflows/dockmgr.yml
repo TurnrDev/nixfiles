@@ -1,0 +1,44 @@
+name: Dockmgr
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/dockmgr/**"
+      - ".github/workflows/dockmgr.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "packages/dockmgr/**"
+      - ".github/workflows/dockmgr.yml"
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Lint Nix, shell, Lua, and Python when present
+        run: |
+          nix shell nixpkgs#nixfmt nixpkgs#statix nixpkgs#deadnix nixpkgs#shellcheck nixpkgs#lua -c bash -euo pipefail -c '
+            nixfmt --check packages/dockmgr
+            statix check packages/dockmgr
+            deadnix --fail packages/dockmgr
+            shellcheck packages/dockmgr/src/dockmgr.sh
+            luac -p packages/dockmgr/src/dockmgr.lua
+
+            python_files="$(git ls-files "packages/dockmgr/**/*.py" "packages/dockmgr/*.py")"
+            if [ -n "$python_files" ]; then
+              nix shell nixpkgs#ruff -c ruff format --check $python_files
+              nix shell nixpkgs#ruff -c ruff check $python_files
+            fi
+          '
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Run dockmgr flake checks
+        run: nix flake check ./packages/dockmgr

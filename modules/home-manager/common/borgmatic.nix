@@ -56,61 +56,61 @@ in
         borgPackage
       ];
 
-    sops = {
-      age.sshKeyPaths = [ sshKeyPath ];
-      secrets.${secretName} = {
-        sopsFile = secretFile;
+      sops = {
+        age.sshKeyPaths = [ sshKeyPath ];
+        secrets.${secretName} = {
+          sopsFile = secretFile;
+        };
       };
-    };
 
       programs.borgmatic = {
         package = borgmaticPackage;
         backups.shared = {
-        location = {
-          sourceDirectories = [ homeDirectory ];
-          repositories = defaultRepositories;
-          excludeHomeManagerSymlinks = true;
-          extraConfig = {
-            archive_name_format = "{hostname}-{utcnow}";
-            exclude_patterns = defaultExcludePatterns;
+          location = {
+            sourceDirectories = [ homeDirectory ];
+            repositories = defaultRepositories;
+            excludeHomeManagerSymlinks = true;
+            extraConfig = {
+              archive_name_format = "{hostname}-{utcnow}";
+              exclude_patterns = defaultExcludePatterns;
+            };
           };
-        };
-        storage = {
-          encryptionPasscommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.${secretName}.path}";
-          extraConfig = {
-            local_path = lib.getExe borgPackage;
-            remote_path = "borg-1.4";
-            ssh_command = sshCommand;
+          storage = {
+            encryptionPasscommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.${secretName}.path}";
+            extraConfig = {
+              local_path = lib.getExe borgPackage;
+              remote_path = "borg-1.4";
+              ssh_command = sshCommand;
+            };
           };
-        };
-        retention = {
-          keepHourly = 4;
-          keepDaily = 7;
-          keepWeekly = 4;
-          keepMonthly = 6;
-          keepYearly = 2;
-        };
-        consistency.extraConfig = {
-          checks = [
-            {
-              name = "repository";
-              max_duration = 1800;
-            }
-            {
-              name = "archives";
-              frequency = "2 weeks";
-            }
-          ];
-        };
-        output.extraConfig = {
-          statistics = true;
-          borg_exit_codes = [
-            {
-              code = 105;
-              treat_as = "warning";
-            }
-          ];
-        };
+          retention = {
+            keepHourly = 4;
+            keepDaily = 7;
+            keepWeekly = 4;
+            keepMonthly = 6;
+            keepYearly = 2;
+          };
+          consistency.extraConfig = {
+            checks = [
+              {
+                name = "repository";
+                max_duration = 1800;
+              }
+              {
+                name = "archives";
+                frequency = "2 weeks";
+              }
+            ];
+          };
+          output.extraConfig = {
+            statistics = true;
+            borg_exit_codes = [
+              {
+                code = 105;
+                treat_as = "warning";
+              }
+            ];
+          };
         };
       };
 

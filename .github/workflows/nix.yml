@@ -1,0 +1,58 @@
+name: Nix configuration
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "packages/dockmgr/**"
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "packages/dockmgr/**"
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Lint Nix, shell, Lua, and Python when present
+        run: |
+          nix shell nixpkgs#nixfmt nixpkgs#statix nixpkgs#deadnix nixpkgs#shellcheck nixpkgs#lua -c bash -euo pipefail -c '
+            nix_files="$(git ls-files "*.nix")"
+            shell_files="$(git ls-files "*.sh" "*.bash")"
+            lua_files="$(git ls-files "*.lua")"
+            python_files="$(git ls-files "*.py")"
+
+            nixfmt --check $nix_files
+            statix check .
+            deadnix --fail .
+            if [ -n "$shell_files" ]; then shellcheck $shell_files; fi
+            if [ -n "$lua_files" ]; then luac -p $lua_files; fi
+            if [ -n "$python_files" ]; then
+              nix shell nixpkgs#ruff -c ruff format --check $python_files
+              nix shell nixpkgs#ruff -c ruff check $python_files
+            fi
+          '
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Run flake checks
+        run: nix flake check --all-systems
+      - name: Evaluate every NixOS host
+        run: |
+          nix eval .#nixosConfigurations.jay-framework.config.system.build.toplevel.drvPath --raw >/dev/null
+          nix eval .#nixosConfigurations.jay-desktop.config.system.build.toplevel.drvPath --raw >/dev/null
+          nix eval .#nixosConfigurations.jay-mopo.config.system.build.toplevel.drvPath --raw >/dev/null
+      - name: Test repository shell scripts
+        run: nix shell nixpkgs#bats -c bats tests/nixos-build-and-activate.bats
+      - name: Run Python tests when present
+        run: |
+          test_files="$(git ls-files "test_*.py" "*_test.py" "tests/**/*.py")"
+          if [ -n "$test_files" ]; then
+            nix shell nixpkgs#python3Packages.pytest -c pytest $test_files
+          fi

@@ -41,7 +41,32 @@
       checks = forAllSystems (
         system:
         let
-          inherit ((forSystem system).pkgs) lua shellcheck runCommand;
+          inherit ((forSystem system).pkgs)
+            bats
+            jq
+            lua
+            shellcheck
+            runCommand
+            ;
+          validModule = nixpkgs.lib.nixosSystem {
+            inherit system;
+            modules = [
+              ./modules/nixos.nix
+              {
+                system.stateVersion = "26.11";
+                programs.dockmgr = {
+                  enable = true;
+                  profiles = [
+                    {
+                      name = "Laptop";
+                      match = null;
+                      outputs.eDP-1 = { };
+                    }
+                  ];
+                };
+              }
+            ];
+          };
         in
         {
           shell =
@@ -62,6 +87,35 @@
                 luac -p ${./src/dockmgr.lua}
                 touch "$out"
               '';
+          shell-tests =
+            runCommand "dockmgr-shell-tests"
+              {
+                nativeBuildInputs = [
+                  bats
+                  jq
+                ];
+                DOCKMGR_SOURCE = ./src/dockmgr.sh;
+              }
+              ''
+                bats ${./tests/dockmgr.bats}
+                touch "$out"
+              '';
+          lua-tests =
+            runCommand "dockmgr-lua-tests"
+              {
+                nativeBuildInputs = [
+                  jq
+                  lua
+                ];
+              }
+              ''
+                lua ${./tests/dockmgr_test.lua} ${./src/dockmgr.lua} ${jq}/bin/jq
+                touch "$out"
+              '';
+          nixos-module = runCommand "dockmgr-nixos-module" { } ''
+            test -e ${validModule.config.programs.dockmgr.configFile}
+            touch "$out"
+          '';
         }
       );
 
@@ -70,6 +124,7 @@
         let
           inherit ((forSystem system).pkgs)
             jq
+            bats
             lua
             shellcheck
             mkShell
@@ -79,6 +134,7 @@
           default = mkShell {
             packages = [
               jq
+              bats
               lua
               shellcheck
             ];

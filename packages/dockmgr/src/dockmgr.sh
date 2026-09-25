@@ -399,6 +399,10 @@ Options:
 EOF
 }
 
+if [ "${DOCKMGR_TEST_LIB:-}" = "1" ] && [ "${BASH_SOURCE[0]}" != "$0" ]; then
+    return 0
+fi
+
 command="watch"
 if [ "${1:-}" = "--version" ]; then
     printf '%s\n' "$DOCKMGR_VERSION"

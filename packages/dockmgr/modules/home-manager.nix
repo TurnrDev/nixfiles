@@ -41,7 +41,11 @@ in
       };
     };
 
-    wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
+    # This must be the first executable Lua in Hyprland's generated config.
+    # A config reload reconciles outputs while parsing the configuration; placing
+    # the restore after the rest of the config leaves it time to pick preferred
+    # modes before dockmgr supplies the saved profile.
+    wayland.windowManager.hyprland.extraConfig = lib.mkBefore ''
       -- Restore the last profile synchronously as this configuration is parsed.
       -- Unlike invoking dockmgr through a start/reload event, this prevents
       -- Hyprland from visibly modesetting an output to its preferred mode first.

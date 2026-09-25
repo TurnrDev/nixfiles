@@ -95,6 +95,7 @@ in
               {
                 name = "repository";
                 max_duration = 1800;
+                frequency = "1 week";
               }
               {
                 name = "archives";

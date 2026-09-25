@@ -19,8 +19,6 @@
     "thunderbolt"
     "nvme"
     "usbhid"
-    "usb_storage"
-    "sd_mod"
     "rtsx_usb_sdmmc"
   ];
   boot.initrd.kernelModules = [ ];
@@ -101,5 +99,6 @@
   ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.intel.npu.enable = true;
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

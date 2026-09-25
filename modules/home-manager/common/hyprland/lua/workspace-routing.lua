@@ -47,6 +47,19 @@ end
 ---@param monitors string[]
 ---@param workspace_count? integer
 function M.apply(monitors, workspace_count)
+  -- Moving the active workspace from Hyprland's focused monitor also moves
+  -- focus.  Remember each monitor's visible workspace so routing does not
+  -- leave every output showing whichever workspace happened to be moved last.
+  local visible_workspaces = {}
+  local focused_workspace = hl.get_active_workspace()
+
+  for _, monitor in ipairs(hl.get_monitors()) do
+    local workspace = monitor.active_workspace
+    if workspace and not workspace.special and workspace.id > 0 then
+      visible_workspaces[#visible_workspaces + 1] = workspace.id
+    end
+  end
+
   M.assign(monitors, workspace_count)
 
   for _, workspace in ipairs(hl.get_workspaces()) do
@@ -59,6 +72,34 @@ function M.apply(monitors, workspace_count)
           monitor = monitor,
         }))
       end
+    end
+  end
+
+  -- A workspace has one routed destination.  On a profile that reduces the
+  -- number of monitors, more than one previously visible workspace can map to
+  -- the same destination; retaining the last one is the only representable
+  -- result.  Normal postUp transitions add monitors, preserving all of them.
+  local active_workspaces = {}
+  for _, workspace_id in ipairs(visible_workspaces) do
+    local monitor = hl.get_monitor(workspace_monitor(workspace_id, monitors))
+    if monitor then
+      active_workspaces[monitor.name] = workspace_id
+    end
+  end
+
+  for _, monitor in ipairs(hl.get_monitors()) do
+    local workspace_id = active_workspaces[monitor.name]
+    if workspace_id and (not monitor.active_workspace or monitor.active_workspace.id ~= workspace_id) then
+      monitor:set_workspace({ workspace = tostring(workspace_id) })
+    end
+  end
+
+  -- set_workspace restores each monitor independently but can alter keyboard
+  -- focus.  Restore the workspace the user was interacting with last.
+  if focused_workspace and not focused_workspace.special and focused_workspace.id > 0 then
+    local workspace = hl.get_workspace(tostring(focused_workspace.id))
+    if workspace then
+      hl.dispatch(hl.dsp.focus({ workspace = workspace }))
     end
   end
 end

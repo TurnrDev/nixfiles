@@ -52,7 +52,10 @@ in
     };
   };
 
-  stylix.targets.firefox.profileNames = lib.mkForce [ "default" "profile1" ];
+  stylix.targets.firefox.profileNames = lib.mkForce [
+    "default"
+    "profile1"
+  ];
 
   # Firefox must own this file: it saves the selected profile and profile
   # edits there. Initialise it once rather than linking it read-only from Nix.

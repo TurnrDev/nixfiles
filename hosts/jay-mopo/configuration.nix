@@ -11,7 +11,10 @@ let
 in
 {
   imports = [
+    # Regenerate hardware-configuration.nix with:
+    # sudo nixos-generate-config --show-hardware-config --no-filesystems > /etc/nixos/hosts/$(hostname)/hardware-configuration.nix
     ./hardware-configuration.nix
+    ./storage.nix
     ../../modules/nixos/roles/laptop.nix
     ../../modules/nixos/hardware/intel-arc.nix
   ];

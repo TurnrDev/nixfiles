@@ -9,7 +9,8 @@ DOCK_UDEV_SETTLE_DELAY="${DOCK_UDEV_SETTLE_DELAY:-1}"
 DOCK_NOTIFY_APP="${DOCK_NOTIFY_APP:-dockmgr}"
 CONTEXT="${DOCKMGR_CONTEXT:-session}"
 DOCKMGR_LUA_MODULE="${DOCKMGR_LUA_MODULE:-}"
-DOCKMGR_VERSION="2.2.0"
+DOCKMGR_STATE_PATH="${DOCKMGR_STATE_PATH:-${XDG_STATE_HOME:-${HOME:-/tmp}/.local/state}/dockmgr/active-profile}"
+DOCKMGR_VERSION="2.3.0"
 
 trap 'exit 130' INT
 trap 'exit 143' TERM
@@ -238,6 +239,19 @@ apply_profile() {
     fi
 }
 
+persist_active_profile() {
+    local profile_json="$1"
+    local profile_id state_dir state_tmp
+
+    profile_id="$(jq -r '.id' <<<"$profile_json")"
+    [ "$profile_id" != "null" ] && [ -n "$profile_id" ] || return 1
+
+    state_dir="$(dirname "$DOCKMGR_STATE_PATH")"
+    mkdir -p "$state_dir" || return 1
+    state_tmp="$(mktemp "$state_dir/.active-profile.XXXXXX")" || return 1
+    printf '%s\n' "$profile_id" > "$state_tmp" && mv -f "$state_tmp" "$DOCKMGR_STATE_PATH"
+}
+
 transition_profile() {
     local from_json="$1"
     local to_json="$2"
@@ -298,7 +312,10 @@ check_transition() {
     current_id="$(jq -r '.id' <<<"$current_json")"
 
     if [ "${last_profile_id:-}" != "$current_id" ]; then
-        transition_profile "${last_profile_json:-}" "$current_json"
+        transition_profile "${last_profile_json:-}" "$current_json" || return 1
+        persist_active_profile "$current_json" || {
+            printf 'dockmgr: failed to persist active profile: %s\n' "$DOCKMGR_STATE_PATH" >&2
+        }
         last_profile_json="$current_json"
         last_profile_id="$current_id"
     fi
@@ -354,7 +371,10 @@ once() {
         exit 1
     }
 
-    transition_profile "" "$current_json"
+    transition_profile "" "$current_json" || exit 1
+    persist_active_profile "$current_json" || {
+        printf 'dockmgr: failed to persist active profile: %s\n' "$DOCKMGR_STATE_PATH" >&2
+    }
 }
 
 usage() {
@@ -369,6 +389,7 @@ Environment overrides:
   DOCK_POLL_INTERVAL      default: 2 unit: seconds
   DOCK_UDEV_SETTLE_DELAY  default: 1 unit: seconds
   DOCK_NOTIFY_APP         default: dockmgr
+  DOCKMGR_STATE_PATH       default: $XDG_STATE_HOME/dockmgr/active-profile
   CONFIG_PATH             default: /etc/dockmgr/config.json
   LOCK_PATH               default: $XDG_RUNTIME_DIR/dockmgr.lock or /tmp/dockmgr.lock
 

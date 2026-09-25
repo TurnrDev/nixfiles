@@ -105,6 +105,10 @@ Import the Home Manager module for each managed Hyprland user:
 When `programs.dockmgr.enable` is set in the corresponding NixOS
 configuration, the module creates a user watcher service. The watcher starts
 at Hyprland's `hyprland.start` event and runs with the `session` hook context.
+After each successful activation it records the profile ID in
+`$XDG_STATE_HOME/dockmgr/active-profile`. The Home Manager integration loads
+the Lua module and restores that profile synchronously while Hyprland reloads
+its configuration, avoiding a visible fallback to preferred monitor modes.
 
 For a non-Home-Manager Hyprland environment such as a greeter, start
 `dockmgr watch --config /etc/dockmgr/config.json --context greeter` after the

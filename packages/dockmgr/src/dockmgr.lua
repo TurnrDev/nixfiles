@@ -128,4 +128,29 @@ function M.apply(profile_id, config_path, jq)
   end
 end
 
+---Apply the profile most recently activated by dockmgr, if one is recorded.
+---This is intended to run while Hyprland evaluates its configuration, before
+---the compositor falls back to preferred monitor modes during a reload.
+---@param state_path string
+---@param config_path? string
+---@param jq? string
+---@return boolean restored Whether a recorded profile was applied.
+function M.restore(state_path, config_path, jq)
+  local state_file = io.open(state_path, "r")
+  if not state_file then
+    return false
+  end
+
+  local profile_id = state_file:read("*l")
+  state_file:close()
+  if not profile_id or profile_id == "" then
+    return false
+  end
+
+  M.apply(profile_id, config_path, jq)
+  return true
+end
+
 _G.dockmgr = M
+
+return M

@@ -11,7 +11,7 @@ jobs:
   nixos:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: DeterminateSystems/nix-installer-action@main
       - name: Run flake checks
         run: nix flake check --all-systems
@@ -32,7 +32,7 @@ jobs:
   dockmgr:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: DeterminateSystems/nix-installer-action@main
       - name: Run dockmgr flake checks
         run: nix flake check ./packages/dockmgr

@@ -6,29 +6,31 @@ local calls = {}
 local monitors = {}
 
 local function write_file(path, content)
-  local file = assert(io.open(path, "w"))
-  file:write(content)
-  file:close()
+	local file = assert(io.open(path, "w"))
+	file:write(content)
+	file:close()
 end
 
 local function assert_equal(actual, expected, message)
-  if actual ~= expected then
-    error(string.format("%s: expected %s, got %s", message, expected, actual))
-  end
+	if actual ~= expected then
+		error(string.format("%s: expected %s, got %s", message, expected, actual))
+	end
 end
 
 _G.hl = {
-  get_monitors = function()
-    return monitors
-  end,
-  monitor = function(configuration)
-    calls[#calls + 1] = configuration
-  end,
+	get_monitors = function()
+		return monitors
+	end,
+	monitor = function(configuration)
+		calls[#calls + 1] = configuration
+	end,
 }
 
 local dockmgr = assert(loadfile(source_path))()
 
-write_file(config_path, [[
+write_file(
+	config_path,
+	[[
   {"profiles":[
     {"id":"dock","disableUnspecifiedOutputs":true,"outputs":{
       "DP-1":{"mode":"2560x1440@60","position":{"x":0,"y":0},"scale":1.0},
@@ -38,12 +40,13 @@ write_file(config_path, [[
       "desc:Example Display":{"mode":"preferred","position":{"x":0,"y":0},"scale":1.0}
     }}
   ]}
-]])
+]]
+)
 
 monitors = {
-  { name = "DP-1", description = "External" },
-  { name = "eDP-1", description = "Internal" },
-  { name = "HDMI-A-1", description = "Unconfigured" },
+	{ name = "DP-1", description = "External" },
+	{ name = "eDP-1", description = "Internal" },
+	{ name = "HDMI-A-1", description = "Unconfigured" },
 }
 calls = {}
 dockmgr.apply("dock", config_path, jq)

@@ -14,7 +14,7 @@ let
     builtins.filter (version: lib.hasPrefix "1.4." version) (multiverse.versionsOf "borgbackup")
   );
   borgPackage = multiverse.version "borgbackup" borgVersion;
-  homeDirectory = identity.homeDirectory;
+  inherit (identity) homeDirectory;
   hostName = osConfig.networking.hostName;
   defaultRepositories = [
     {

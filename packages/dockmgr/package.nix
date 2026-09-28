@@ -26,7 +26,7 @@ let
     util-linux
   ];
 in
-stdenvNoCC.mkDerivation (finalAttrs: {
+stdenvNoCC.mkDerivation (_finalAttrs: {
   pname = "dockmgr";
   inherit version;
   src = ./src;

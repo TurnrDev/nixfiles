@@ -68,11 +68,18 @@
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     { self, nixpkgs, ... }@inputs:
     let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+      treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
       mkHost =
         hostDirectory:
         nixpkgs.lib.nixosSystem {
@@ -89,6 +96,10 @@
         };
     in
     {
+      formatter.${system} = treefmtEval.config.build.wrapper;
+
+      checks.${system}.formatting = treefmtEval.config.build.check self;
+
       nixosConfigurations = {
         jay-framework = mkHost ./hosts/jay-framework;
         jay-desktop = mkHost ./hosts/jay-desktop;

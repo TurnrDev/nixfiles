@@ -16,113 +16,113 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 
 need_cmd() {
-    command -v "$1" >/dev/null 2>&1 || {
-        printf 'dockmgr: missing required command: %s\n' "$1" >&2
-        exit 1
-    }
+  command -v "$1" >/dev/null 2>&1 || {
+    printf 'dockmgr: missing required command: %s\n' "$1" >&2
+    exit 1
+  }
 }
 
 quick_notify() {
-    if command -v notify-send >/dev/null 2>&1; then
-        notify-send -a "$DOCK_NOTIFY_APP" "$1" >/dev/null 2>&1 || true
-    fi
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send -a "$DOCK_NOTIFY_APP" "$1" >/dev/null 2>&1 || true
+  fi
 }
 
 notify() {
-    if command -v notify-send >/dev/null 2>&1; then
-        notify-send -a "$DOCK_NOTIFY_APP" "$1" "$2" >/dev/null 2>&1 || true
-    fi
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send -a "$DOCK_NOTIFY_APP" "$1" "$2" >/dev/null 2>&1 || true
+  fi
 }
 
 ensure_config() {
-    [ -r "$CONFIG_PATH" ] || {
-        printf 'dockmgr: missing config: %s\n' "$CONFIG_PATH" >&2
-        exit 1
-    }
+  [ -r "$CONFIG_PATH" ] || {
+    printf 'dockmgr: missing config: %s\n' "$CONFIG_PATH" >&2
+    exit 1
+  }
 }
 
 acquire_watch_lock() {
-    need_cmd flock
+  need_cmd flock
 
-    exec 9>"$LOCK_PATH"
-    if ! flock -n 9; then
-        printf 'dockmgr: another watch instance is already running\n' >&2
-        exit 75
-    fi
+  exec 9>"$LOCK_PATH"
+  if ! flock -n 9; then
+    printf 'dockmgr: another watch instance is already running\n' >&2
+    exit 75
+  fi
 }
 
 read_usb_ids() {
-    local vendor_file device_dir product_file got_vendor got_product
+  local vendor_file device_dir product_file got_vendor got_product
 
-    for vendor_file in /sys/bus/usb/devices/*/idVendor; do
-        [ -e "$vendor_file" ] || continue
+  for vendor_file in /sys/bus/usb/devices/*/idVendor; do
+    [ -e "$vendor_file" ] || continue
 
-        device_dir="${vendor_file%/idVendor}"
-        product_file="$device_dir/idProduct"
-        [ -r "$vendor_file" ] || continue
-        [ -r "$product_file" ] || continue
+    device_dir="${vendor_file%/idVendor}"
+    product_file="$device_dir/idProduct"
+    [ -r "$vendor_file" ] || continue
+    [ -r "$product_file" ] || continue
 
-        read -r got_vendor < "$vendor_file" || continue
-        read -r got_product < "$product_file" || continue
-        printf '%s:%s\n' "$got_vendor" "$got_product"
-    done | sort -u
+    read -r got_vendor <"$vendor_file" || continue
+    read -r got_product <"$product_file" || continue
+    printf '%s:%s\n' "$got_vendor" "$got_product"
+  done | sort -u
 }
 
 read_connected_display_names() {
-    local status_file output_name status_value
+  local status_file output_name status_value
 
-    for status_file in /sys/class/drm/card*-*/status; do
-        [ -r "$status_file" ] || continue
-        read -r status_value < "$status_file" || continue
-        [ "$status_value" = "connected" ] || continue
+  for status_file in /sys/class/drm/card*-*/status; do
+    [ -r "$status_file" ] || continue
+    read -r status_value <"$status_file" || continue
+    [ "$status_value" = "connected" ] || continue
 
-        output_name="$(basename "${status_file%/status}")"
-        output_name="${output_name#*-}"
-        printf '%s\n' "$output_name"
-    done | sort -u
+    output_name="$(basename "${status_file%/status}")"
+    output_name="${output_name#*-}"
+    printf '%s\n' "$output_name"
+  done | sort -u
 }
 
 read_connected_display_descriptions() {
-    hyprctl monitors all -j 2>/dev/null \
-        | jq -r '.[] | .description? // empty | select(length > 0) | "desc:" + .' 2>/dev/null \
-        | sort -u || true
+  hyprctl monitors all -j 2>/dev/null |
+    jq -r '.[] | .description? // empty | select(length > 0) | "desc:" + .' 2>/dev/null |
+    sort -u || true
 }
 
 read_lid_closed() {
-    local lid_state_file lid_value
+  local lid_state_file lid_value
 
-    for lid_state_file in /proc/acpi/button/lid/*/state; do
-        [ -r "$lid_state_file" ] || continue
-        lid_value="$(awk '{ print $2 }' "$lid_state_file" 2>/dev/null)" || continue
-        case "$lid_value" in
-            closed)
-                printf 'true\n'
-                return 0
-                ;;
-            open)
-                printf 'false\n'
-                return 0
-                ;;
-        esac
-    done
+  for lid_state_file in /proc/acpi/button/lid/*/state; do
+    [ -r "$lid_state_file" ] || continue
+    lid_value="$(awk '{ print $2 }' "$lid_state_file" 2>/dev/null)" || continue
+    case "$lid_value" in
+    closed)
+      printf 'true\n'
+      return 0
+      ;;
+    open)
+      printf 'false\n'
+      return 0
+      ;;
+    esac
+  done
 
-    printf 'false\n'
+  printf 'false\n'
 }
 
 collect_state() {
-    local usb_json display_json description_json merged_display_json lid_closed
+  local usb_json display_json description_json merged_display_json lid_closed
 
-    usb_json="$(read_usb_ids | jq -R . | jq -s .)"
-    display_json="$(read_connected_display_names | jq -R . | jq -s .)"
-    description_json="$(read_connected_display_descriptions | jq -R . | jq -s .)"
-    merged_display_json="$(jq -cn --argjson names "$display_json" --argjson descriptions "$description_json" '$names + $descriptions | unique')"
-    lid_closed="$(read_lid_closed)"
+  usb_json="$(read_usb_ids | jq -R . | jq -s .)"
+  display_json="$(read_connected_display_names | jq -R . | jq -s .)"
+  description_json="$(read_connected_display_descriptions | jq -R . | jq -s .)"
+  merged_display_json="$(jq -cn --argjson names "$display_json" --argjson descriptions "$description_json" '$names + $descriptions | unique')"
+  lid_closed="$(read_lid_closed)"
 
-    jq -cn \
-        --argjson usb "$usb_json" \
-        --argjson displays "$merged_display_json" \
-        --argjson lidClosed "$lid_closed" \
-        '{
+  jq -cn \
+    --argjson usb "$usb_json" \
+    --argjson displays "$merged_display_json" \
+    --argjson lidClosed "$lid_closed" \
+    '{
             usb: $usb,
             displays: $displays,
             lid: {
@@ -132,11 +132,11 @@ collect_state() {
 }
 
 select_profile() {
-    local state_json="$1"
+  local state_json="$1"
 
-    jq -cn \
-        --rawfile configText "$CONFIG_PATH" \
-        --argjson state "$state_json" '
+  jq -cn \
+    --rawfile configText "$CONFIG_PATH" \
+    --argjson state "$state_json" '
         ($configText | fromjson) as $config
         |
         def containsValue($haystack; $needle):
@@ -185,201 +185,201 @@ select_profile() {
 }
 
 run_hook_list() {
-    local profile_name="$1"
-    local phase="$2"
-    local commands_json="$3"
+  local profile_name="$1"
+  local phase="$2"
+  local commands_json="$3"
 
-    while IFS= read -r -d '' command; do
-        [ -n "$command" ] || continue
-        if ! bash -lc "$command"; then
-            printf 'dockmgr: hook failed: %s %s: %s\n' "$profile_name" "$phase" "$command" >&2
-            notify "dockmgr hook failed" "$profile_name $phase failed"
-        fi
-    done < <(jq -jr '.[] + "\u0000"' <<<"$commands_json")
+  while IFS= read -r -d '' command; do
+    [ -n "$command" ] || continue
+    if ! bash -lc "$command"; then
+      printf 'dockmgr: hook failed: %s %s: %s\n' "$profile_name" "$phase" "$command" >&2
+      notify "dockmgr hook failed" "$profile_name $phase failed"
+    fi
+  done < <(jq -jr '.[] + "\u0000"' <<<"$commands_json")
 }
 
 run_profile_hooks() {
-    local profile_json="$1"
-    local profile_name="$2"
-    local phase="$3"
+  local profile_json="$1"
+  local profile_name="$2"
+  local phase="$3"
 
-    run_hook_list "$profile_name" "$phase" "$(jq -c --arg context "$CONTEXT" --arg phase "$phase" '.hooks[$context][$phase] // []' <<<"$profile_json")"
+  run_hook_list "$profile_name" "$phase" "$(jq -c --arg context "$CONTEXT" --arg phase "$phase" '.hooks[$context][$phase] // []' <<<"$profile_json")"
 }
 
 apply_profile_with_lua() {
-    local profile_json="$1"
-    local profile_id lua_profile_id lua_config_path lua_jq lua_module
+  local profile_json="$1"
+  local profile_id lua_profile_id lua_config_path lua_jq lua_module
 
-    profile_id="$(jq -r '.id' <<<"$profile_json")"
-    [ "$profile_id" != "null" ] && [ -n "$profile_id" ] || {
-        printf 'dockmgr: selected profile has no ID\n' >&2
-        return 1
-    }
+  profile_id="$(jq -r '.id' <<<"$profile_json")"
+  [ "$profile_id" != "null" ] && [ -n "$profile_id" ] || {
+    printf 'dockmgr: selected profile has no ID\n' >&2
+    return 1
+  }
 
-    lua_profile_id="$(jq -Rn --arg value "$profile_id" '$value')"
-    lua_config_path="$(jq -Rn --arg value "$CONFIG_PATH" '$value')"
-    lua_jq="$(jq -Rn --arg value "$(command -v jq)" '$value')"
-    [ -r "$DOCKMGR_LUA_MODULE" ] || {
-        printf 'dockmgr: missing Lua module: %s\n' "$DOCKMGR_LUA_MODULE" >&2
-        return 1
-    }
-    lua_module="$(jq -Rn --arg value "$DOCKMGR_LUA_MODULE" '$value')"
-    hyprctl eval "(function() dofile($lua_module); return dockmgr.apply($lua_profile_id, $lua_config_path, $lua_jq) end)()"
+  lua_profile_id="$(jq -Rn --arg value "$profile_id" '$value')"
+  lua_config_path="$(jq -Rn --arg value "$CONFIG_PATH" '$value')"
+  lua_jq="$(jq -Rn --arg value "$(command -v jq)" '$value')"
+  [ -r "$DOCKMGR_LUA_MODULE" ] || {
+    printf 'dockmgr: missing Lua module: %s\n' "$DOCKMGR_LUA_MODULE" >&2
+    return 1
+  }
+  lua_module="$(jq -Rn --arg value "$DOCKMGR_LUA_MODULE" '$value')"
+  hyprctl eval "(function() dofile($lua_module); return dockmgr.apply($lua_profile_id, $lua_config_path, $lua_jq) end)()"
 }
 
 apply_profile() {
-    local profile_json="$1"
-    local profile_name
+  local profile_json="$1"
+  local profile_name
 
-    profile_name="$(jq -r '.name' <<<"$profile_json")"
-    if ! apply_profile_with_lua "$profile_json"; then
-        printf 'dockmgr: failed to configure profile with Hyprland Lua: %s\n' "$profile_name" >&2
-        notify "dockmgr apply failed" "Unable to activate $profile_name"
-        return 1
-    fi
+  profile_name="$(jq -r '.name' <<<"$profile_json")"
+  if ! apply_profile_with_lua "$profile_json"; then
+    printf 'dockmgr: failed to configure profile with Hyprland Lua: %s\n' "$profile_name" >&2
+    notify "dockmgr apply failed" "Unable to activate $profile_name"
+    return 1
+  fi
 }
 
 persist_active_profile() {
-    local profile_json="$1"
-    local profile_id state_dir state_tmp
+  local profile_json="$1"
+  local profile_id state_dir state_tmp
 
-    profile_id="$(jq -r '.id' <<<"$profile_json")"
-    [ "$profile_id" != "null" ] && [ -n "$profile_id" ] || return 1
+  profile_id="$(jq -r '.id' <<<"$profile_json")"
+  [ "$profile_id" != "null" ] && [ -n "$profile_id" ] || return 1
 
-    state_dir="$(dirname "$DOCKMGR_STATE_PATH")"
-    mkdir -p "$state_dir" || return 1
-    state_tmp="$(mktemp "$state_dir/.active-profile.XXXXXX")" || return 1
-    printf '%s\n' "$profile_id" > "$state_tmp" && mv -f "$state_tmp" "$DOCKMGR_STATE_PATH"
+  state_dir="$(dirname "$DOCKMGR_STATE_PATH")"
+  mkdir -p "$state_dir" || return 1
+  state_tmp="$(mktemp "$state_dir/.active-profile.XXXXXX")" || return 1
+  printf '%s\n' "$profile_id" >"$state_tmp" && mv -f "$state_tmp" "$DOCKMGR_STATE_PATH"
 }
 
 transition_profile() {
-    local from_json="$1"
-    local to_json="$2"
-    local from_name to_name
+  local from_json="$1"
+  local to_json="$2"
+  local from_name to_name
 
-    to_name="$(jq -r '.name' <<<"$to_json")"
+  to_name="$(jq -r '.name' <<<"$to_json")"
 
-    if [ -n "$from_json" ]; then
-        from_name="$(jq -r '.name' <<<"$from_json")"
-        notify "Switching profile" "$from_name -> $to_name"
-        run_profile_hooks "$from_json" "$from_name" "preDown"
-    else
-        notify "Activating profile" "$to_name"
-    fi
+  if [ -n "$from_json" ]; then
+    from_name="$(jq -r '.name' <<<"$from_json")"
+    notify "Switching profile" "$from_name -> $to_name"
+    run_profile_hooks "$from_json" "$from_name" "preDown"
+  else
+    notify "Activating profile" "$to_name"
+  fi
 
-    run_profile_hooks "$to_json" "$to_name" "preUp"
-    apply_profile "$to_json" || return 1
+  run_profile_hooks "$to_json" "$to_name" "preUp"
+  apply_profile "$to_json" || return 1
 
-    if [ -n "$from_json" ]; then
-        run_profile_hooks "$from_json" "$from_name" "postDown"
-    fi
+  if [ -n "$from_json" ]; then
+    run_profile_hooks "$from_json" "$from_name" "postDown"
+  fi
 
-    run_profile_hooks "$to_json" "$to_name" "postUp"
-    notify "Profile active" "$to_name"
+  run_profile_hooks "$to_json" "$to_name" "postUp"
+  notify "Profile active" "$to_name"
 }
 
 current_profile_json() {
-    local state_json
-    state_json="$(collect_state)"
-    select_profile "$state_json"
+  local state_json
+  state_json="$(collect_state)"
+  select_profile "$state_json"
 }
 
 print_status() {
-    local state_json profile_json
+  local state_json profile_json
 
-    state_json="$(collect_state)"
-    profile_json="$(select_profile "$state_json")"
+  state_json="$(collect_state)"
+  profile_json="$(select_profile "$state_json")"
 
-    printf 'State:\n'
-    jq . <<<"$state_json"
-    printf '\nSelected profile:\n'
-    if [ -n "$profile_json" ]; then
-        jq . <<<"$profile_json"
-    else
-        printf 'None\n'
-    fi
+  printf 'State:\n'
+  jq . <<<"$state_json"
+  printf '\nSelected profile:\n'
+  if [ -n "$profile_json" ]; then
+    jq . <<<"$profile_json"
+  else
+    printf 'None\n'
+  fi
 }
 
 check_transition() {
-    local current_json current_id
+  local current_json current_id
 
-    current_json="$(current_profile_json)"
-    [ -n "$current_json" ] || {
-        printf 'dockmgr: no profile matched and no fallback is configured\n' >&2
-        return 1
+  current_json="$(current_profile_json)"
+  [ -n "$current_json" ] || {
+    printf 'dockmgr: no profile matched and no fallback is configured\n' >&2
+    return 1
+  }
+
+  current_id="$(jq -r '.id' <<<"$current_json")"
+
+  if [ "${last_profile_id:-}" != "$current_id" ]; then
+    transition_profile "${last_profile_json:-}" "$current_json" || return 1
+    persist_active_profile "$current_json" || {
+      printf 'dockmgr: failed to persist active profile: %s\n' "$DOCKMGR_STATE_PATH" >&2
     }
-
-    current_id="$(jq -r '.id' <<<"$current_json")"
-
-    if [ "${last_profile_id:-}" != "$current_id" ]; then
-        transition_profile "${last_profile_json:-}" "$current_json" || return 1
-        persist_active_profile "$current_json" || {
-            printf 'dockmgr: failed to persist active profile: %s\n' "$DOCKMGR_STATE_PATH" >&2
-        }
-        last_profile_json="$current_json"
-        last_profile_id="$current_id"
-    fi
+    last_profile_json="$current_json"
+    last_profile_id="$current_id"
+  fi
 }
 
 watch_udev() {
-    udevadm monitor --udev 2>/dev/null | while IFS= read -r _event; do
-        sleep "$DOCK_UDEV_SETTLE_DELAY"
-        check_transition || true
-    done
-    return 1
+  udevadm monitor --udev 2>/dev/null | while IFS= read -r _event; do
+    sleep "$DOCK_UDEV_SETTLE_DELAY"
+    check_transition || true
+  done
+  return 1
 }
 
 watch_poll() {
-    while :; do
-        check_transition || true
-        sleep "$DOCK_POLL_INTERVAL"
-    done
+  while :; do
+    check_transition || true
+    sleep "$DOCK_POLL_INTERVAL"
+  done
 }
 
 watch() {
-    ensure_config
-    need_cmd jq
-    need_cmd hyprctl
-    acquire_watch_lock
+  ensure_config
+  need_cmd jq
+  need_cmd hyprctl
+  acquire_watch_lock
 
-    last_profile_id=""
-    last_profile_json=""
-    check_transition
+  last_profile_id=""
+  last_profile_json=""
+  check_transition
 
-    if command -v udevadm >/dev/null 2>&1; then
-        watch_udev &
-        udev_pid=$!
-        trap 'kill "$udev_pid" 2>/dev/null || true; exit 130' INT
-        trap 'kill "$udev_pid" 2>/dev/null || true; exit 143' TERM
-    else
-        printf 'dockmgr: udev monitor unavailable; polling every %ss\n' "$DOCK_POLL_INTERVAL" >&2
-    fi
+  if command -v udevadm >/dev/null 2>&1; then
+    watch_udev &
+    udev_pid=$!
+    trap 'kill "$udev_pid" 2>/dev/null || true; exit 130' INT
+    trap 'kill "$udev_pid" 2>/dev/null || true; exit 143' TERM
+  else
+    printf 'dockmgr: udev monitor unavailable; polling every %ss\n' "$DOCK_POLL_INTERVAL" >&2
+  fi
 
-    watch_poll
+  watch_poll
 }
 
 once() {
-    local current_json
+  local current_json
 
-    ensure_config
-    need_cmd jq
-    need_cmd hyprctl
+  ensure_config
+  need_cmd jq
+  need_cmd hyprctl
 
-    current_json="$(current_profile_json)"
-    [ -n "$current_json" ] || {
-        printf 'dockmgr: no profile matched and no fallback is configured\n' >&2
-        exit 1
-    }
+  current_json="$(current_profile_json)"
+  [ -n "$current_json" ] || {
+    printf 'dockmgr: no profile matched and no fallback is configured\n' >&2
+    exit 1
+  }
 
-    transition_profile "" "$current_json" || exit 1
-    persist_active_profile "$current_json" || {
-        printf 'dockmgr: failed to persist active profile: %s\n' "$DOCKMGR_STATE_PATH" >&2
-    }
+  transition_profile "" "$current_json" || exit 1
+  persist_active_profile "$current_json" || {
+    printf 'dockmgr: failed to persist active profile: %s\n' "$DOCKMGR_STATE_PATH" >&2
+  }
 }
 
 usage() {
-    printf 'dockmgr %s\n\n' "$DOCKMGR_VERSION"
-    cat <<'EOF'
+  printf 'dockmgr %s\n\n' "$DOCKMGR_VERSION"
+  cat <<'EOF'
 Usage:
   dockmgr watch      Watch dock state and switch profiles
   dockmgr status     Print current state and selected profile
@@ -400,71 +400,77 @@ EOF
 }
 
 if [ "${DOCKMGR_TEST_LIB:-}" = "1" ] && [ "${BASH_SOURCE[0]}" != "$0" ]; then
-    return 0
+  return 0
 fi
 
 command="watch"
 if [ "${1:-}" = "--version" ]; then
-    printf '%s\n' "$DOCKMGR_VERSION"
-    exit 0
+  printf '%s\n' "$DOCKMGR_VERSION"
+  exit 0
 fi
 
 if [ "$#" -gt 0 ] && [ "${1#-}" = "$1" ]; then
-    command="$1"
-    shift
+  command="$1"
+  shift
 fi
 
 while [ "$#" -gt 0 ]; do
-    case "$1" in
-        --config)
-            [ "$#" -ge 2 ] || { printf 'dockmgr: --config requires a path\n' >&2; exit 2; }
-            CONFIG_PATH="$2"
-            shift 2
-            ;;
-        --context)
-            [ "$#" -ge 2 ] || { printf 'dockmgr: --context requires a value\n' >&2; exit 2; }
-            CONTEXT="$2"
-            shift 2
-            ;;
-        -h|--help|help)
-            usage
-            exit 0
-            ;;
-        *)
-            usage >&2
-            exit 2
-            ;;
-    esac
+  case "$1" in
+  --config)
+    [ "$#" -ge 2 ] || {
+      printf 'dockmgr: --config requires a path\n' >&2
+      exit 2
+    }
+    CONFIG_PATH="$2"
+    shift 2
+    ;;
+  --context)
+    [ "$#" -ge 2 ] || {
+      printf 'dockmgr: --context requires a value\n' >&2
+      exit 2
+    }
+    CONTEXT="$2"
+    shift 2
+    ;;
+  -h | --help | help)
+    usage
+    exit 0
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+  esac
 done
 
 case "$CONTEXT" in
-    session|greeter) ;;
-    *)
-        printf 'dockmgr: unsupported context: %s\n' "$CONTEXT" >&2
-        exit 2
-        ;;
+session | greeter) ;;
+*)
+  printf 'dockmgr: unsupported context: %s\n' "$CONTEXT" >&2
+  exit 2
+  ;;
 esac
 
 case "$command" in
-    watch)
-        watch
-        ;;
-    status)
-        ensure_config
-        need_cmd jq
-        print_status
-        ;;
-    once)
-        once
-        ;;
-    --version)
-        printf '%s\n' "$DOCKMGR_VERSION"
-        ;;
-    -h|--help|help)
-        usage
-        ;;
-    *)
-        usage >&2
-        exit 2
-        ;;
+watch)
+  watch
+  ;;
+status)
+  ensure_config
+  need_cmd jq
+  print_status
+  ;;
+once)
+  once
+  ;;
+--version)
+  printf '%s\n' "$DOCKMGR_VERSION"
+  ;;
+-h | --help | help)
+  usage
+  ;;
+*)
+  usage >&2
+  exit 2
+  ;;
 esac

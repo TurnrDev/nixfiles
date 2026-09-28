@@ -1,6 +1,4 @@
-{
-  ...
-}:
+_:
 
 {
   boot.initrd.supportedFilesystems = [ "btrfs" ];

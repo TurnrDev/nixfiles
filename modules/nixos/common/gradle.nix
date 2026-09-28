@@ -1,12 +1,9 @@
 { pkgs, ... }:
 
-let
-  jdk = pkgs.jdk;
-in
 {
   programs.java = {
     enable = true;
-    package = jdk;
+    package = pkgs.jdk;
   };
 
   environment.systemPackages = with pkgs; [
@@ -14,6 +11,6 @@ in
   ];
 
   environment.sessionVariables = {
-    JAVA_HOME = "${jdk}";
+    JAVA_HOME = "${pkgs.jdk}";
   };
 }

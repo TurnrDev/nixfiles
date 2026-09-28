@@ -137,6 +137,7 @@
     mtr
     nano
     nixfmt
+    nixfmt-tree
     nmap
     p7zip
     pciutils

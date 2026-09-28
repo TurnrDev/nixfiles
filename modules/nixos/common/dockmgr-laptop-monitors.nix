@@ -7,7 +7,7 @@
 let
   inherit (lib) mkIf mkOption types;
   cfg = config.my.displays;
-  internal = cfg.internal;
+  inherit (cfg) internal;
   homeOfficeDisplay = "desc:Samsung Electric Company LC49G95T H1AK500000";
   homeOfficeMode = "5120x1440@59.977";
   internalMode = "${toString internal.width}x${toString internal.height}@${internal.freq}";

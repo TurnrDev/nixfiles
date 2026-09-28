@@ -11,7 +11,6 @@
 }:
 
 let
-  toLua = lib.generators.toLua { };
   hostName = config.networking.hostName;
   hasPersonalFolders = lib.elem hostName config.my.syncthing.personalFolderHosts;
   hasWorkFolders = lib.elem hostName config.my.syncthing.workFolderHosts;

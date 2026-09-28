@@ -9,7 +9,7 @@
 let
   gitName = identity.fullName;
   gitEmail = identity.email;
-  homeDirectory = identity.homeDirectory;
+  inherit (identity) homeDirectory;
   gpg = lib.getExe config.programs.gpg.package;
   gpgconf = lib.getExe' config.programs.gpg.package "gpgconf";
   sshKeygen = lib.getExe' pkgs.openssh "ssh-keygen";

@@ -1,8 +1,5 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 
-let
-
-in
 {
   home.packages = [
     pkgs.edmarketconnector

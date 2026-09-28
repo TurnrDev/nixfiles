@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices"],
+  "timezone": "Europe/London",
+  "schedule": ["* 0-3 * * *"],
+  "automerge": false,
+  "automergeType": "pr",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["* 0-3,12-15 * * *"]
+  },
+  "nix": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "Group Nix updates twice daily and automerge them",
+      "matchManagers": ["nix"],
+      "groupName": "Nix flake inputs",
+      "schedule": ["* 0-3,12-15 * * *"],
+      "automerge": true,
+      "platformAutomerge": false
+    }
+  ]
+}

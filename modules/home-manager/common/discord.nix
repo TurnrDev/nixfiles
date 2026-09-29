@@ -2,6 +2,7 @@
   identity,
   inputs,
   lib,
+  pkgs,
   ...
 }:
 
@@ -23,8 +24,27 @@
       });
 
   programs.nixcord = {
-    discord.vencord.enable = true;
+    discord = {
+      package =
+        let
+          discord = pkgs.discord;
+        in
+        discord
+        // {
+          override =
+            args:
+            discord.override (
+              builtins.removeAttrs args [
+                "source"
+                "branch"
+              ]
+            );
+        };
+      vencord.enable = true;
+    };
+
     enable = true;
+
     config = {
       plugins = {
         alwaysTrust.enable = true;
@@ -49,5 +69,4 @@
       };
     };
   };
-
 }

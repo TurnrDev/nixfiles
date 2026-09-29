@@ -97,8 +97,9 @@ nix shell nixpkgs#sops --command sops hosts/<hostname>.yaml
 
 Set `storagebox-borg-passphrase` in that file.
 
-- Use the same value across hosts for a shared passphrase.
-- Use a different value per host if you want host-specific credentials.
+- Generate a unique value for this host; never reuse it on another host.
+- The host's Borg 1.4 and Borg 2 repositories deliberately share this one
+  passphrase.
 
 If you changed recipients in `secrets/.sops.yaml`, refresh recipient metadata:
 

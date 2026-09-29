@@ -27,7 +27,7 @@
     discord = {
       package =
         let
-          discord = pkgs.discord;
+          inherit (pkgs) discord;
         in
         discord
         // {

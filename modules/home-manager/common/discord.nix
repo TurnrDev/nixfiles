@@ -10,9 +10,17 @@
     inputs.nixcord.homeModules.nixcord
   ];
 
-  programs.borgmatic.backups.shared.location.extraConfig.exclude_patterns = lib.mkAfter [
-    "${identity.homeDirectory}/.config/discord"
-  ];
+  programs.borgmatic.backups =
+    lib.genAttrs
+      [
+        "borg1.4"
+        "borg2"
+      ]
+      (_: {
+        location.extraConfig.exclude_patterns = lib.mkAfter [
+          "${identity.homeDirectory}/.config/discord"
+        ];
+      });
 
   programs.nixcord = {
     discord.vencord.enable = true;

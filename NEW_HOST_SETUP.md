@@ -8,13 +8,15 @@ during activation.
 
 Create a new host directory under `hosts/` and add its `configuration.nix` and
 `home.nix`. Borgmatic is configured through Home Manager, so put any
-per-device overrides in `home.nix`. The shared module already configures both
-Hetzner repositories using the hostname; only add settings that differ from
-those defaults:
+per-device overrides in `home.nix`. The shared module configures a Borg 1
+backup to both Hetzner repositories and a Borg 2 backup to OVH Object Storage,
+all using the hostname; only add settings that differ from those defaults.
+Apply source and exclusion overrides to both named configurations when they
+should remain identical:
 
 ```nix
-programs.borgmatic.backups.shared = {
-  location = {
+programs.borgmatic.backups = {
+  "borg1.4".location = {
     sourceDirectories = lib.mkAfter [ "/srv/projects" ];
     repositories = lib.mkAfter [
       {
@@ -27,7 +29,19 @@ programs.borgmatic.backups.shared = {
     ];
   };
 
-  hooks.extraConfig.healthchecks = {
+  borg2.location = {
+    sourceDirectories = lib.mkAfter [ "/srv/projects" ];
+    extraConfig.exclude_patterns = lib.mkAfter [
+      "${config.home.homeDirectory}/.config/obs-studio"
+    ];
+  };
+
+  "borg1.4".hooks.extraConfig.healthchecks = {
+    ping_url = "https://hc-ping.com/replace-me";
+    send_logs = true;
+  };
+
+  borg2.hooks.extraConfig.healthchecks = {
     ping_url = "https://hc-ping.com/replace-me";
     send_logs = true;
   };
@@ -200,10 +214,11 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes -p 22 \
   jay@home.turnr.net
 ```
 
-## 5. Initialize The Borg Repository
+## 5. Initialize The Borg Repositories
 
-The repo is pinned to Borg 1.4.x locally and configured to use `borg-1.4` on
-the Storage Box side.
+The Hetzner configuration is pinned to Borg 1.4.x locally and uses `borg-1.4`
+on the Storage Box side. The OVH configuration uses the latest packaged Borg 2
+beta and connects directly to its S3-compatible API.
 
 Create both Storage Box repositories manually once per host. This setup
 decrypts the host passphrase into the Home Manager `sops-nix` runtime symlink
@@ -220,7 +235,36 @@ bash -c '
 unset BORG_PASSPHRASE
 ```
 
-If that file is missing, start the user secret service first:
+Create the host's Borg 2 repository in the `borg-2` OVH bucket after rebuilding
+so that the rendered S3 credentials and `borg2` executable are available:
+
+```sh
+export BORG_PASSPHRASE="$(cat "${HOME}/.config/sops-nix/secrets/storagebox-borg-passphrase")"
+export AWS_SHARED_CREDENTIALS_FILE="${HOME}/.config/sops-nix/secrets/rendered/ovh-borg2-aws-credentials"
+export AWS_DEFAULT_REGION=gra
+export AWS_REGION=gra
+export BORG_REPO="s3:https://s3.gra.io.cloud.ovh.net/borg-2/$(hostname)"
+
+borg2 repo-create \
+  --encryption aes256-ocb \
+  --id-hash blake3 \
+  --key-location repokey
+
+# Keep an encrypted recovery copy of the repokey outside the repository.
+borg2 key export /dev/stdout \
+  | jq -Rs . \
+  | (cd /etc/nixos/secrets && \
+      sops set --value-stdin "hosts/$(hostname).yaml" '["ovh-borg2-repokey"]')
+
+unset BORG_REPO AWS_REGION AWS_DEFAULT_REGION AWS_SHARED_CREDENTIALS_FILE BORG_PASSPHRASE
+```
+
+The exported key remains encrypted and still requires the host's existing Borg
+passphrase. Each host must initialize its own hostname prefix because host
+secret files are encrypted to that host's age recipient.
+
+If the passphrase or rendered credentials file is missing, start the user
+secret service first:
 
 ```sh
 systemctl --user start sops-nix.service
@@ -230,6 +274,7 @@ If you want to confirm the versions first:
 
 ```sh
 borg --version
+borg2 --version
 ssh -p 23 u551190@u551190.your-storagebox.de borg-1.4 --version
 ```
 
@@ -238,12 +283,17 @@ ssh -p 23 u551190@u551190.your-storagebox.de borg-1.4 --version
 Once the key is installed and the repo exists:
 
 ```sh
-borgmatic --config ~/.config/borgmatic.d/shared.yaml create
+borgmatic --config ~/.config/borgmatic.d/borg1.4.yaml create
+borgmatic --config ~/.config/borgmatic.d/borg2.yaml create
 ```
+
+The scheduled `borgmatic.service` discovers both files in `borgmatic.d` and
+runs them sequentially from the same daily timer.
 
 Useful follow-up checks:
 
 ```sh
-borgmatic --config ~/.config/borgmatic.d/shared.yaml repo-info
+borgmatic --config ~/.config/borgmatic.d/borg1.4.yaml repo-info
+borgmatic --config ~/.config/borgmatic.d/borg2.yaml repo-info
 systemctl --user list-timers | rg borgmatic
 ```

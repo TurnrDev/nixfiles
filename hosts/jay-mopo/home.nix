@@ -66,11 +66,19 @@ in
     fi
   '';
 
-  programs.borgmatic.backups.shared.location.extraConfig.exclude_patterns = lib.mkAfter [
-    "${config.home.homeDirectory}/Repos/mopo/.db_data"
-    "${config.home.homeDirectory}/Repos/mopo/.redis_data"
-    "*.xb"
-    "*.xb.zstd"
-  ];
+  programs.borgmatic.backups =
+    lib.genAttrs
+      [
+        "borg1.4"
+        "borg2"
+      ]
+      (_: {
+        location.extraConfig.exclude_patterns = lib.mkAfter [
+          "${config.home.homeDirectory}/Repos/mopo/.db_data"
+          "${config.home.homeDirectory}/Repos/mopo/.redis_data"
+          "*.xb"
+          "*.xb.zstd"
+        ];
+      });
 
 }

@@ -65,6 +65,14 @@ Then add a key in the editor, for example:
 github-token: ghp_example
 ```
 
+The OVH Borg 2 setup stores its bucket credentials as shared secrets so every
+configured host can render a private boto3 credentials file:
+
+```yaml
+ovh-borg2-s3-access-key-id: example-access-key
+ovh-borg2-s3-secret-access-key: example-secret-key
+```
+
 GitHub API rate limits for Nix flakes
 -------------------------------------
 
@@ -121,6 +129,10 @@ Then add a key in the editor, for example:
 ```yaml
 storagebox-borg-passphrase: my-framework-passphrase
 ```
+
+After initializing the host's OVH Borg 2 repository, its encrypted recovery key
+is also stored in the host file as `ovh-borg2-repokey`. The recovery key does
+not replace the passphrase; both are needed for recovery.
 
 Update a secret
 ---------------

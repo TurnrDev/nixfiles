@@ -25,11 +25,19 @@
     antialiasing = true;
   };
 
-  programs.borgmatic.backups.shared.location.extraConfig.exclude_patterns = lib.mkAfter [
-    "${identity.homeDirectory}/.config/Code"
-    "${identity.homeDirectory}/.config/GitKraken"
-    "${identity.homeDirectory}/.gitkraken"
-    "${identity.homeDirectory}/.vscode"
-    "${identity.homeDirectory}/.vscode-server"
-  ];
+  programs.borgmatic.backups =
+    lib.genAttrs
+      [
+        "borg1.4"
+        "borg2"
+      ]
+      (_: {
+        location.extraConfig.exclude_patterns = lib.mkAfter [
+          "${identity.homeDirectory}/.config/Code"
+          "${identity.homeDirectory}/.config/GitKraken"
+          "${identity.homeDirectory}/.gitkraken"
+          "${identity.homeDirectory}/.vscode"
+          "${identity.homeDirectory}/.vscode-server"
+        ];
+      });
 }

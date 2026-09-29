@@ -19,7 +19,7 @@ in
 {
   imports = [
     ./default.nix
-    # ./cad.nix
+    ./cad.nix
     ../common/stylix.nix
     ../common/virtualisation.nix
     inputs.dockmgr.nixosModules.default

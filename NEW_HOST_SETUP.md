@@ -235,6 +235,51 @@ bash -c '
 unset BORG_PASSPHRASE
 ```
 
+Export both Borg 1.4 repository keys. Although the repositories share a
+passphrase, each repository has its own key. The exported keys remain encrypted
+and still require the original passphrase for recovery:
+
+```sh
+(
+  set -euo pipefail
+
+  unset BORG_PASSPHRASE BORG_PASSPHRASE_FD
+  export BORG_PASSCOMMAND="cat ${HOME}/.config/sops-nix/secrets/storagebox-borg-passphrase"
+  export BORG_RSH="ssh -i ${HOME}/.ssh/id_ed25519 -o IdentitiesOnly=yes -p 23"
+
+  host_name="$(hostname)"
+  key_file="$(mktemp)"
+  trap 'rm -f "$key_file"' EXIT
+
+  borg key export \
+    --remote-path borg-1.4 \
+    "ssh://u551190@u551190.your-storagebox.de:23/./${host_name}" \
+    /dev/stdout >"$key_file"
+
+  jq -Rs . <"$key_file" \
+    | (cd /etc/nixos/secrets && \
+        sops set --value-stdin \
+          "hosts/${host_name}.yaml" \
+          '["hetzner-fsn1-borg1.4-repokey"]')
+
+  borg key export \
+    --remote-path borg-1.4 \
+    "ssh://u650719@u650719.your-storagebox.de:23/./${host_name}" \
+    /dev/stdout >"$key_file"
+
+  jq -Rs . <"$key_file" \
+    | (cd /etc/nixos/secrets && \
+        sops set --value-stdin \
+          "hosts/${host_name}.yaml" \
+          '["hetzner-hel1-borg1.4-repokey"]')
+)
+```
+
+Host secret files are encrypted only to that host's SSH-derived age recipient.
+Back up the host SSH private key independently, or add a separate recovery age
+recipient, so the exported repository keys remain decryptable after losing the
+host.
+
 Create the host's Borg 2 repository in the `borg-2` OVH bucket after rebuilding
 so that the rendered S3 credentials and `borg2` executable are available:
 

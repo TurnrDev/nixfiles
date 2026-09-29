@@ -14,8 +14,8 @@ jobs:
   nixos:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # main
       - name: Run flake checks
         run: nix flake check --all-systems
       - name: Evaluate every NixOS host
@@ -35,7 +35,7 @@ jobs:
   dockmgr:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # main
       - name: Run dockmgr flake checks
         run: nix flake check ./packages/dockmgr

@@ -275,10 +275,11 @@ and still require the original passphrase for recovery:
 )
 ```
 
-Host secret files are encrypted only to that host's SSH-derived age recipient.
-Back up the host SSH private key independently, or add a separate recovery age
-recipient, so the exported repository keys remain decryptable after losing the
-host.
+Host secret files should be encrypted to both that host's SSH-derived age
+recipient and the dedicated recovery recipient. This keeps the exported keys
+decryptable after losing the host without requiring reuse of its operational
+SSH private key. See [`disaster-recovery.md`](disaster-recovery.md) for the
+recovery-key design and complete restore procedure.
 
 Create the host's Borg 2 repository in the `borg-2` OVH bucket after rebuilding
 so that the rendered S3 credentials and `borg2` executable are available:

@@ -30,6 +30,16 @@
       "schedule": ["* 0-3,12-15 * * *"],
       "automerge": true,
       "platformAutomerge": false
+    },
+    {
+      "description": "Disable pinning Docker images to a specific digest/hash (undoes config:best-practices default)",
+      "matchDatasources": ["docker"],
+      "pinDigests": false
+    },
+    {
+      "description": "Disable pinning GitHub Actions to a specific digest/hash (undoes config:best-practices default)",
+      "matchDepTypes": ["action", "workflow"],
+      "pinDigests": false
     }
   ]
 }

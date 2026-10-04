@@ -45,10 +45,11 @@ in
   ];
 
   fileSystems."/srv/nfs/games" = {
-    device = "home.turnr.net:/games";
+    device = "home.turnr.net:/data/media/games";
     fsType = "nfs";
     options = [
       "_netdev"
+      "nfsvers=4.2"
       "noauto"
       "x-systemd.automount"
       "x-systemd.mount-timeout=10"

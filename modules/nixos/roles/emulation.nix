@@ -50,6 +50,7 @@ in
     options = [
       "_netdev"
       "nfsvers=4.2"
+      "ro"
       "noauto"
       "x-systemd.automount"
       "x-systemd.mount-timeout=10"

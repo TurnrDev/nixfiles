@@ -12,6 +12,14 @@
   "nix": {
     "enabled": true
   },
+  "customDatasources": {
+    "es-de": {
+      "defaultRegistryUrlTemplate": "https://gitlab.com/es-de/emulationstation-de/-/raw/master/latest_release.json",
+      "transformTemplates": [
+        "{\"releases\":[{\"version\":stable.version}],\"sourceUrl\":\"https://gitlab.com/es-de/emulationstation-de\",\"homepage\":website}"
+      ]
+    }
+  },
   "customManagers": [
     {
       "description": "Update the Borg 2 release binary and its SHA-256 hash",
@@ -19,6 +27,24 @@
       "managerFilePatterns": ["/^packages/borg2/default\\.nix$/"],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\s+version = \\\"(?<currentValue>[^\\\"]+)\\\";[\\s\\S]*?sha256 = \\\"(?<currentDigest>[a-f0-9]{64})\\\";"
+      ]
+    },
+    {
+      "description": "Update GitHub release binaries and their SHA-256 hashes",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^packages/(greenlight|kytyps5|sharpemu)/default\\.nix$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\s+releaseTag = \\\"(?<currentValue>[^\\\"]+)\\\";[\\s\\S]*?sha256 = \\\"(?<currentDigest>[a-f0-9]{64})\\\";"
+      ]
+    },
+    {
+      "description": "Update ES-DE from its official release manifest",
+      "customType": "regex",
+      "managerFilePatterns": ["/^packages/es-de/default\\.nix$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\s+version = \\\"(?<currentValue>[^\\\"]+)\\\";"
       ]
     }
   ],

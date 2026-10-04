@@ -10,6 +10,7 @@
 {
   imports = [
     ../common/minecraft.nix
+    ./emulation.nix
   ];
 
   programs.steam = {

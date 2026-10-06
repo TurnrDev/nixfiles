@@ -7,6 +7,7 @@
 {
   imports = [
     ../common/elite.nix
+    ./emulation.nix
   ];
 
   programs.borgmatic.backups =

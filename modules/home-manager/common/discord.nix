@@ -2,7 +2,6 @@
   identity,
   inputs,
   lib,
-  pkgs,
   ...
 }:
 
@@ -24,27 +23,8 @@
       });
 
   programs.nixcord = {
-    discord = {
-      package =
-        let
-          inherit (pkgs) discord;
-        in
-        discord
-        // {
-          override =
-            args:
-            discord.override (
-              builtins.removeAttrs args [
-                "source"
-                "branch"
-              ]
-            );
-        };
-      vencord.enable = true;
-    };
-
+    discord.vencord.enable = true;
     enable = true;
-
     config = {
       plugins = {
         alwaysTrust.enable = true;

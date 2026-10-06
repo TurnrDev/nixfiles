@@ -51,25 +51,17 @@ let
   borgmaticPackage = pkgs.borgmatic;
   sopsPackage = pkgs.sops;
   commonBackup = {
-    location = {
-      sourceDirectories = [ homeDirectory ];
-      excludeHomeManagerSymlinks = true;
-      extraConfig = {
-        archive_name_format = "{hostname}-{utcnow}";
-        exclude_patterns = defaultExcludePatterns;
-      };
-    };
-    storage.encryptionPasscommand = "${pkgs.coreutils}/bin/cat ${
-      config.sops.secrets.${secretName}.path
-    }";
-    retention = {
-      keepHourly = 4;
-      keepDaily = 7;
-      keepWeekly = 4;
-      keepMonthly = 6;
-      keepYearly = 2;
-    };
-    consistency.extraConfig = {
+    location.excludeHomeManagerSymlinks = true;
+    settings = {
+      source_directories = [ homeDirectory ];
+      archive_name_format = "{hostname}-{utcnow}";
+      exclude_patterns = defaultExcludePatterns;
+      encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.${secretName}.path}";
+      keep_hourly = 4;
+      keep_daily = 7;
+      keep_weekly = 4;
+      keep_monthly = 6;
+      keep_yearly = 2;
       checks = [
         {
           name = "repository";
@@ -81,8 +73,6 @@ let
           frequency = "2 weeks";
         }
       ];
-    };
-    output.extraConfig = {
       statistics = true;
       borg_exit_codes = [
         {
@@ -132,25 +122,21 @@ in
         package = borgmaticPackage;
         backups = {
           "borg1.4" = lib.recursiveUpdate commonBackup {
-            location = {
+            settings = {
               repositories = defaultRepositories;
-            };
-            storage.extraConfig = {
               local_path = lib.getExe borgPackage;
               remote_path = "borg-1.4";
               ssh_command = sshCommand;
             };
           };
           borg2 = lib.recursiveUpdate commonBackup {
-            location = {
+            settings = {
               repositories = [
                 {
                   label = "ovh-gra";
                   path = "s3:https://s3.gra.io.cloud.ovh.net/borg-2/${hostName}";
                 }
               ];
-            };
-            storage.extraConfig = {
               local_path = lib.getExe borg2Package;
             };
           };

@@ -17,7 +17,7 @@
         "borg2"
       ]
       (_: {
-        location.extraConfig.exclude_patterns = lib.mkAfter [
+        settings.exclude_patterns = lib.mkAfter [
           "${identity.homeDirectory}/.local/share/Steam"
           "${identity.homeDirectory}/.steam-shared"
           "${identity.homeDirectory}/.steam"

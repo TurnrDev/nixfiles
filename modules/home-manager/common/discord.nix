@@ -17,7 +17,7 @@
         "borg2"
       ]
       (_: {
-        location.extraConfig.exclude_patterns = lib.mkAfter [
+        settings.exclude_patterns = lib.mkAfter [
           "${identity.homeDirectory}/.config/discord"
         ];
       });

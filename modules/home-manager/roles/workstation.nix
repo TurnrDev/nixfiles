@@ -32,7 +32,7 @@
         "borg2"
       ]
       (_: {
-        location.extraConfig.exclude_patterns = lib.mkAfter [
+        settings.exclude_patterns = lib.mkAfter [
           "${identity.homeDirectory}/.config/Code"
           "${identity.homeDirectory}/.config/GitKraken"
           "${identity.homeDirectory}/.gitkraken"

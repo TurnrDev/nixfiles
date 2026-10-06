@@ -3,6 +3,7 @@
 {
   imports = [
     ../../modules/home-manager/roles/laptop.nix
+    ../../modules/home-manager/roles/gaming.nix
     ../../modules/home-manager/hardware/amd.nix
   ];
 

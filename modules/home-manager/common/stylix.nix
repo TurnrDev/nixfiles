@@ -5,6 +5,10 @@
   # cursor to Home Manager. Keep only Home Manager-specific target choices.
   stylix.targets = {
     qt.enable = false;
+
+    # Rofi is not enabled on any host, and this Stylix target still uses
+    # Home Manager's deprecated `programs.rofi.font` option.
+    rofi.enable = false;
   };
 
   home.pointerCursor.enable = true;

@@ -5,7 +5,6 @@
 
 let
   pname = "es-de";
-  # renovate: datasource=custom.es-de depName=es-de versioning=semver
   version = "3.4.1";
   src = fetchurl {
     url = "https://gitlab.com/api/v4/projects/es-de%2Femulationstation-de/packages/generic/ES-DE_Stable/${version}/ES-DE_x64.AppImage";

@@ -33,7 +33,7 @@
       "description": "Update GitHub release binaries and their SHA-256 hashes",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^packages/(greenlight|kytyps5|sharpemu)/default\\.nix$/"
+        "/^packages/(designcraft|effectcraft|filmcraft|greenlight|kytyps5|lightcraft|photocraft|printcraft|sharpemu|vectorcraft)/default\\.nix$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\s+releaseTag = \\\"(?<currentValue>[^\\\"]+)\\\";[\\s\\S]*?sha256 = \\\"(?<currentDigest>[a-f0-9]{64})\\\";"

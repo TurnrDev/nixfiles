@@ -134,6 +134,7 @@
     gh
     jq
     libnotify
+    localsend
     mtr
     nano
     nixfmt

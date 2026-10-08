@@ -9,6 +9,7 @@
   imports = [
     ./default.nix
     ../common/default-apps.nix
+    ../common/codex.nix
     ../common/discord.nix
     inputs.dockmgr.homeManagerModules.default
     ../common/firefox.nix

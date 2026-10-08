@@ -220,7 +220,6 @@ in
     environment.systemPackages = with pkgs; [
       bibata-cursors
       cameractrls-gtk4
-      codex
       gimp
       gitkraken
       gnome-disk-utility

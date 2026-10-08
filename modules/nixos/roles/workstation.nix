@@ -12,6 +12,7 @@
 
 let
   hostName = config.networking.hostName;
+  avatar = ../../../assets/jay.png;
   hasPersonalFolders = lib.elem hostName config.my.syncthing.personalFolderHosts;
   hasWorkFolders = lib.elem hostName config.my.syncthing.workFolderHosts;
   hasAllFolders = hasPersonalFolders || hasWorkFolders;
@@ -63,6 +64,16 @@ in
   };
 
   config = {
+    # DMS reads the user icon from AccountsService.  Keep its standard icon
+    # location backed by the checked-in avatar so the desktop and greeter use
+    # the same image on every host.  Nix copies the source into /nix/store,
+    # so the link never points at the working tree.
+    services.accounts-daemon.enable = true;
+    systemd.tmpfiles.rules = [
+      "d /var/lib/AccountsService/icons 0755 root root -"
+      "L+ /var/lib/AccountsService/icons/${config.my.identity.username} - - - - ${avatar}"
+    ];
+
     programs.dockmgr.enable = true;
     # Use Hyprland's built-in UWSM session and let DMS remember whichever
     # session was chosen last, while still defaulting system-side to UWSM.

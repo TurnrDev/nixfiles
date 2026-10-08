@@ -9,6 +9,7 @@
 let
   settings = builtins.fromJSON (builtins.readFile ./settings.json);
   sessionTarget = config.wayland.systemd.target;
+  avatar = ../../../../assets/jay.png;
 in
 
 {
@@ -90,6 +91,10 @@ in
     # Needed for the Home Assistant Monitor plugin's websocket connection.
     qt6.qtwebsockets
   ];
+
+  # A widely supported per-user fallback.  DMS itself prefers
+  # AccountsService, while dms-greeter can sync this image into its cache.
+  home.file.".face".source = avatar;
 
   stylix.targets.dank-material-shell.enable = true;
 

@@ -2,6 +2,7 @@
   config,
   identity,
   lib,
+  osConfig,
   pkgs,
   ...
 }:
@@ -19,6 +20,7 @@ let
   gpgHome = toString config.programs.gpg.homedir;
   signingKey = "E4C8D6EEB05503E94B2896CA53C55D34138B4E04";
   signingSecretName = "git-signing-secret-key";
+  signingSecretPath = osConfig.sops.secrets.${signingSecretName}.path;
   importSigningKey = pkgs.writeShellScript "import-git-signing-key" ''
     set -eu
 
@@ -29,7 +31,7 @@ let
     fi
 
     ${gpgconf} --launch gpg-agent >/dev/null 2>&1 || true
-    ${gpg} --batch --import ${lib.escapeShellArg config.sops.secrets.${signingSecretName}.path}
+    ${gpg} --batch --import ${lib.escapeShellArg signingSecretPath}
   '';
 in
 lib.mkMerge [
@@ -62,15 +64,10 @@ lib.mkMerge [
       pinentry.package = pkgs.pinentry-qt;
     };
 
-    sops.secrets.${signingSecretName} = {
-      sopsFile = ../../../secrets/shared.yaml;
-    };
-
     systemd.user.services.import-git-signing-key = {
       Unit = {
         Description = "Import Git signing GPG key";
-        After = [ "sops-nix.service" ];
-        Requires = [ "sops-nix.service" ];
+        AssertPathExists = [ signingSecretPath ];
       };
       Service = {
         Type = "oneshot";

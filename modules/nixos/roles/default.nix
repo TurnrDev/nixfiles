@@ -10,6 +10,10 @@
   ...
 }:
 
+let
+  userSecretOwner = config.my.identity.username;
+  hostSecretsFile = ../../../secrets/hosts + "/${config.networking.hostName}.yaml";
+in
 {
   imports = [
     inputs.sops-nix.nixosModules.sops
@@ -104,12 +108,45 @@
     '';
   };
 
+  # Every host decrypts system and user-consumed secrets with its root-only
+  # OpenSSH host identity, which is available before /home is mounted.
   sops.age.sshKeyPaths = [
-    "${config.my.identity.homeDirectory}/.ssh/id_ed25519"
+    "/etc/ssh/ssh_host_ed25519_key"
   ];
 
-  sops.secrets.github-token = {
-    sopsFile = ../../../secrets/shared.yaml;
+  # Decrypt user-consumed secrets during system activation so Home Manager
+  # services never need access to a SOPS identity. The files remain readable
+  # only by their intended desktop user.
+  sops.secrets = {
+    github-token = {
+      sopsFile = ../../../secrets/shared.yaml;
+    };
+  }
+  // {
+    git-signing-secret-key = {
+      sopsFile = ../../../secrets/shared.yaml;
+      owner = userSecretOwner;
+      group = "users";
+      mode = "0400";
+    };
+    storagebox-borg-passphrase = {
+      sopsFile = hostSecretsFile;
+      owner = userSecretOwner;
+      group = "users";
+      mode = "0400";
+    };
+    ovh-borg2-s3-access-key-id = {
+      sopsFile = ../../../secrets/shared.yaml;
+      owner = userSecretOwner;
+      group = "users";
+      mode = "0400";
+    };
+    ovh-borg2-s3-secret-access-key = {
+      sopsFile = ../../../secrets/shared.yaml;
+      owner = userSecretOwner;
+      group = "users";
+      mode = "0400";
+    };
   };
 
   sops.templates."github-access-token.conf" = {
@@ -121,6 +158,18 @@
     group = "root";
     mode = "0400";
     restartUnits = [ "nix-daemon.service" ];
+  };
+
+  sops.templates."ovh-borg2-aws-credentials" = {
+    path = "/run/secrets/ovh-borg2-aws-credentials";
+    content = ''
+      [default]
+      aws_access_key_id=${config.sops.placeholder.ovh-borg2-s3-access-key-id}
+      aws_secret_access_key=${config.sops.placeholder.ovh-borg2-s3-secret-access-key}
+    '';
+    owner = userSecretOwner;
+    group = "users";
+    mode = "0400";
   };
 
   # List packages installed in system profile. To search, run:

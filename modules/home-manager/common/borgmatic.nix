@@ -40,23 +40,21 @@ let
   ];
 
   secretName = "storagebox-borg-passphrase";
-  secretFile = ../../../secrets/hosts/${hostName}.yaml;
-  sharedSecretFile = ../../../secrets/shared.yaml;
   ovhAccessKeySecretName = "ovh-borg2-s3-access-key-id";
   ovhSecretKeySecretName = "ovh-borg2-s3-secret-access-key";
   ovhCredentialsTemplateName = "ovh-borg2-aws-credentials";
-  ovhCredentialsPath = config.sops.templates.${ovhCredentialsTemplateName}.path;
+  ovhCredentialsPath = osConfig.sops.templates.${ovhCredentialsTemplateName}.path;
+  borgPassphrasePath = osConfig.sops.secrets.${secretName}.path;
   sshKeyPath = "${homeDirectory}/.ssh/id_ed25519";
   sshCommand = "ssh -i ${sshKeyPath} -o IdentitiesOnly=yes -p 23";
   borgmaticPackage = pkgs.borgmatic;
-  sopsPackage = pkgs.sops;
   commonBackup = {
     location.excludeHomeManagerSymlinks = true;
     settings = {
       source_directories = [ homeDirectory ];
       archive_name_format = "{hostname}-{utcnow}";
       exclude_patterns = defaultExcludePatterns;
-      encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.${secretName}.path}";
+      encryption_passcommand = "${pkgs.coreutils}/bin/cat ${borgPassphrasePath}";
       keep_hourly = 4;
       keep_daily = 7;
       keep_weekly = 4;
@@ -90,7 +88,6 @@ in
     }
     (lib.mkIf config.programs.borgmatic.enable {
       home.packages = [
-        sopsPackage
         borgPackage
         borg2Package
       ];
@@ -99,23 +96,6 @@ in
         AWS_DEFAULT_REGION = "gra";
         AWS_REGION = "gra";
         AWS_SHARED_CREDENTIALS_FILE = ovhCredentialsPath;
-      };
-
-      sops = {
-        age.sshKeyPaths = [ sshKeyPath ];
-        secrets = {
-          ${secretName}.sopsFile = secretFile;
-          ${ovhAccessKeySecretName}.sopsFile = sharedSecretFile;
-          ${ovhSecretKeySecretName}.sopsFile = sharedSecretFile;
-        };
-        templates.${ovhCredentialsTemplateName} = {
-          mode = "0400";
-          content = ''
-            [default]
-            aws_access_key_id=${config.sops.placeholder.${ovhAccessKeySecretName}}
-            aws_secret_access_key=${config.sops.placeholder.${ovhSecretKeySecretName}}
-          '';
-        };
       };
 
       programs.borgmatic = {
@@ -149,12 +129,10 @@ in
       };
 
       systemd.user.services.borgmatic = {
-        Unit = {
-          # Ensure the decrypted sops secret is mounted before borgmatic tries to
-          # read the shared encryption passphrase.
-          After = [ "sops-nix.service" ];
-          Requires = [ "sops-nix.service" ];
-        };
+        Unit.AssertPathExists = [
+          borgPassphrasePath
+          ovhCredentialsPath
+        ];
         Service.Environment = [
           "AWS_DEFAULT_REGION=gra"
           "AWS_REGION=gra"

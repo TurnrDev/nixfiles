@@ -57,35 +57,34 @@ shared base list stays focused on generic clutter.
 
 ## 2. Add The Host SSH Key To SOPS And Create Host Secrets
 
-After the new machine has generated `~/.ssh/id_ed25519`, commit its public key
-into the repo as `hosts/<hostname>/id_ed25519.pub`.
+Create the root-owned host key before the first configuration that decrypts
+system SOPS files:
 
-Convert that SSH public key to an age recipient:
+```sh
+sudo install -d -m 700 /etc/ssh
+if ! sudo test -e /etc/ssh/ssh_host_ed25519_key; then
+  sudo ssh-keygen -q -t ed25519 -N '' -f /etc/ssh/ssh_host_ed25519_key
+fi
+```
+
+Convert its public key to an age recipient:
 
 ```sh
 cd /etc/nixos
 nix shell nixpkgs#ssh-to-age --command sh -c \
-  'ssh-to-age < hosts/<hostname>/id_ed25519.pub'
-```
-
-From an existing authorized machine, ensure `sops` can decrypt by exporting an
-age key derived from your SSH private key:
-
-```sh
-mkdir -p ~/.config/sops/age
-nix shell nixpkgs#ssh-to-age --command ssh-to-age \
-  -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt
-chmod 600 ~/.config/sops/age/keys.txt
-export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
+  'ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub'
 ```
 
 Add the new recipient to `secrets/.sops.yaml`:
 
 - add a new key anchor under `keys:`
-- add/update a `creation_rules` entry for `hosts/<hostname>.yaml`
+- add it alongside recovery to the `shared.yaml`, `obojima-glyph.ttf.json`,
+  and `hosts/<hostname>.yaml` rules
 
-Important: do not replace existing recipients when adding a device. Add the new
-recipient alongside existing ones, otherwise older machines may lose access.
+The shared NixOS role already configures
+`/etc/ssh/ssh_host_ed25519_key` as the SOPS identity, so do not add a host
+override. The full consumer migration and validation process is documented in
+[secrets/SYSTEM_SOPS_BOOT_MIGRATION.md](secrets/SYSTEM_SOPS_BOOT_MIGRATION.md).
 
 Then create or update that host's secret file from a machine that can already
 decrypt and edit secrets:
@@ -108,14 +107,17 @@ cd /etc/nixos/secrets
 nix shell nixpkgs#sops --command sops updatekeys -y hosts/<hostname>.yaml
 ```
 
+Do not commit `~/.ssh/id_ed25519.pub`. Keep it local and distribute it directly
+to any external SSH service that needs it; it is not a SOPS recipient.
+
 Recommended flow for a new device:
 
-1. Rebuild the new host once so it creates `~/.ssh/id_ed25519`.
-2. Commit `hosts/<hostname>/id_ed25519.pub`.
-3. Add the new age recipient and host rule in `secrets/.sops.yaml`.
-4. Create/edit `secrets/hosts/<hostname>.yaml` with `sops`.
-5. Commit `secrets/.sops.yaml` and `secrets/hosts/<hostname>.yaml`.
-6. Rebuild the new machine again so it can decrypt its host secret file.
+1. Create the root-owned host key and derive its recipient.
+2. Add the host recipient and recovery recipient to `.sops.yaml` rules.
+3. Create/edit `secrets/hosts/<hostname>.yaml` from an already authorised host.
+4. Rewrap every affected file with `sops updatekeys -y`.
+5. Commit the encrypted metadata.
+6. Build, switch, and verify the system secret manifest before rebooting.
 
 ## 3. Apply The NixOS Config
 

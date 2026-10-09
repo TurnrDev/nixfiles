@@ -1,24 +1,18 @@
-{ config, pkgs, ... }:
+{ osConfig, pkgs, ... }:
 
 let
-  rcloneConfig = config.sops.secrets."rclone-gdrive-config".path;
+  rcloneConfig = osConfig.sops.secrets."rclone-gdrive-config".path;
 in
 {
   home.packages = [ pkgs.rclone ];
-
-  sops.secrets."rclone-gdrive-config" = {
-    sopsFile = ../../secrets/hosts/jay-mopo.yaml;
-    mode = "0400";
-  };
 
   systemd.user.services.rclone-gdrive = {
     Unit = {
       Description = "Mount Google Drive at ~/GDrive";
       After = [
-        "sops-nix.service"
         "network-online.target"
       ];
-      Requires = [ "sops-nix.service" ];
+      AssertPathExists = [ rcloneConfig ];
       Wants = [ "network-online.target" ];
     };
 

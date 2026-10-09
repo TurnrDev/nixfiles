@@ -2,11 +2,11 @@
 
 let
   # renovate: datasource=github-release-attachments depName=storytold/designcraft versioning=semver
-  releaseTag = "v0.2.1";
+  releaseTag = "v0.4.0";
 in
 callPackage ../crafting-apps/package.nix {
   pname = "designcraft";
   inherit releaseTag;
-  sha256 = "0a66a34192203d5f53d6a38e95c9f556396a12edc1b73f9e66c40b371e100970";
+  sha256 = "4c0b68c0dc62081e455bf8d60dd54f022ff1624359d5e10d06ca2b18d73d4bb3";
   description = "Native page layout and desktop publishing application";
 }

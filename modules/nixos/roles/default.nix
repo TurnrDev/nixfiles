@@ -143,6 +143,7 @@
     p7zip
     pciutils
     pwvucontrol
+    ripgrep
     sbctl
     screen
     smartmontools

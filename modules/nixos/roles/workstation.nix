@@ -238,7 +238,6 @@ in
       libreoffice
       nwg-displays
       postman
-      (pkgs.callPackage ../../../packages/photocraft { })
       plezy
       qview
       vlc

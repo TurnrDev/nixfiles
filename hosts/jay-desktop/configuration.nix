@@ -1,4 +1,6 @@
-{ pkgs, ... }:
+{
+  ...
+}:
 
 {
   imports = [
@@ -11,15 +13,6 @@
     ../../modules/nixos/hardware/keychron.nix
     ../../modules/nixos/hardware/logitech-mx-master-3s.nix
     ../../modules/nixos/roles/gaming.nix
-  ];
-
-  environment.systemPackages = [
-    (pkgs.callPackage ../../packages/designcraft { })
-    (pkgs.callPackage ../../packages/effectcraft { })
-    (pkgs.callPackage ../../packages/filmcraft { })
-    (pkgs.callPackage ../../packages/lightcraft { })
-    (pkgs.callPackage ../../packages/printcraft { })
-    (pkgs.callPackage ../../packages/vectorcraft { })
   ];
 
   networking = {

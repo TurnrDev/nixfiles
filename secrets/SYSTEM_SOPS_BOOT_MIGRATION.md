@@ -8,7 +8,7 @@ per-host Nix edits are needed.
 
 - [ ] `jay-desktop`
 - [ ] `jay-framework`
-- [ ] `jay-mopo`
+- [x] `jay-mopo`
 
 ## Runbook
 

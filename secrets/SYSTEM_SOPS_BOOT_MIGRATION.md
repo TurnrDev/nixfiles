@@ -47,7 +47,7 @@ cd /etc/nixos
 nix flake check
 nix build ".#nixosConfigurations.$(hostname).config.system.build.toplevel" --no-link
 sudo nixos-rebuild switch --flake ".#$(hostname)"
-sudo find /run/secrets -maxdepth 1 -type f -printf '%f %u:%g %m\n'
+sudo ls -l /run/secrets
 ```
 
 The switch must succeed and expected files must appear in `/run/secrets`. It
@@ -77,7 +77,7 @@ The second switch must succeed.
 Reboot normally. After login:
 
 ```sh
-sudo find /run/secrets -maxdepth 1 -type f -printf '%f %u:%g %m\n'
+sudo ls -l /run/secrets
 systemctl --user status borgmatic.service import-git-signing-key.service rclone-gdrive.service
 ```
 

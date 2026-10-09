@@ -2,6 +2,7 @@
 
 let
   rcloneConfig = osConfig.sops.secrets."rclone-gdrive-config".path;
+  runtimeConfig = "%t/rclone-gdrive/rclone.conf";
 in
 {
   home.packages = [ pkgs.rclone ];
@@ -18,10 +19,15 @@ in
 
     Service = {
       Type = "notify";
-      ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/GDrive";
+      RuntimeDirectory = "rclone-gdrive";
+      RuntimeDirectoryMode = "0700";
+      ExecStartPre = [
+        "${pkgs.coreutils}/bin/mkdir -p %h/GDrive"
+        "${pkgs.coreutils}/bin/install -m 0600 ${rcloneConfig} ${runtimeConfig}"
+      ];
       ExecStart = builtins.concatStringsSep " " [
         "${pkgs.rclone}/bin/rclone mount gdrive: %h/GDrive"
-        "--config ${rcloneConfig}"
+        "--config ${runtimeConfig}"
         "--vfs-cache-mode writes"
         "--dir-cache-time 1m"
         "--poll-interval 1m"

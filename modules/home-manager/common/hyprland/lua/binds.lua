@@ -75,6 +75,7 @@ end, { description = "Centred Master Layout (1:2:1)" })
 hl.bind("SUPER + SHIFT + bracketright", function()
 	layouts.master(layouts.ratios.two_to_three_to_two)
 end, { description = "Centred Master Layout (2:3:2)" })
+hl.bind("SUPER + M", hl.dsp.layout("swapwithmaster master"), { description = "Make Focused Window Master" })
 
 -- Zoom zoom. Used infrequently, but loved when used. Keep.
 hl.bind("SUPER + mouse_up", hl.dsp.exec_cmd(zoom_in), { description = "Zoom In" })

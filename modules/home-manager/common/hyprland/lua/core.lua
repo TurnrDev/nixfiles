@@ -5,8 +5,37 @@ hl.env("DMS_DANKBAR_LAYER", "overlay")
 hl.env("DMS_HIDE_TRAYIDS", "spotify")
 hl.env("QS_ICON_THEME", "Papirus")
 
+local master_ratios = {
+	one_to_two_to_one = 0.5,
+	two_to_three_to_two = 0.428571,
+}
+
+local last_master_ratio = master_ratios.one_to_two_to_one
+
+local function configure_master(ratio)
+	last_master_ratio = ratio or last_master_ratio
+
+	hl.config({
+		general = { layout = "master" },
+		master = {
+			orientation = "center",
+			mfact = last_master_ratio,
+			slave_count_for_center_master = 2,
+		},
+	})
+end
+
+local layouts = {
+	dwindle = function()
+		hl.config({ general = { layout = "dwindle" } })
+	end,
+	master = configure_master,
+	ratios = master_ratios,
+}
+
 hl.config({
 	general = {
+		layout = "dwindle",
 		gaps_in = 5,
 		gaps_out = 10,
 		border_size = 2,
@@ -78,3 +107,5 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("uwsm app -- spotify", { workspace = "9 silent" })
 	hl.exec_cmd("uwsm app -- discord", { workspace = "9 silent" })
 end)
+
+return layouts

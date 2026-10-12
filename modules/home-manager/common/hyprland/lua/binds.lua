@@ -1,9 +1,4 @@
-local function raw_dispatch(command)
-	return function()
-		hl.exec_cmd("hyprctl dispatch " .. command)
-	end
-end
--- hyprctl eval "hl.config({ cursor = { zoom_factor = $(hyprctl getoption cursor:zoom_factor | awk '/^float/ {print $2 * 0.9}') }})"
+local layouts = require("config.core")
 
 local zoom_in = 'hyprctl eval "hl.config({ cursor = { zoom_factor = $(hyprctl getoption cursor:zoom_factor -j | '
 	.. nix.pkgs.jq
@@ -19,90 +14,38 @@ hl.bind("SUPER + W", hl.dsp.exec_cmd("uwsm app -- firefox"), { description = "La
 hl.bind("SUPER + C", hl.dsp.exec_cmd("uwsm app -- code"), { description = "Launch IDE" })
 hl.bind("SUPER + G", hl.dsp.exec_cmd("uwsm app -- gitkraken"), { description = "Launch Git Client" })
 hl.bind("SUPER + T", hl.dsp.exec_cmd("uwsm app -- ghostty"), { description = "Launch Terminal" })
-hl.bind("SUPER + SHIFT + E", hl.dsp.exit(), { description = "Exit Hyprland" })
 
 -- Window management.
 hl.bind("SUPER + Q", hl.dsp.window.close(), { description = "Close Window" })
 hl.bind(
 	"SUPER + F",
 	hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }),
-	{ description = "Enter Fullscreen" }
+	{ description = "Maximise Window" }
 )
 hl.bind(
 	"SUPER + SHIFT + F",
 	hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }),
-	{ description = "Exit Fullscreen" }
+	{ description = "Toggle Fullscreen" }
+)
+hl.bind(
+	"SUPER + CTRL + F",
+	hl.dsp.window.fullscreen_state({
+		internal = 0,
+		client = 2,
+		action = "toggle",
+	}),
+	{ description = "Toggle Fake Fullscreen" }
+)
+hl.bind(
+	"SUPER + CTRL + SHIFT + F",
+	hl.dsp.window.fullscreen_state({
+		internal = 2,
+		client = 0,
+		action = "toggle",
+	}),
+	{ description = "Toggle Fullscreen Without Notifying Client" }
 )
 hl.bind("SUPER + SHIFT + T", hl.dsp.window.float({ action = "toggle" }), { description = "Toggle Floating" })
-
-hl.bind("SUPER + left", hl.dsp.focus({ direction = "l" }), { description = "Focus Left" })
-hl.bind("SUPER + down", hl.dsp.focus({ direction = "d" }), { description = "Focus Down" })
-hl.bind("SUPER + up", hl.dsp.focus({ direction = "u" }), { description = "Focus Up" })
-hl.bind("SUPER + right", hl.dsp.focus({ direction = "r" }), { description = "Focus Right" })
-hl.bind("SUPER + H", hl.dsp.focus({ direction = "l" }), { description = "Focus Left" })
-hl.bind("SUPER + J", hl.dsp.focus({ direction = "d" }), { description = "Focus Down" })
-hl.bind("SUPER + K", hl.dsp.focus({ direction = "u" }), { description = "Focus Up" })
-hl.bind("SUPER + L", hl.dsp.focus({ direction = "r" }), { description = "Focus Right" })
-
-hl.bind("SUPER + SHIFT + left", hl.dsp.window.move({ direction = "l" }), { description = "Move Window Left" })
-hl.bind("SUPER + SHIFT + down", hl.dsp.window.move({ direction = "d" }), { description = "Move Window Down" })
-hl.bind("SUPER + SHIFT + up", hl.dsp.window.move({ direction = "u" }), { description = "Move Window Up" })
-hl.bind("SUPER + SHIFT + right", hl.dsp.window.move({ direction = "r" }), { description = "Move Window Right" })
-hl.bind("SUPER + SHIFT + H", hl.dsp.window.move({ direction = "l" }), { description = "Move Window Left" })
-hl.bind("SUPER + SHIFT + J", hl.dsp.window.move({ direction = "d" }), { description = "Move Window Down" })
-hl.bind("SUPER + SHIFT + K", hl.dsp.window.move({ direction = "u" }), { description = "Move Window Up" })
-hl.bind("SUPER + SHIFT + L", hl.dsp.window.move({ direction = "r" }), { description = "Move Window Right" })
-hl.bind("SUPER + Home", hl.dsp.focus({ window = "first" }), { description = "Focus First Window" })
-hl.bind("SUPER + End", hl.dsp.focus({ window = "last" }), { description = "Focus Last Window" })
-
--- Monitor navigation.
-hl.bind("SUPER + CTRL + left", hl.dsp.focus({ monitor = "l" }), { description = "Focus Monitor Left" })
-hl.bind("SUPER + CTRL + right", hl.dsp.focus({ monitor = "r" }), { description = "Focus Monitor Right" })
-hl.bind("SUPER + CTRL + H", hl.dsp.focus({ monitor = "l" }), { description = "Focus Monitor Left" })
-hl.bind("SUPER + CTRL + J", hl.dsp.focus({ monitor = "d" }), { description = "Focus Monitor Down" })
-hl.bind("SUPER + CTRL + K", hl.dsp.focus({ monitor = "u" }), { description = "Focus Monitor Up" })
-hl.bind("SUPER + CTRL + L", hl.dsp.focus({ monitor = "r" }), { description = "Focus Monitor Right" })
-hl.bind(
-	"SUPER + SHIFT + CTRL + left",
-	hl.dsp.window.move({ monitor = "l" }),
-	{ description = "Move Window To Left Monitor" }
-)
-hl.bind(
-	"SUPER + SHIFT + CTRL + down",
-	hl.dsp.window.move({ monitor = "d" }),
-	{ description = "Move Window To Lower Monitor" }
-)
-hl.bind(
-	"SUPER + SHIFT + CTRL + up",
-	hl.dsp.window.move({ monitor = "u" }),
-	{ description = "Move Window To Upper Monitor" }
-)
-hl.bind(
-	"SUPER + SHIFT + CTRL + right",
-	hl.dsp.window.move({ monitor = "r" }),
-	{ description = "Move Window To Right Monitor" }
-)
-hl.bind(
-	"SUPER + SHIFT + CTRL + H",
-	hl.dsp.window.move({ monitor = "l" }),
-	{ description = "Move Window To Left Monitor" }
-)
-hl.bind(
-	"SUPER + SHIFT + CTRL + J",
-	hl.dsp.window.move({ monitor = "d" }),
-	{ description = "Move Window To Lower Monitor" }
-)
-hl.bind(
-	"SUPER + SHIFT + CTRL + K",
-	hl.dsp.window.move({ monitor = "u" }),
-	{ description = "Move Window To Upper Monitor" }
-)
-hl.bind(
-	"SUPER + SHIFT + CTRL + L",
-	hl.dsp.window.move({ monitor = "r" }),
-	{ description = "Move Window To Right Monitor" }
-)
-
 hl.bind("SUPER + 1", hl.dsp.focus({ workspace = "1" }), { description = "Workspace 1" })
 hl.bind("SUPER + 2", hl.dsp.focus({ workspace = "2" }), { description = "Workspace 2" })
 hl.bind("SUPER + 3", hl.dsp.focus({ workspace = "3" }), { description = "Workspace 3" })
@@ -123,21 +66,17 @@ hl.bind("SUPER + SHIFT + 8", hl.dsp.window.move({ workspace = "8" }), { descript
 hl.bind("SUPER + SHIFT + 9", hl.dsp.window.move({ workspace = "9" }), { description = "Move Window To Workspace 9" })
 
 -- Layout, resize, display power, and zoom.
-hl.bind("SUPER + F12", hl.dsp.exec_cmd("dockmgr once"), { description = "Apply DockMgr Profile" })
-hl.bind("SUPER + bracketleft", hl.dsp.layout("preselect l"), { description = "Preselect Left Column" })
-hl.bind("SUPER + bracketright", hl.dsp.layout("preselect r"), { description = "Preselect Right Column" })
-hl.bind("SUPER + R", hl.dsp.layout("togglesplit"), { description = "Toggle Split" })
-hl.bind(
-	"SUPER + code:20",
-	hl.dsp.window.resize({ x = -100, y = 0, relative = true }),
-	{ description = "Expand Window Left" }
-)
-hl.bind(
-	"SUPER + code:21",
-	hl.dsp.window.resize({ x = 100, y = 0, relative = true }),
-	{ description = "Shrink Window Left" }
-)
-hl.bind("SUPER + SHIFT + P", hl.dsp.dpms({ action = "toggle" }), { description = "Toggle DPMS" })
+hl.bind("SUPER + F12", hl.dsp.exec_cmd("dockmgr once"), { description = "Apply DockMgr Profile" }) -- Used regularly
+hl.bind("SUPER + bracketleft", layouts.dwindle, { description = "Switch To Dwindle Layout" })
+hl.bind("SUPER + bracketright", layouts.master, { description = "Switch To Centred Master Layout" })
+hl.bind("SUPER + SHIFT + bracketleft", function()
+	layouts.master(layouts.ratios.one_to_two_to_one)
+end, { description = "Centred Master Layout (1:2:1)" })
+hl.bind("SUPER + SHIFT + bracketright", function()
+	layouts.master(layouts.ratios.two_to_three_to_two)
+end, { description = "Centred Master Layout (2:3:2)" })
+
+-- Zoom zoom. Used infrequently, but loved when used. Keep.
 hl.bind("SUPER + mouse_up", hl.dsp.exec_cmd(zoom_in), { description = "Zoom In" })
 hl.bind("SUPER + mouse_down", hl.dsp.exec_cmd(zoom_out), { description = "Zoom Out" })
 hl.bind(
@@ -150,38 +89,19 @@ hl.bind("SUPER + minus", hl.dsp.exec_cmd(zoom_out), { description = "Zoom Out", 
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { description = "Move Window", mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { description = "Resize Window", mouse = true })
 
--- DMS shell actions. These stay in the repository rather than dms.binds.lua.
-hl.bind("SUPER + space", hl.dsp.exec_cmd("dms ipc call spotlight toggle"), { description = "Toggle Spotlight" })
-hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"), { description = "Toggle Clipboard" })
-hl.bind("SUPER + M", hl.dsp.exec_cmd("dms ipc call processlist focusOrToggle"), { description = "Open Process List" })
-hl.bind("SUPER + comma", hl.dsp.exec_cmd("dms ipc call settings focusOrToggle"), { description = "Open Settings" })
-hl.bind("SUPER + N", hl.dsp.exec_cmd("dms ipc call notifications toggle"), { description = "Toggle Notifications" })
-hl.bind("SUPER + SHIFT + N", hl.dsp.exec_cmd("dms ipc call notepad toggle"), { description = "Toggle Notepad" })
-hl.bind("SUPER + Y", hl.dsp.exec_cmd("dms ipc call dankdash wallpaper"), { description = "Change Wallpaper" })
+-- DMS shell actions
 hl.bind("SUPER + TAB", hl.dsp.exec_cmd("dms ipc call hypr toggleOverview"), { description = "Toggle Overview" })
-hl.bind("SUPER + X", hl.dsp.exec_cmd("dms ipc call powermenu toggle"), { description = "Toggle Power Menu" })
 hl.bind(
-	"SUPER + SHIFT + Slash",
+	"SUPER + Slash",
 	hl.dsp.exec_cmd("dms ipc call keybinds toggle hyprland"),
 	{ description = "Show Keybinds" }
 )
 hl.bind("SUPER + L", hl.dsp.exec_cmd("dms ipc call lock lock"), { description = "Lock Session" })
 hl.bind(
-	"CTRL + ALT + Delete",
-	hl.dsp.exec_cmd("dms ipc call processlist focusOrToggle"),
-	{ description = "Open Process List" }
-)
-hl.bind(
 	"CTRL + SHIFT + Escape",
 	hl.dsp.exec_cmd("dms ipc call processlist focusOrToggle"),
 	{ description = "Open Process List" }
 )
-hl.bind(
-	"SUPER + SHIFT + W",
-	hl.dsp.exec_cmd("dms ipc call window-rules toggle"),
-	{ description = "Toggle Window Rules" }
-)
-hl.bind("CTRL + SHIFT + R", hl.dsp.exec_cmd("dms ipc call workspace-rename open"), { description = "Rename Workspace" })
 hl.bind("Print", hl.dsp.exec_cmd("dms screenshot"), { description = "Take Screenshot" })
 hl.bind("CTRL + Print", hl.dsp.exec_cmd("dms screenshot full"), { description = "Take Full Screenshot" })
 hl.bind("ALT + Print", hl.dsp.exec_cmd("dms screenshot window"), { description = "Take Window Screenshot" })

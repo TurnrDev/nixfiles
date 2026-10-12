@@ -223,58 +223,133 @@ The Hetzner configuration is pinned to Borg 1.4.x locally and uses `borg-1.4`
 on the Storage Box side. The OVH configuration uses the latest packaged Borg 2
 beta and connects directly to its S3-compatible API.
 
-Create both Storage Box repositories manually once per host. This setup
-decrypts the host passphrase into the Home Manager `sops-nix` runtime symlink
-directory:
+Create both Storage Box repositories manually once per host. The system
+`sops-nix` activation must already have decrypted the Borg passphrase and OVH
+credentials into `/run/secrets`:
 
 ```sh
-export BORG_PASSPHRASE="$(cat "${HOME}/.config/sops-nix/secrets/storagebox-borg-passphrase")"
-bash -c '
-  borg init --remote-path borg-1.4 --encryption=repokey-blake2 \
-  ssh://u551190@u551190.your-storagebox.de:23/./$(hostname) && \
-  borg init --remote-path borg-1.4 --encryption=repokey-blake2 \
-  ssh://u650719@u650719.your-storagebox.de:23/./$(hostname)
-'
-unset BORG_PASSPHRASE
+test -r /run/secrets/storagebox-borg-passphrase
+test -r /run/secrets/ovh-borg2-aws-credentials
 ```
 
-Export both Borg 1.4 repository keys. Although the repositories share a
-passphrase, each repository has its own key. The exported keys remain encrypted
-and still require the original passphrase for recovery:
+Initialize the two Borg 1.4 Storage Box repositories:
 
 ```sh
 (
   set -euo pipefail
 
   unset BORG_PASSPHRASE BORG_PASSPHRASE_FD
-  export BORG_PASSCOMMAND="cat ${HOME}/.config/sops-nix/secrets/storagebox-borg-passphrase"
+  export BORG_PASSCOMMAND='cat /run/secrets/storagebox-borg-passphrase'
   export BORG_RSH="ssh -i ${HOME}/.ssh/id_ed25519 -o IdentitiesOnly=yes -p 23"
 
   host_name="$(hostname)"
-  key_file="$(mktemp)"
-  trap 'rm -f "$key_file"' EXIT
+
+  borg init --remote-path borg-1.4 --encryption=repokey-blake2 \
+    "ssh://u551190@u551190.your-storagebox.de:23/./${host_name}"
+
+  borg init --remote-path borg-1.4 --encryption=repokey-blake2 \
+    "ssh://u650719@u650719.your-storagebox.de:23/./${host_name}"
+)
+```
+
+Create the host's Borg 2 repository in the `borg-2` OVH bucket:
+
+```sh
+(
+  set -euo pipefail
+
+  unset BORG_PASSPHRASE BORG_PASSPHRASE_FD
+  export BORG_PASSCOMMAND='cat /run/secrets/storagebox-borg-passphrase'
+  export AWS_SHARED_CREDENTIALS_FILE=/run/secrets/ovh-borg2-aws-credentials
+  export AWS_DEFAULT_REGION=gra
+  export AWS_REGION=gra
+  export BORG_REPO="s3:https://s3.gra.io.cloud.ovh.net/borg-2/$(hostname)"
+
+  borg2 repo-create \
+    --encryption aes256-ocb \
+    --id-hash blake3 \
+    --key-location repokey
+
+  borg2 repo-info
+
+  # Optional: reserve about 1 GiB of billable object storage so Borg can still
+  # recover from a storage-full condition.
+  # borg2 repo-space --reserve 1G
+)
+```
+
+Export all three repository keys into the host's SOPS file. Although the
+repositories share a passphrase, every repository has its own key. The SOPS
+file uses the `age1...` identity derived from the root-owned OpenSSH host key,
+so convert that key with `ssh-to-age`; passing the raw SSH key directly to SOPS
+will not match the recipient.
+
+```sh
+(
+  set -euo pipefail
+
+  sudo -v
+
+  host_name="$(hostname)"
+  fsn1_key="$(mktemp)"
+  hel1_key="$(mktemp)"
+  ovh_key="$(mktemp)"
+  sops_identity="$(mktemp)"
+  trap 'rm -f "$fsn1_key" "$hel1_key" "$ovh_key" "$sops_identity"' EXIT
+
+  ssh_to_age_store="$(
+    nix build --no-link --print-out-paths nixpkgs#ssh-to-age
+  )"
+  sudo -n "${ssh_to_age_store}/bin/ssh-to-age" \
+    -private-key \
+    -i /etc/ssh/ssh_host_ed25519_key >"$sops_identity"
+
+  unset SOPS_AGE_SSH_PRIVATE_KEY_CMD SOPS_AGE_SSH_PRIVATE_KEY_FILE
+  export SOPS_AGE_KEY_FILE="$sops_identity"
+
+  unset BORG_PASSPHRASE BORG_PASSPHRASE_FD
+  export BORG_PASSCOMMAND='cat /run/secrets/storagebox-borg-passphrase'
+  export BORG_RSH="ssh -i ${HOME}/.ssh/id_ed25519 -o IdentitiesOnly=yes -p 23"
 
   borg key export \
     --remote-path borg-1.4 \
     "ssh://u551190@u551190.your-storagebox.de:23/./${host_name}" \
-    /dev/stdout >"$key_file"
-
-  jq -Rs . <"$key_file" \
-    | (cd /etc/nixos/secrets && \
-        sops set --value-stdin \
-          "hosts/${host_name}.yaml" \
-          '["hetzner-fsn1-borg1.4-repokey"]')
+    /dev/stdout >"$fsn1_key"
 
   borg key export \
     --remote-path borg-1.4 \
     "ssh://u650719@u650719.your-storagebox.de:23/./${host_name}" \
-    /dev/stdout >"$key_file"
+    /dev/stdout >"$hel1_key"
 
-  jq -Rs . <"$key_file" \
-    | (cd /etc/nixos/secrets && \
-        sops set --value-stdin \
-          "hosts/${host_name}.yaml" \
-          '["hetzner-hel1-borg1.4-repokey"]')
+  export AWS_SHARED_CREDENTIALS_FILE=/run/secrets/ovh-borg2-aws-credentials
+  export AWS_DEFAULT_REGION=gra
+  export AWS_REGION=gra
+  export BORG_REPO="s3:https://s3.gra.io.cloud.ovh.net/borg-2/${host_name}"
+
+  borg2 key export /dev/stdout >"$ovh_key"
+
+  cd /etc/nixos/secrets
+
+  jq -Rs . <"$fsn1_key" \
+    | sops set --value-stdin \
+        "hosts/${host_name}.yaml" \
+        '["hetzner-fsn1-borg1.4-repokey"]'
+
+  jq -Rs . <"$hel1_key" \
+    | sops set --value-stdin \
+        "hosts/${host_name}.yaml" \
+        '["hetzner-hel1-borg1.4-repokey"]'
+
+  jq -Rs . <"$ovh_key" \
+    | sops set --value-stdin \
+        "hosts/${host_name}.yaml" \
+        '["ovh-borg2-repokey"]'
+
+  sops decrypt "hosts/${host_name}.yaml" >/dev/null
+
+  rg -o \
+    '^(hetzner-(fsn1|hel1)-borg1\.4-repokey|ovh-borg2-repokey):' \
+    "hosts/${host_name}.yaml"
 )
 ```
 
@@ -284,40 +359,10 @@ decryptable after losing the host without requiring reuse of its operational
 SSH private key. See [`disaster-recovery.md`](disaster-recovery.md) for the
 recovery-key design and complete restore procedure.
 
-Create the host's Borg 2 repository in the `borg-2` OVH bucket after rebuilding
-so that the rendered S3 credentials and `borg2` executable are available:
-
-```sh
-export BORG_PASSPHRASE="$(cat "${HOME}/.config/sops-nix/secrets/storagebox-borg-passphrase")"
-export AWS_SHARED_CREDENTIALS_FILE="${HOME}/.config/sops-nix/secrets/rendered/ovh-borg2-aws-credentials"
-export AWS_DEFAULT_REGION=gra
-export AWS_REGION=gra
-export BORG_REPO="s3:https://s3.gra.io.cloud.ovh.net/borg-2/$(hostname)"
-
-borg2 repo-create \
-  --encryption aes256-ocb \
-  --id-hash blake3 \
-  --key-location repokey
-
-# Keep an encrypted recovery copy of the repokey outside the repository.
-borg2 key export /dev/stdout \
-  | jq -Rs . \
-  | (cd /etc/nixos/secrets && \
-      sops set --value-stdin "hosts/$(hostname).yaml" '["ovh-borg2-repokey"]')
-
-unset BORG_REPO AWS_REGION AWS_DEFAULT_REGION AWS_SHARED_CREDENTIALS_FILE BORG_PASSPHRASE
-```
-
-The exported key remains encrypted and still requires the host's existing Borg
-passphrase. Each host must initialize its own hostname prefix because host
-secret files are encrypted to that host's age recipient.
-
-If the passphrase or rendered credentials file is missing, start the user
-secret service first:
-
-```sh
-systemctl --user start sops-nix.service
-```
+The exported keys remain encrypted and still require the host's Borg
+passphrase. Each host must initialize its own hostname prefix. If either file
+under `/run/secrets` is missing, fix the system `sops-nix` activation before
+continuing; do not fall back to the retired Home Manager secret paths.
 
 If you want to confirm the versions first:
 

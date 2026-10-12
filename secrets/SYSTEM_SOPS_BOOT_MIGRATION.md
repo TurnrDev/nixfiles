@@ -7,7 +7,7 @@ per-host Nix edits are needed.
 ## Progress
 
 - [ ] `jay-desktop`
-- [ ] `jay-framework`
+- [x] `jay-framework`
 - [x] `jay-mopo`
 
 ## Runbook

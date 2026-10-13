@@ -21,7 +21,7 @@ local function configure_master(ratio)
 			orientation = "center",
 			mfact = last_master_ratio,
 			slave_count_for_center_master = 2,
-			center_master_fallback = "right"
+			center_master_fallback = "right",
 		},
 	})
 end

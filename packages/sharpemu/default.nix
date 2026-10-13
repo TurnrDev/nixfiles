@@ -28,7 +28,7 @@
 let
   pname = "sharpemu";
   # renovate: datasource=github-release-attachments depName=sharpemu/sharpemu versioning=loose
-  releaseTag = "v0.0.5-nexus";
+  releaseTag = "v0.0.5-nexus-release.2";
   version = lib.removePrefix "v" releaseTag;
   unwrapped = stdenvNoCC.mkDerivation {
     pname = "${pname}-unwrapped";
@@ -36,7 +36,7 @@ let
 
     src = fetchurl {
       url = "https://github.com/sharpemu/sharpemu/releases/download/${releaseTag}/sharpemu-${version}-linux-x64.tar.gz";
-      sha256 = "af9e7dbc3605c32b81b8031109e429fba721dad6c5c6522568f9ab34d92d4d1e";
+      sha256 = "0e238c8377119b67047042f1ff2f3e4c94960feaedf49a066467a72756e134f0";
     };
 
     sourceRoot = ".";

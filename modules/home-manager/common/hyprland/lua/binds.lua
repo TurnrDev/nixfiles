@@ -92,11 +92,7 @@ hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { description = "Resize Win
 
 -- DMS shell actions
 hl.bind("SUPER + TAB", hl.dsp.exec_cmd("dms ipc call hypr toggleOverview"), { description = "Toggle Overview" })
-hl.bind(
-	"SUPER + Slash",
-	hl.dsp.exec_cmd("dms ipc call keybinds toggle hyprland"),
-	{ description = "Show Keybinds" }
-)
+hl.bind("SUPER + Slash", hl.dsp.exec_cmd("dms ipc call keybinds toggle hyprland"), { description = "Show Keybinds" })
 hl.bind("SUPER + L", hl.dsp.exec_cmd("dms ipc call lock lock"), { description = "Lock Session" })
 hl.bind(
 	"CTRL + SHIFT + Escape",

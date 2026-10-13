@@ -40,8 +40,6 @@ let
   ];
 
   secretName = "storagebox-borg-passphrase";
-  ovhAccessKeySecretName = "ovh-borg2-s3-access-key-id";
-  ovhSecretKeySecretName = "ovh-borg2-s3-secret-access-key";
   ovhCredentialsTemplateName = "ovh-borg2-aws-credentials";
   ovhCredentialsPath = osConfig.sops.templates.${ovhCredentialsTemplateName}.path;
   borgPassphrasePath = osConfig.sops.secrets.${secretName}.path;

@@ -10,10 +10,14 @@
 
 let
   multiverse = inputs.multiverse.multiverse.${pkgs.stdenv.hostPlatform.system};
-  borgVersion = lib.last (
-    builtins.filter (version: lib.hasPrefix "1.4." version) (multiverse.versionsOf "borgbackup")
-  );
-  borgPackage = multiverse.version "borgbackup" borgVersion;
+  borgVersions = multiverse.versionsOf "borgbackup";
+  borg1Versions = builtins.filter (
+    version: lib.versionAtLeast version "1.4.0" && lib.versionOlder version "2.0.0"
+  ) borgVersions;
+  borg1Version = lib.last borg1Versions;
+  borg2Versions = builtins.filter (version: lib.versionAtLeast version "2.0.0") borgVersions;
+  borg2Version = if borg2Versions == [ ] then null else lib.last borg2Versions;
+  borg1Package = multiverse.version "borgbackup" borg1Version;
   borg2Package = pkgs.callPackage ../../../packages/borg2 { };
   inherit (identity) homeDirectory;
   hostName = osConfig.networking.hostName;
@@ -83,10 +87,13 @@ in
   config = lib.mkMerge [
     {
       programs.borgmatic.enable = lib.mkDefault true;
+      warnings = lib.optional (
+        borg2Version != null
+      ) "Borg Backup ${borg2Version} is available in Multiverse; replace borg2Package with that package.";
     }
     (lib.mkIf config.programs.borgmatic.enable {
       home.packages = [
-        borgPackage
+        borg1Package
         borg2Package
       ];
 
@@ -102,7 +109,7 @@ in
           "borg1.4" = lib.recursiveUpdate commonBackup {
             settings = {
               repositories = defaultRepositories;
-              local_path = lib.getExe borgPackage;
+              local_path = lib.getExe borg1Package;
               remote_path = "borg-1.4";
               ssh_command = sshCommand;
             };

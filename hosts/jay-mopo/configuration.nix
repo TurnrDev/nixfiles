@@ -8,6 +8,11 @@
 
 let
   mv = inputs.multiverse.multiverse.${pkgs.stdenv.hostPlatform.system};
+  borgVersion = lib.last (
+    builtins.filter (version: lib.versionAtLeast version "1.2.6" && lib.versionOlder version "2.0.0") (
+      mv.versionsOf "borgbackup"
+    )
+  );
 in
 {
   imports = [
@@ -105,18 +110,24 @@ in
     ];
   };
 
-  environment.systemPackages = with pkgs; [
-    android-studio
-    (mv.version "borgbackup" "1.2.0")
-    dbeaver-bin
-    (mv.version "go" "1.24.4")
-    jetbrains.idea
-    jetbrains.jdk
-    kotlin
-    (mv.version "nodejs" "24.15.0")
-    (mv.version "python3" "3.11.5")
-    python313
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      android-studio
+      dbeaver-bin
+      (mv.version "go" "1.24.4")
+      jetbrains.idea
+      jetbrains.jdk
+      kotlin
+      (mv.version "nodejs" "24.15.0")
+      (mv.version "python3" "3.11.5")
+      python313
+    ]
+    ++
+      lib.optionals (!config.home-manager.users.${config.my.identity.username}.programs.borgmatic.enable)
+        [
+          (mv.version "borgbackup" borgVersion)
+        ];
 
   users.users = lib.mkIf config.my.identity.enable {
     ${config.my.identity.username} = {

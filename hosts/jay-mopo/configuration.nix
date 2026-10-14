@@ -107,7 +107,7 @@ in
 
   environment.systemPackages = with pkgs; [
     android-studio
-    (mv.version "borgbackup" "1.4.5")
+    (mv.version "borgbackup" "1.2.0")
     dbeaver-bin
     (mv.version "go" "1.24.4")
     jetbrains.idea

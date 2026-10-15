@@ -36,6 +36,24 @@ _:
       "noatime"
     ];
   };
+  fileSystems."/tmp" = {
+    device = "/dev/mapper/cryptroot";
+    fsType = "btrfs";
+    options = [
+      "subvol=@/tmp"
+      "compress=zstd"
+      "noatime"
+    ];
+  };
+  fileSystems."/var/tmp" = {
+    device = "/dev/mapper/cryptroot";
+    fsType = "btrfs";
+    options = [
+      "subvol=@/var/tmp"
+      "compress=zstd"
+      "noatime"
+    ];
+  };
   fileSystems."/var/log" = {
     device = "/dev/mapper/cryptroot";
     fsType = "btrfs";

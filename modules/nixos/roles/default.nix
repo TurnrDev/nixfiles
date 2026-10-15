@@ -35,6 +35,9 @@ in
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  # Keep /tmp clean
+  boot.tmp.cleanOnBoot = true;
+
   # Enable networking
   networking.networkmanager.enable = true;
 

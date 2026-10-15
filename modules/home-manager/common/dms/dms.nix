@@ -10,12 +10,47 @@ let
   settings = builtins.fromJSON (builtins.readFile ./settings.json);
   sessionTarget = config.wayland.systemd.target;
   avatar = ../../../../assets/jay.png;
+  multiverse = inputs.multiverse.multiverse.${pkgs.stdenv.hostPlatform.system};
+  multiverseQtMultimediaVersion = multiverse.tip.qt6Packages.qtmultimedia.version;
+  qtMultimediaDeviceRemovalFix = final: prev: {
+    qt6 =
+      let
+        patchQt6 =
+          qt6:
+          (qt6.overrideScope (
+            _qtFinal: qtPrev: {
+              qtmultimedia = qtPrev.qtmultimedia.overrideAttrs (
+                oldAttrs:
+                lib.optionalAttrs (lib.versionOlder oldAttrs.version "6.12.1") {
+                  patches = (oldAttrs.patches or [ ]) ++ [
+                    (final.fetchurl {
+                      url = "https://github.com/qt/qtmultimedia/commit/8e7f6edf9a04d6c6484ecebca1227c06ec3b3640.patch";
+                      hash = "sha256-FyHzu2XYErN9LI14IuBJkJ6mJvnculTVdmcds//z+Tg=";
+                    })
+                  ];
+                }
+              );
+            }
+          ))
+          // {
+            override = args: patchQt6 (qt6.override args);
+          };
+      in
+      patchQt6 prev.qt6;
+  };
 in
 
 {
   imports = [
     inputs.dms.homeModules.dank-material-shell
   ];
+
+  # QTBUG-150678: Qt Multimedia's native PipeWire backend can use a freed
+  # stream when an audio device is removed. Qt 6.12.0 lacks this fix, so keep
+  # the backport through that release and omit it from Qt 6.12.1 onward.
+  nixpkgs.overlays = [ qtMultimediaDeviceRemovalFix ];
+
+  warnings = lib.optional (lib.versionAtLeast multiverseQtMultimediaVersion "6.12.1") "Qt Multimedia ${multiverseQtMultimediaVersion} is available at the Multiverse tip; remove the local device-removal overlay and update Nixpkgs to use Qt Multimedia ${multiverseQtMultimediaVersion}.";
 
   systemd.user.services.dms = {
     Unit = {

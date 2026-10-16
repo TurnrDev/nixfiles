@@ -26,6 +26,13 @@ in
 
   networking.hostName = "jay-mopo";
 
+  sops.secrets.rclone-gdrive-config = {
+    sopsFile = ../../secrets/hosts/jay-mopo.yaml;
+    owner = config.my.identity.username;
+    group = "users";
+    mode = "0400";
+  };
+
   my.displays = {
     internal = {
       width = 2880;

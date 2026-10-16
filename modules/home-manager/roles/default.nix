@@ -1,13 +1,9 @@
 {
-  inputs,
-  identity,
-  lib,
   ...
 }:
 
 {
   imports = [
-    inputs.sops-nix.homeManagerModules.sops
     ../common/borgmatic.nix
     ../common/identity.nix
     ../common/git.nix
@@ -24,12 +20,6 @@
   # changes in each release.
   home.stateVersion = "25.11";
   nixpkgs.config.allowUnfree = true;
-
-  sops.age.sshKeyPaths = lib.mkDefault [
-    "${identity.homeDirectory}/.ssh/id_ed25519"
-  ];
-
-  home.sessionVariables.SOPS_AGE_KEY_FILE = "${identity.homeDirectory}/.config/sops/age/keys.txt";
 
   programs.btop.enable = true;
 

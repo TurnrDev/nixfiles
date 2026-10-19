@@ -9,7 +9,8 @@
     ./hardware-configuration.nix
     ./storage.nix
     ../../modules/nixos/roles/desktop.nix
-    ../../modules/nixos/hardware/bluetooth.nix
+    ../../modules/nixos/roles/low-memory.nix
+    # ../../modules/nixos/hardware/bluetooth.nix
     ../../modules/nixos/hardware/keychron.nix
     ../../modules/nixos/hardware/logitech-mx-master-3s.nix
     ../../modules/nixos/roles/gaming.nix

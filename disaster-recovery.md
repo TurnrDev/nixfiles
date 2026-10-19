@@ -55,7 +55,7 @@ encrypted file's SOPS metadata. Adding it to `.sops.yaml` alone is not enough.
 - [x] `secrets/shared.yaml`
 - [x] `secrets/obojima-glyph.ttf.json`
 - [x] `secrets/hosts/jay-mopo.yaml`
-- [ ] `secrets/hosts/jay-framework.yaml`
+- [x] `secrets/hosts/jay-framework.yaml`
 - [x] `secrets/hosts/jay-desktop.yaml`
 
 Update each outstanding host file on the host that can currently decrypt it:

@@ -1,33 +1,33 @@
-{ config, pkgs, ... }:
+{ osConfig, pkgs, ... }:
 
 let
-  rcloneConfig = config.sops.secrets."rclone-gdrive-config".path;
+  rcloneConfig = osConfig.sops.secrets."rclone-gdrive-config".path;
+  runtimeConfig = "%t/rclone-gdrive/rclone.conf";
 in
 {
   home.packages = [ pkgs.rclone ];
-
-  sops.secrets."rclone-gdrive-config" = {
-    sopsFile = ../../secrets/hosts/jay-mopo.yaml;
-    mode = "0400";
-  };
 
   systemd.user.services.rclone-gdrive = {
     Unit = {
       Description = "Mount Google Drive at ~/GDrive";
       After = [
-        "sops-nix.service"
         "network-online.target"
       ];
-      Requires = [ "sops-nix.service" ];
+      AssertPathExists = [ rcloneConfig ];
       Wants = [ "network-online.target" ];
     };
 
     Service = {
       Type = "notify";
-      ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/GDrive";
+      RuntimeDirectory = "rclone-gdrive";
+      RuntimeDirectoryMode = "0700";
+      ExecStartPre = [
+        "${pkgs.coreutils}/bin/mkdir -p %h/GDrive"
+        "${pkgs.coreutils}/bin/install -m 0600 ${rcloneConfig} ${runtimeConfig}"
+      ];
       ExecStart = builtins.concatStringsSep " " [
         "${pkgs.rclone}/bin/rclone mount gdrive: %h/GDrive"
-        "--config ${rcloneConfig}"
+        "--config ${runtimeConfig}"
         "--vfs-cache-mode writes"
         "--dir-cache-time 1m"
         "--poll-interval 1m"

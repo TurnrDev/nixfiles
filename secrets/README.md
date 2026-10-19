@@ -6,6 +6,9 @@ This repo uses two scopes for secrets:
 - `shared.yaml`: same secret values for multiple machines.
 - `hosts/<hostname>.yaml`: host-specific values.
 
+For the separate migration that lets NixOS decrypt system secrets before
+`/home` is mounted, see [SYSTEM_SOPS_BOOT_MIGRATION.md](SYSTEM_SOPS_BOOT_MIGRATION.md).
+
 `.sops.yaml` lives in this directory, so run commands from `/etc/nixos/secrets`:
 
 ```sh
@@ -18,11 +21,14 @@ If `sops` is not installed globally, use:
 nix shell nixpkgs#sops --command sops <args...>
 ```
 
-Key setup (required once per machine)
--------------------------------------
+Legacy key setup (temporary migration aid)
+------------------------------------------
 
-This repo uses `age1...` recipients generated from SSH public keys. For editing
-with `sops`, create a local age private key file from your SSH private key:
+The following personal-key setup is only for files that still contain a legacy
+personal recipient during migration. New hosts and fully migrated hosts use
+the root-only OpenSSH host key instead; follow
+[SYSTEM_SOPS_BOOT_MIGRATION.md](SYSTEM_SOPS_BOOT_MIGRATION.md) for editing and
+recipient changes.
 
 ```sh
 mkdir -p ~/.config/sops/age
@@ -31,13 +37,8 @@ nix shell nixpkgs#ssh-to-age --command ssh-to-age \
 chmod 600 ~/.config/sops/age/keys.txt
 ```
 
-Home Manager exports the key path automatically for configured users. After the
-next rebuild, start a new login shell (or source
-`~/.nix-profile/etc/profile.d/hm-session-vars.sh`) before running `sops`:
-
-```sh
-echo "$SOPS_AGE_KEY_FILE"
-```
+Do not configure this identity in Home Manager. Once a host has been migrated,
+the personal identity must no longer decrypt its SOPS files.
 
 Example
 -------
@@ -175,13 +176,17 @@ In both cases, delete the key in the editor and save.
 Add a new host key
 ------------------
 
-1. Add the host SSH public key at `../hosts/<hostname>/id_ed25519.pub`.
-2. Convert it to an age recipient:
-   `ssh-to-age < ../hosts/<hostname>/id_ed25519.pub`
-3. Add it to `.sops.yaml` keys and creation rules.
-4. Create/edit `hosts/<hostname>.yaml` with `sops`.
-5. Refresh recipient metadata:
-   `sops updatekeys -y hosts/<hostname>.yaml`
+1. Create or identify the root-owned `/etc/ssh/ssh_host_ed25519_key` on the
+   target machine.
+2. Convert `/etc/ssh/ssh_host_ed25519_key.pub` to an age recipient.
+3. Add it plus recovery to the `.sops.yaml` shared, binary, and host-file
+   rules.
+4. The shared NixOS role already uses the host key; do not add a per-host Nix
+   override.
+5. Rewrap every affected file with `sops updatekeys -y`.
+
+Follow [SYSTEM_SOPS_BOOT_MIGRATION.md](SYSTEM_SOPS_BOOT_MIGRATION.md) for the
+complete ordered procedure and verification commands.
 
 Refresh recipient keys after `.sops.yaml` changes
 -------------------------------------------------
@@ -191,5 +196,6 @@ Run `updatekeys` on each managed secret file:
 ```sh
 cd /etc/nixos/secrets
 sops updatekeys -y shared.yaml
+sops updatekeys -y obojima-glyph.ttf.json
 sops updatekeys -y hosts/jay-framework.yaml
 ```

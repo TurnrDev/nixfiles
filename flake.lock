@@ -91,11 +91,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792175351,
-        "narHash": "sha256-daN7sEieSw7GRp2LCVVG2F85Xz4zQbhzm26BoO1NlJQ=",
+        "lastModified": 1792375164,
+        "narHash": "sha256-LA1i8uf5YobsbD3Hoxur9P69foBnbJo0aw0/05iwsMQ=",
         "owner": "AvengeMedia",
         "repo": "dank-greeter",
-        "rev": "a8b106330db763abd17bcb8eba2f58cb94ebf7a8",
+        "rev": "f2c2b71e9500996c1451418f17f0c72dbe0448ab",
         "type": "github"
       },
       "original": {
@@ -443,11 +443,11 @@
     },
     "multiverse": {
       "locked": {
-        "lastModified": 1792281746,
-        "narHash": "sha256-f8Q/HitbGHUgFSbkYbtEPpDumBbBZsE1gRNk1VElPsk=",
+        "lastModified": 1792371142,
+        "narHash": "sha256-NZjNPuDmudrJ2QjzhXQmLZpf6unuKPfp6UmzgK3FawA=",
         "owner": "fzakaria",
         "repo": "nixpkgs-multiverse",
-        "rev": "bd585901740ec83034030baba5e8bae542f4fd80",
+        "rev": "7869694141a277deae44808b0d14ecf8c952b749",
         "type": "github"
       },
       "original": {
@@ -488,11 +488,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1792277718,
-        "narHash": "sha256-Nv32eZ+x7qr/yKofkemv1O2ImnXkUpFQgq71u6c6Wi8=",
+        "lastModified": 1792354133,
+        "narHash": "sha256-ncYaCksO/r8PVWLWxWQWgAQvisy+UfWSYvBQszvzQwE=",
         "owner": "4evy",
         "repo": "nixcord",
-        "rev": "f4f803048d4bb6bc296fc4bdbd8620ff63fe100f",
+        "rev": "324115db0fe29255e7b4e2ea19ba6a30a393f016",
         "type": "github"
       },
       "original": {

@@ -529,11 +529,11 @@
     },
     "nixpkgs-gitsquid": {
       "locked": {
-        "lastModified": 1792492749,
+        "lastModified": 1792501966,
         "narHash": "sha256-wKf9GdiXIzM27M6aKl2k2EIzR/ZMxzY2XFthSPndKUs=",
         "owner": "TurnrDev",
         "repo": "nixpkgs",
-        "rev": "6038be4107e88bfd4c614c4d73cc7a0a593bbd9d",
+        "rev": "31bdce5b7d53d58664be0804d171f902fca78c88",
         "type": "github"
       },
       "original": {

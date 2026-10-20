@@ -21,6 +21,7 @@ in
   imports = [
     ./default.nix
     ./cad.nix
+    ./wallet.nix
     ../common/stylix.nix
     ../common/virtualisation.nix
     inputs.dockmgr.nixosModules.default
@@ -148,6 +149,7 @@ in
         [
           xdg-desktop-portal-hyprland
           kdePackages.xdg-desktop-portal-kde
+          kdePackages.kwallet
         ]
       );
       config = {

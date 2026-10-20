@@ -41,6 +41,7 @@ let
     "${homeDirectory}/.local/share/Trash"
     "${homeDirectory}/.thumbnails"
     "${homeDirectory}/Downloads"
+    "${homeDirectory}/Repos/nixpkgs"
   ];
 
   secretName = "storagebox-borg-passphrase";

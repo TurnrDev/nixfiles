@@ -90,7 +90,7 @@ hl.bind("SUPER + minus", hl.dsp.exec_cmd(zoom_out), { description = "Zoom Out", 
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { description = "Move Window", mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { description = "Resize Window", mouse = true })
 
--- DMS shell actions
+-- Dux shell actions. The v2 executable remains `dms` for compatibility.
 hl.bind("SUPER + TAB", hl.dsp.exec_cmd("dms ipc call hypr toggleOverview"), { description = "Toggle Overview" })
 hl.bind("SUPER + Slash", hl.dsp.exec_cmd("dms ipc call keybinds toggle hyprland"), { description = "Show Keybinds" })
 hl.bind("SUPER + L", hl.dsp.exec_cmd("dms ipc call lock lock"), { description = "Lock Session" })

@@ -25,35 +25,39 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixcord.url = "github:4evy/nixcord";
-    dms = {
-      url = "github:AvengeMedia/DankMaterialShell/stable";
+    dux = {
+      url = "github:duxlabs-dev/dux-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dank-greeter = {
-      url = "github:AvengeMedia/dank-greeter";
+    dux-greeter = {
+      url = "github:duxlabs-dev/dux-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dms-plugins = {
-      url = "github:AvengeMedia/dms-plugins";
+    dux-files = {
+      url = "github:duxlabs-dev/dux-files";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dux-plugins = {
+      url = "github:duxlabs-dev/dux-plugins";
       flake = false;
     };
-    dms-screenshot = {
+    dux-screenshot = {
       url = "github:JDKamalakar/DMS-Screenshot";
       flake = false;
     };
-    dms-plugin-hass = {
+    dux-plugin-hass = {
       url = "github:xxyangyoulin/dms-plugin-hass";
       flake = false;
     };
-    dms-plugin-docker-manager = {
+    dux-plugin-docker-manager = {
       url = "github:LuckShiba/DmsDockerManager";
       flake = false;
     };
-    dms-emoji-launcher = {
+    dux-emoji-launcher = {
       url = "github:devnullvoid/dms-emoji-launcher";
       flake = false;
     };
-    dms-plugin-tailscale = {
+    dux-plugin-tailscale = {
       url = "github:cglavin50/dms-tailscale";
       flake = false;
     };

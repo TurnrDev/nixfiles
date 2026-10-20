@@ -42,7 +42,7 @@ in
 
 {
   imports = [
-    inputs.dms.homeModules.dank-material-shell
+    inputs.dux.homeModules.dank-material-shell
   ];
 
   # QTBUG-150678: Qt Multimedia's native PipeWire backend can use a freed
@@ -62,7 +62,7 @@ in
     Service = {
       Restart = "on-failure";
       RestartSec = "2s";
-      # DMS only adds the QML imports bundled with its own wrapper.  User
+      # Dux only adds the QML imports bundled with its own wrapper.  User
       # packages are not searched automatically, so expose QtWebSockets to
       # the QML engine that loads the Home Assistant Monitor plugin.
       Environment = [
@@ -80,14 +80,14 @@ in
     plugins = {
       dankBatteryAlerts = {
         enable = lib.mkDefault false;
-        src = inputs."dms-plugins" + "/DankBatteryAlerts";
+        src = inputs."dux-plugins" + "/DankBatteryAlerts";
       };
-      dankKDEConnect.src = inputs."dms-plugins" + "/DankKDEConnect";
-      dankLauncherKeys.src = inputs."dms-plugins" + "/DankLauncherKeys";
-      dankNotepadModule.src = inputs."dms-plugins" + "/DankNotepadModule";
-      dmsScreenshot.src = inputs."dms-screenshot";
+      dankKDEConnect.src = inputs."dux-plugins" + "/DankKDEConnect";
+      dankLauncherKeys.src = inputs."dux-plugins" + "/DankLauncherKeys";
+      dankNotepadModule.src = inputs."dux-plugins" + "/DankNotepadModule";
+      dmsScreenshot.src = inputs."dux-screenshot";
       homeAssistantMonitor = {
-        src = inputs."dms-plugin-hass";
+        src = inputs."dux-plugin-hass";
         settings = {
           hassUrl = "https://assistant.home.turnr.net";
           hassTokenPath = "/run/secrets/hass_token";
@@ -95,22 +95,22 @@ in
         };
       };
       dockerManager = {
-        src = inputs."dms-plugin-docker-manager";
+        src = inputs."dux-plugin-docker-manager";
         settings = {
           terminalApp = "ghostty --hold";
           groupByCompose = true;
         };
       };
-      emojiLauncher.src = inputs."dms-emoji-launcher";
+      emojiLauncher.src = inputs."dux-emoji-launcher";
       tailscale = {
         enable = lib.mkDefault false;
-        src = inputs."dms-plugin-tailscale";
+        src = inputs."dux-plugin-tailscale";
       };
     };
 
     systemd = {
       enable = true; # Systemd service for auto-start
-      restartIfChanged = true; # Auto-restart dms.service when dank-material-shell changes
+      restartIfChanged = true; # Auto-restart the Dux compatibility service when its shell changes
     };
 
     # Core features
@@ -125,23 +125,14 @@ in
   home.packages = with pkgs; [
     # Needed for the Home Assistant Monitor plugin's websocket connection.
     qt6.qtwebsockets
+    # The standalone Dux file manager is published from its own flake.
+    inputs.dux-files.packages.${stdenv.hostPlatform.system}.default
   ];
 
-  # A widely supported per-user fallback.  DMS itself prefers
-  # AccountsService, while dms-greeter can sync this image into its cache.
+  # A widely supported per-user fallback.  Dux itself prefers AccountsService,
+  # while its greeter can sync this image into its cache.
   home.file.".face".source = avatar;
 
   stylix.targets.dank-material-shell.enable = true;
-
-  xdg.configFile =
-    let
-      enabledPlugins = lib.filterAttrs (
-        _: plugin: plugin.enable
-      ) config.programs.dank-material-shell.plugins;
-    in
-    lib.mapAttrs' (name: _: {
-      name = "DankMaterialShell/plugins/${name}";
-      value.force = true;
-    }) enabledPlugins;
 
 }

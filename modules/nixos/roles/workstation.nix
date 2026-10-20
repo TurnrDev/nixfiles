@@ -26,8 +26,8 @@ in
     ../common/stylix.nix
     ../common/virtualisation.nix
     inputs.dockmgr.nixosModules.default
-    inputs.dank-greeter.nixosModules.default
-    ../services/dms-home-assistant-monitor.nix
+    inputs.dux-greeter.nixosModules.default
+    ../services/dux-home-assistant-monitor.nix
   ];
 
   options.my.syncthing.personalDeviceList = lib.mkOption {
@@ -66,7 +66,7 @@ in
   };
 
   config = {
-    # DMS reads the user icon from AccountsService.  Keep its standard icon
+    # Dux reads the user icon from AccountsService.  Keep its standard icon
     # location backed by the checked-in avatar so the desktop and greeter use
     # the same image on every host.  Nix copies the source into /nix/store,
     # so the link never points at the working tree.
@@ -77,7 +77,7 @@ in
     ];
 
     programs.dockmgr.enable = true;
-    # Use Hyprland's built-in UWSM session and let DMS remember whichever
+    # Use Hyprland's built-in UWSM session and let Dux remember whichever
     # session was chosen last, while still defaulting system-side to UWSM.
     services.displayManager = {
       defaultSession = "hyprland-uwsm";

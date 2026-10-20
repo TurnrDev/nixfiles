@@ -18,7 +18,7 @@ let
   };
 in
 {
-  imports = [ ../dms/dms.nix ];
+  imports = [ ../dux/dux.nix ];
 
   home.packages = [
     pkgs.lua

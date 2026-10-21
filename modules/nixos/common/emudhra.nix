@@ -1,4 +1,9 @@
-{ lib, pkgs, repoLib, ... }:
+{
+  lib,
+  pkgs,
+  repoLib,
+  ...
+}:
 
 {
   # certificate-blacklist # remove-begin
@@ -16,8 +21,7 @@
       upstream CA bundle covers the required distrusts.
     ''
     # mozilla-ca-override # remove
-    ++ lib.optional (lib.versionAtLeast pkgs.emudhraUpstreamMozillaCA.version "20261020")
-      "nixos-unstable now provides Mozilla::CA 20261020 or later; remove # mozilla-ca-override.";
+    ++ lib.optional (lib.versionAtLeast pkgs.emudhraUpstreamMozillaCA.version "20261020") "nixos-unstable now provides Mozilla::CA 20261020 or later; remove # mozilla-ca-override.";
 
   nixpkgs.overlays = [
     (_final: prev: {

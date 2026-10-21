@@ -46,11 +46,10 @@ in
   networking.hostName = "jay-mopo";
 
   # go-override # remove
-  warnings = lib.optional (lib.versionAtLeast pkgs.go.version "1.26.10")
-    "nixos-unstable now provides Go 1.26.10 or later; remove # go-override."
-  # node-override # remove
-    ++ lib.optional (lib.versionAtLeast pkgs.nodejs_24.version "24.22.1")
-    "nixos-unstable now provides Node.js 24.22.1 or later; remove # node-override.";
+  warnings =
+    lib.optional (lib.versionAtLeast pkgs.go.version "1.26.10") "nixos-unstable now provides Go 1.26.10 or later; remove # go-override."
+    # node-override # remove
+    ++ lib.optional (lib.versionAtLeast pkgs.nodejs_24.version "24.22.1") "nixos-unstable now provides Node.js 24.22.1 or later; remove # node-override.";
 
   sops.secrets.rclone-gdrive-config = {
     sopsFile = ../../secrets/hosts/jay-mopo.yaml;

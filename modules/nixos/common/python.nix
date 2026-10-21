@@ -1,4 +1,9 @@
-{ lib, pkgs, repoLib, ... }:
+{
+  lib,
+  pkgs,
+  repoLib,
+  ...
+}:
 
 let
   # uv-override # remove-begin; delete packages/uv/default.nix
@@ -24,8 +29,7 @@ in
     lib.optional (lib.versionAtLeast pkgs.uv.version "0.13.4")
       "nixos-unstable now provides uv 0.13.4 or later; remove # uv-override."
     # pip-override # remove
-    ++ lib.optional (lib.versionAtLeast pkgs.python3Packages.pip.version "26.2.2")
-      "nixos-unstable now provides pip 26.2.2 or later; remove # pip-override.";
+    ++ lib.optional (lib.versionAtLeast pkgs.python3Packages.pip.version "26.2.2") "nixos-unstable now provides pip 26.2.2 or later; remove # pip-override.";
 
   programs.nix-ld = {
     enable = true;

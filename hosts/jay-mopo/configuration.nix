@@ -8,6 +8,17 @@
 
 let
   mv = inputs.multiverse.multiverse.${pkgs.stdenv.hostPlatform.system};
+  # go-override # remove-begin
+  goPatched = pkgs.go_1_26.overrideAttrs (
+    _finalAttrs: _previousAttrs: {
+      version = "1.26.10";
+      src = pkgs.fetchurl {
+        url = "https://go.dev/dl/go1.26.10.src.tar.gz";
+        hash = "sha256-/WPog7ovK/ypPBZGsx6+9j4rHk0rMXyXidl2po2B828=";
+      };
+    }
+  );
+  # go-override # remove-end
   borgVersion = lib.last (
     builtins.filter (version: lib.versionAtLeast version "1.2.6" && lib.versionOlder version "2.0.0") (
       mv.versionsOf "borgbackup"
@@ -25,6 +36,10 @@ in
   ];
 
   networking.hostName = "jay-mopo";
+
+  # go-override # remove
+  warnings = lib.optional (lib.versionAtLeast pkgs.go.version "1.26.10")
+    "nixos-unstable now provides Go 1.26.10 or later; remove # go-override.";
 
   sops.secrets.rclone-gdrive-config = {
     sopsFile = ../../secrets/hosts/jay-mopo.yaml;
@@ -122,7 +137,7 @@ in
     [
       android-studio
       dbeaver-bin
-      (mv.version "go" "1.24.4")
+      goPatched # go-override # go
       jetbrains.idea
       jetbrains.jdk
       kotlin

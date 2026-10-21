@@ -18,6 +18,7 @@ in
   imports = [
     inputs.sops-nix.nixosModules.sops
     ../common/gradle.nix
+    ../common/emudhra.nix
     ../common/identity.nix
     ../common/obojima-glyph.nix
     ../common/python.nix

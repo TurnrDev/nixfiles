@@ -36,10 +36,12 @@
       "gothCornerRadiusValue": 12,
       "gothCornersEnabled": false,
       "hideOnLastDisplay": false,
+      "hoverPopouts": false,
       "iconScale": 1,
       "id": "default",
       "innerPadding": 4,
       "island": true,
+      "islandAlongOffset": 0,
       "islandFloating": false,
       "islandHomeLayout": [
         {
@@ -71,12 +73,17 @@
           "id": "volume"
         }
       ],
+      "islandInteractionMode": "hybrid",
       "islandNotch": false,
+      "islandOuterGap": 4,
       "islandPlacement": "edge",
+      "islandRouteClipboard": "follow",
       "islandRouteControlCenter": "follow",
       "islandRouteDash": "island",
+      "islandRouteLauncher": "follow",
       "islandRouteMedia": "island",
       "islandRouteNotificationCenter": "follow",
+      "islandRoutePowerMenu": "follow",
       "islandRouteWallpaper": "island",
       "islandRouteWeather": "island",
       "islandSatelliteBackground": true,
@@ -152,7 +159,9 @@
           "showPrinterIcon": false
         }
       ],
-      "screenPreferences": ["all"],
+      "screenPreferences": [
+        "all"
+      ],
       "scrollEnabled": true,
       "scrollXBehavior": "focusWindow",
       "scrollYBehavior": "workspace",
@@ -324,7 +333,9 @@
           "showPrinterIcon": false
         }
       ],
-      "screenPreferences": ["all"],
+      "screenPreferences": [
+        "all"
+      ],
       "scrollEnabled": true,
       "scrollXBehavior": "focusWindow",
       "scrollYBehavior": "workspace",
@@ -507,51 +518,59 @@
   },
   "dashCards": [
     {
-      "col": 0,
-      "h": 1,
-      "id": "clock",
-      "row": 0,
-      "w": 3
-    },
-    {
       "h": 1,
       "id": "weather",
       "w": 1
     },
     {
-      "col": 3,
-      "h": 2,
-      "id": "media",
-      "row": 2,
-      "w": 3
-    },
-    {
-      "col": 3,
+      "col": 0,
       "h": 1,
-      "id": "sysmon",
-      "row": 1,
-      "w": 3
+      "id": "clock",
+      "row": 0,
+      "w": 1
     },
     {
       "col": 0,
       "h": 3,
-      "id": "notifications",
+      "id": "sysmon",
       "row": 1,
-      "w": 3
+      "w": 1
     },
     {
-      "col": 3,
+      "col": 1,
       "h": 1,
       "id": "user",
       "row": 0,
       "w": 3
+    },
+    {
+      "col": 1,
+      "h": 3,
+      "id": "media",
+      "row": 1,
+      "w": 5
+    },
+    {
+      "col": 4,
+      "h": 1,
+      "id": "wellbeing",
+      "row": 0,
+      "w": 2
     }
   ],
   "dashOptions": {
+    "media": {
+      "animatedArt": true,
+      "artStyle": "cookie"
+    },
     "overview": {
       "panelRows": 4
+    },
+    "user": {
+      "badge": false
     }
   },
+  "dashTabPosition": "auto",
   "dashTabs": [
     {
       "enabled": true,
@@ -583,7 +602,9 @@
     }
   ],
   "displayShowDisconnected": true,
-  "dmsWindowsFloatingSeeded": ["hyprland"],
+  "dmsWindowsFloatingSeeded": [
+    "hyprland"
+  ],
   "dockConfigs": [
     {
       "autoHide": false,
@@ -621,7 +642,9 @@
       "order": [],
       "position": 1,
       "restoreSpecialWorkspaceOnClick": false,
-      "screenPreferences": ["all"],
+      "screenPreferences": [
+        "all"
+      ],
       "separatePinnedAndRunningApps": false,
       "showOnFullscreen": false,
       "showOnLastDisplay": true,
@@ -662,7 +685,9 @@
         "autoPosition": true,
         "colorMode": "default",
         "customColor": "#ffffff",
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "showAnalogNumbers": false,
         "showAnalogSeconds": true,
         "showDate": false,
@@ -681,7 +706,9 @@
       "config": {
         "colorMode": "default",
         "customColor": "#ffffff",
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "format": "short",
         "syncPositionAcrossScreens": true
       },
@@ -691,7 +718,9 @@
     },
     {
       "config": {
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "passwordVisibility": "always",
         "profileVisibility": "always",
         "style": "expressive",
@@ -704,7 +733,9 @@
     {
       "config": {
         "background": false,
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "showMediaPlayer": true,
         "showWeather": true,
         "syncPositionAcrossScreens": true
@@ -715,7 +746,9 @@
     },
     {
       "config": {
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "shape": "round",
         "syncPositionAcrossScreens": true
       },
@@ -725,7 +758,9 @@
     },
     {
       "config": {
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "syncPositionAcrossScreens": true
       },
       "enabled": true,
@@ -745,7 +780,9 @@
         "autoPosition": true,
         "colorMode": "default",
         "customColor": "#ffffff",
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "showAnalogNumbers": false,
         "showAnalogSeconds": true,
         "showDate": false,
@@ -764,7 +801,9 @@
       "config": {
         "colorMode": "default",
         "customColor": "#ffffff",
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "format": "short",
         "syncPositionAcrossScreens": true
       },
@@ -774,7 +813,9 @@
     },
     {
       "config": {
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "passwordVisibility": "always",
         "profileVisibility": "always",
         "style": "expressive",
@@ -786,7 +827,9 @@
     },
     {
       "config": {
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "mode": 2,
         "syncPositionAcrossScreens": true
       },
@@ -797,7 +840,9 @@
     {
       "config": {
         "background": false,
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "showMediaPlayer": true,
         "showWeather": true,
         "syncPositionAcrossScreens": true
@@ -808,7 +853,9 @@
     },
     {
       "config": {
-        "displayPreferences": ["all"],
+        "displayPreferences": [
+          "all"
+        ],
         "shape": "round",
         "syncPositionAcrossScreens": true
       },
@@ -854,7 +901,9 @@
   "runDmsMatugenTemplates": false,
   "runUserMatugenTemplates": false,
   "screenPreferences": {
-    "wallpaper": ["all"]
+    "wallpaper": [
+      "all"
+    ]
   },
   "showWeekNumber": true,
   "terminalsAlwaysDark": true,

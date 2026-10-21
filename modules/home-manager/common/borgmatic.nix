@@ -5,20 +5,17 @@
   lib,
   osConfig,
   pkgs,
+  repoLib,
   ...
 }:
 
 let
   multiverse = inputs.multiverse.multiverse.${pkgs.stdenv.hostPlatform.system};
-  borgVersions = multiverse.versionsOf "borgbackup";
-  borg1Versions = builtins.filter (
-    version: lib.versionAtLeast version "1.4.0" && lib.versionOlder version "2.0.0"
-  ) borgVersions;
-  borg1Version = lib.last borg1Versions;
-  borg2Versions = builtins.filter (version: lib.versionAtLeast version "2.0.0") borgVersions;
-  borg2Version = if borg2Versions == [ ] then null else lib.last borg2Versions;
+  borg1Version = repoLib.versionBetween multiverse "borgbackup" "1.4.0" "2.0.0";
   borg1Package = multiverse.version "borgbackup" borg1Version;
-  borg2Package = pkgs.callPackage ../../../packages/borg2 { };
+  borg2Package = repoLib.multiverseVersionBetweenOrLocal multiverse "borgbackup" "2.0.0" "3.0.0" (
+    pkgs.callPackage ../../../packages/borg2 { }
+  );
   inherit (identity) homeDirectory;
   hostName = osConfig.networking.hostName;
   defaultRepositories = [
@@ -88,9 +85,6 @@ in
   config = lib.mkMerge [
     {
       programs.borgmatic.enable = lib.mkDefault true;
-      warnings = lib.optional (
-        borg2Version != null
-      ) "Borg Backup ${borg2Version} is available in Multiverse; replace borg2Package with that package.";
     }
     (lib.mkIf config.programs.borgmatic.enable {
       home.packages = [

@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, repoLib, ... }:
 
 let
   # uv-override # remove-begin; delete packages/uv/default.nix
@@ -48,11 +48,11 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    uvPatched # uv-override # uv
+    (repoLib.versionAtLeastOrLocal uv "0.13.4" uvPatched) # uv-override # uv
     ruff
     (python3.withPackages (
       ps: with ps; [
-        pipPatched # pip-override # pip
+        (repoLib.versionAtLeastOrLocal pip "26.2.2" pipPatched) # pip-override # pip
         requests
         virtualenv
       ]

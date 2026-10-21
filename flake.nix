@@ -84,12 +84,13 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      repoLib = import ./lib { lib = nixpkgs.lib; };
       treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
       mkHost =
         hostDirectory:
         nixpkgs.lib.nixosSystem {
           specialArgs = {
-            inherit inputs;
+            inherit inputs repoLib;
             homeModule = hostDirectory + "/home.nix";
           };
           modules = [

@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, repoLib, ... }:
 
 {
   # certificate-blacklist # remove-begin
@@ -26,16 +26,18 @@
 
       perlPackages = prev.perlPackages.overrideScope (
         _perlFinal: perlPrev: {
-          MozillaCA = perlPrev.MozillaCA.overrideAttrs (
-            _finalAttrs: _previousAttrs: {
-              name = "Mozilla-CA-20261020";
-              version = "20261020";
-              src = prev.fetchurl {
-                url = "mirror://cpan/authors/id/L/LW/LWP/Mozilla-CA-20261020.tar.gz";
-                hash = "sha256-Gu7ZekYzieWC4IXoLeA64L/6501Gz47kxRE0HlUIwh0=";
-              };
-              postPatch = "";
-            }
+          MozillaCA = repoLib.versionAtLeastOrLocal perlPrev.MozillaCA "20261020" (
+            perlPrev.MozillaCA.overrideAttrs (
+              _finalAttrs: _previousAttrs: {
+                name = "Mozilla-CA-20261020";
+                version = "20261020";
+                src = prev.fetchurl {
+                  url = "mirror://cpan/authors/id/L/LW/LWP/Mozilla-CA-20261020.tar.gz";
+                  hash = "sha256-Gu7ZekYzieWC4IXoLeA64L/6501Gz47kxRE0HlUIwh0=";
+                };
+                postPatch = "";
+              }
+            )
           );
         }
       );

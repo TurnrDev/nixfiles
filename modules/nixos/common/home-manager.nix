@@ -4,6 +4,7 @@
   lib,
   pkgs,
   homeModule,
+  repoLib,
   ...
 }:
 
@@ -35,7 +36,7 @@ in
   home-manager = {
     inherit backupCommand;
     extraSpecialArgs = {
-      inherit inputs;
+      inherit inputs repoLib;
       identity = config.my.identity;
     };
     users = lib.mkIf config.my.identity.enable {

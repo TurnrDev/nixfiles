@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  repoLib,
   ...
 }:
 
@@ -19,11 +20,18 @@ let
     }
   );
   # go-override # remove-end
-  borgVersion = lib.last (
-    builtins.filter (version: lib.versionAtLeast version "1.2.6" && lib.versionOlder version "2.0.0") (
-      mv.versionsOf "borgbackup"
-    )
+  # node-override # remove-begin
+  nodePatched = pkgs.nodejs_24.overrideAttrs (
+    _finalAttrs: _previousAttrs: {
+      version = "24.22.1";
+      src = pkgs.fetchurl {
+        url = "https://nodejs.org/dist/v24.22.1/node-v24.22.1.tar.xz";
+        hash = "sha256-T1N5eWKAza6wwvNY/QS2oWzE+336g7WoyRqdljtDUjE=";
+      };
+    }
   );
+  # node-override # remove-end
+  borgVersion = repoLib.versionBetween mv "borgbackup" "1.2.6" "2.0.0";
 in
 {
   imports = [
@@ -39,7 +47,10 @@ in
 
   # go-override # remove
   warnings = lib.optional (lib.versionAtLeast pkgs.go.version "1.26.10")
-    "nixos-unstable now provides Go 1.26.10 or later; remove # go-override.";
+    "nixos-unstable now provides Go 1.26.10 or later; remove # go-override."
+  # node-override # remove
+    ++ lib.optional (lib.versionAtLeast pkgs.nodejs_24.version "24.22.1")
+    "nixos-unstable now provides Node.js 24.22.1 or later; remove # node-override.";
 
   sops.secrets.rclone-gdrive-config = {
     sopsFile = ../../secrets/hosts/jay-mopo.yaml;
@@ -137,12 +148,12 @@ in
     [
       android-studio
       dbeaver-bin
-      goPatched # go-override # go
+      (repoLib.versionAtLeastOrLocal go "1.26.10" goPatched) # go-override # go
       jetbrains.idea
       jetbrains.jdk
       kotlin
-      (mv.version "nodejs" "24.15.0")
-      (mv.version "python3" "3.11.5")
+      (repoLib.multiverseVersionBetweenOrLocal mv "nodejs" "24.22.1" "25.0.0" nodePatched) # node-override # (mv.version "nodejs" (repoLib.versionBetween mv "nodejs" "24.22.1" "25.0.0"))
+      (mv.version "python3" (repoLib.versionBetween mv "python3" "3.11.5" "3.12.0"))
       python313
     ]
     ++

@@ -371,84 +371,37 @@
   "configVersion": 42,
   "controlCenterWidgets": [
     {
+      "col": 0,
       "enabled": true,
       "h": 1,
       "id": "user",
+      "row": 0,
       "w": 5
     },
     {
+      "col": 5,
       "enabled": true,
       "h": 1,
       "id": "settings",
+      "row": 0,
       "small": true,
       "w": 1
     },
     {
+      "col": 6,
       "enabled": true,
       "h": 1,
       "id": "lock",
+      "row": 0,
       "small": true,
       "w": 1
     },
     {
+      "col": 7,
       "enabled": true,
       "h": 1,
       "id": "power",
-      "small": true,
-      "w": 1
-    },
-    {
-      "enabled": true,
-      "h": 1,
-      "id": "volumeSlider",
-      "w": 4
-    },
-    {
-      "enabled": true,
-      "h": 1,
-      "id": "brightnessSlider",
-      "w": 4
-    },
-    {
-      "enabled": true,
-      "h": 1,
-      "id": "wifi",
-      "w": 4
-    },
-    {
-      "enabled": true,
-      "h": 1,
-      "id": "bluetooth",
-      "w": 4
-    },
-    {
-      "enabled": true,
-      "h": 1,
-      "id": "audioOutput",
-      "w": 4
-    },
-    {
-      "enabled": true,
-      "h": 1,
-      "id": "audioInput",
-      "w": 4
-    },
-    {
-      "enabled": true,
-      "h": 1,
-      "id": "darkMode",
-      "w": 4
-    },
-    {
-      "enabled": true,
-      "h": 1,
-      "id": "idleInhibitor",
-      "w": 4
-    },
-    {
-      "enabled": true,
-      "h": 1,
-      "id": "edit",
+      "row": 0,
       "small": true,
       "w": 1
     },
@@ -456,10 +409,82 @@
       "col": 0,
       "enabled": true,
       "h": 1,
-      "id": "runningApps",
-      "row": 6,
-      "small": true,
+      "id": "volumeSlider",
+      "row": 1,
       "w": 4
+    },
+    {
+      "col": 4,
+      "enabled": true,
+      "h": 1,
+      "id": "brightnessSlider",
+      "row": 1,
+      "w": 4
+    },
+    {
+      "col": 0,
+      "enabled": true,
+      "h": 1,
+      "id": "wifi",
+      "row": 2,
+      "w": 4
+    },
+    {
+      "col": 4,
+      "enabled": true,
+      "h": 1,
+      "id": "bluetooth",
+      "row": 2,
+      "w": 4
+    },
+    {
+      "col": 0,
+      "enabled": true,
+      "h": 1,
+      "id": "audioOutput",
+      "row": 3,
+      "w": 4
+    },
+    {
+      "col": 4,
+      "enabled": true,
+      "h": 1,
+      "id": "darkMode",
+      "row": 3,
+      "w": 1
+    },
+    {
+      "col": 6,
+      "enabled": true,
+      "h": 1,
+      "id": "idleInhibitor",
+      "row": 3,
+      "w": 1
+    },
+    {
+      "col": 0,
+      "enabled": true,
+      "h": 1,
+      "id": "edit",
+      "row": 4,
+      "small": true,
+      "w": 1
+    },
+    {
+      "col": 5,
+      "enabled": true,
+      "h": 1,
+      "id": "builtin_tailscale",
+      "row": 3,
+      "w": 1
+    },
+    {
+      "col": 7,
+      "enabled": true,
+      "h": 1,
+      "id": "doNotDisturb",
+      "row": 3,
+      "w": 1
     }
   ],
   "currentThemeCategory": "custom",

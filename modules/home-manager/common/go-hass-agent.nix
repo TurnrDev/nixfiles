@@ -2,7 +2,28 @@
 {
   home.packages = [ pkgs.go-hass-agent ];
 
-  # Run go-hass-agent continuously as a user service so it starts on login.
+  xdg.configFile."go-hass-agent/commands.toml".text = ''
+    [[button]]
+    name = "Reboot"
+    exec = "${pkgs.systemd}/bin/systemctl reboot"
+    icon = "mdi:restart"
+
+    [[button]]
+    name = "Power Off"
+    exec = "${pkgs.systemd}/bin/systemctl poweroff"
+    icon = "mdi:power"
+
+    [[button]]
+    name = "Suspend"
+    exec = "${pkgs.systemd}/bin/systemctl suspend"
+    icon = "mdi:power-sleep"
+
+    [[button]]
+    name = "Hibernate"
+    exec = "${pkgs.systemd}/bin/systemctl hibernate"
+    icon = "mdi:power"
+  '';
+
   systemd.user.services.go-hass-agent = {
     Unit = {
       Description = "go-hass-agent";
@@ -16,8 +37,6 @@
       RestartSec = 5;
     };
 
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
+    Install.WantedBy = [ "default.target" ];
   };
 }

@@ -24,6 +24,7 @@ in
     ./cad.nix
     ./wallet.nix
     ../common/stylix.nix
+    ../common/go-hass-agent.nix
     ../common/virtualisation.nix
     inputs.dockmgr.nixosModules.default
     inputs.dux-greeter.nixosModules.default

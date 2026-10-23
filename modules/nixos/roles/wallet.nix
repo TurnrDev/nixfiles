@@ -26,8 +26,9 @@ in
     hyprland."org.freedesktop.impl.portal.Secret" = [ "kwallet" ];
   };
 
-  # greetd delegates authentication and session setup to the login PAM stack.
-  security.pam.services.login.kwallet = {
+  # Dux logs in through greetd, so attach KWallet directly to the PAM service
+  # that receives the password and opens the graphical session.
+  security.pam.services.greetd.kwallet = {
     enable = true;
     forceRun = true;
   };

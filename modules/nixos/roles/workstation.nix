@@ -13,7 +13,6 @@
 let
   hostName = config.networking.hostName;
   avatar = ../../../assets/jay.png;
-  gitsquid = pkgs.callPackage "${inputs.nixpkgs-gitsquid}/pkgs/by-name/gi/gitsquid/package.nix" { };
   hasPersonalFolders = lib.elem hostName config.my.syncthing.personalFolderHosts;
   hasWorkFolders = lib.elem hostName config.my.syncthing.workFolderHosts;
   hasAllFolders = hasPersonalFolders || hasWorkFolders;
@@ -234,8 +233,7 @@ in
       bibata-cursors
       cameractrls-gtk4
       gimp
-      gitkraken
-      gitsquid
+      sourcegit
       gnome-disk-utility
       imagemagick
       jetbrains.pycharm

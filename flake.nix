@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    nixpkgs-gitsquid.url = "github:TurnrDev/nixpkgs?ref=gitsquid";
     # Historical Nixpkgs package sets, evaluated only when a version is selected.
     # Keep `nixpkgs` as the real base input: flake inputs that follow it require
     # the normal nixpkgs lib and legacyPackages interface.

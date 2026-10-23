@@ -562,22 +562,6 @@
         "url": "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst"
       }
     },
-    "nixpkgs-gitsquid": {
-      "locked": {
-        "lastModified": 1792501966,
-        "narHash": "sha256-wKf9GdiXIzM27M6aKl2k2EIzR/ZMxzY2XFthSPndKUs=",
-        "owner": "TurnrDev",
-        "repo": "nixpkgs",
-        "rev": "31bdce5b7d53d58664be0804d171f902fca78c88",
-        "type": "github"
-      },
-      "original": {
-        "owner": "TurnrDev",
-        "ref": "gitsquid",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-packages": {
       "locked": {
         "lastModified": 1791130267,
@@ -671,7 +655,6 @@
         "multiverse": "multiverse",
         "nixcord": "nixcord",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-gitsquid": "nixpkgs-gitsquid",
         "sops-nix": "sops-nix",
         "spicetify-nix": "spicetify-nix",
         "stylix": "stylix",

@@ -13,7 +13,7 @@
     ../hardware/keychron.nix
     ../hardware/logitech-mx-master-3s.nix
     ../common/dockmgr-laptop-monitors.nix
-    ../services/tailscale.nix
+    ../services/wireguard.nix
   ];
 
   # Enable touchpad support (enabled default in most desktopManager).

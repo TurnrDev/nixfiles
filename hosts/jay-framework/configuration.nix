@@ -16,6 +16,11 @@
 
   networking.hostName = "jay-framework";
 
+  my.wireguard.home = {
+    enable = true;
+    sopsFile = ../../secrets/hosts/jay-framework.yaml;
+  };
+
   my.displays.internal = {
     width = 2256;
     height = 1504;

@@ -58,6 +58,13 @@ in
     mode = "0400";
   };
 
+  services.tailscale.enable = true;
+
+  my.wireguard.home = {
+    enable = true;
+    sopsFile = ../../secrets/hosts/jay-mopo.yaml;
+  };
+
   my.displays = {
     internal = {
       width = 2880;

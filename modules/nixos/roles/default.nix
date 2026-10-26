@@ -13,6 +13,7 @@
 let
   userSecretOwner = config.my.identity.username;
   hostSecretsFile = ../../../secrets/hosts + "/${config.networking.hostName}.yaml";
+  hasHostSecrets = builtins.pathExists hostSecretsFile;
 in
 {
   imports = [
@@ -133,12 +134,6 @@ in
       group = "users";
       mode = "0400";
     };
-    storagebox-borg-passphrase = {
-      sopsFile = hostSecretsFile;
-      owner = userSecretOwner;
-      group = "users";
-      mode = "0400";
-    };
     ovh-borg2-s3-access-key-id = {
       sopsFile = ../../../secrets/shared.yaml;
       owner = userSecretOwner;
@@ -147,6 +142,14 @@ in
     };
     ovh-borg2-s3-secret-access-key = {
       sopsFile = ../../../secrets/shared.yaml;
+      owner = userSecretOwner;
+      group = "users";
+      mode = "0400";
+    };
+  }
+  // lib.optionalAttrs hasHostSecrets {
+    storagebox-borg-passphrase = {
+      sopsFile = hostSecretsFile;
       owner = userSecretOwner;
       group = "users";
       mode = "0400";

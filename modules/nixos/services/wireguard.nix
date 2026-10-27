@@ -95,7 +95,7 @@ in
         };
 
         wireguard = {
-          mtu = cfg.mtu;
+          inherit (cfg) mtu;
           peer-routes = true;
           private-key = "$WIREGUARD_HOME_PRIVATE_KEY";
           private-key-flags = 0;
@@ -103,7 +103,7 @@ in
 
         "wireguard-peer.${cfg.peerPublicKey}" = {
           allowed-ips = lib.concatStringsSep ";" cfg.allowedIPs;
-          endpoint = cfg.endpoint;
+          inherit (cfg) endpoint;
           persistent-keepalive = cfg.persistentKeepalive;
           preshared-key = "$WIREGUARD_HOME_PRESHARED_KEY";
           preshared-key-flags = 0;

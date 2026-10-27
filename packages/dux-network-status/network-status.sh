@@ -3,8 +3,8 @@
 set -u
 
 nm_profiles="$({
-  nmcli -t -f NAME,UUID,TYPE,DEVICE connection show 2>/dev/null \
-    | awk -F: '$3 == "vpn" || $3 == "wireguard"'
+  nmcli -t -f NAME,UUID,TYPE,DEVICE connection show 2>/dev/null |
+    awk -F: '$3 == "vpn" || $3 == "wireguard"'
 } | jq -Rsc '
   split("\n")
   | map(select(length > 0) | split(":")

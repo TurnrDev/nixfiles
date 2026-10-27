@@ -95,10 +95,16 @@
           "enabled": true,
           "id": "workspaceSwitcher",
           "maxWorkspaceIcons": 2,
+          "showOccupiedWorkspacesOnly": false,
+          "showSpecialWorkspaces": true,
           "showWorkspaceApps": true,
           "showWorkspaceIndex": true,
+          "showWorkspaceName": false,
           "showWorkspacePadding": true,
-          "workspaceFollowFocus": true
+          "workspaceFollowFocus": true,
+          "workspaceIndicatorCompact": false,
+          "workspaceIndicatorRoundness": -1,
+          "workspaceIndicatorStyle": "lines"
         },
         {
           "enabled": true,
@@ -138,11 +144,6 @@
         {
           "enabled": true,
           "id": "cpuUsage"
-        },
-        {
-          "enabled": true,
-          "id": "memUsage",
-          "showSwap": false
         },
         {
           "enabled": true,

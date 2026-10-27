@@ -1,0 +1,12 @@
+{
+  "id": "networkStatus",
+  "name": "VPN & Tailnet",
+  "description": "Manage local VPNs, WireGuard tunnels, and Tailscale tailnets.",
+  "version": "1.0.0",
+  "author": "Jay Turner",
+  "type": "widget",
+  "capabilities": ["control-center"],
+  "component": "./NetworkStatusWidget.qml",
+  "icon": "vpn_key",
+  "permissions": ["settings_read", "settings_write"]
+}

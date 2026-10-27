@@ -485,7 +485,7 @@
       "col": 5,
       "enabled": true,
       "h": 1,
-      "id": "builtin_tailscale",
+      "id": "plugin_networkStatus",
       "row": 3,
       "w": 1
     },

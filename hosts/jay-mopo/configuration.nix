@@ -63,6 +63,8 @@ in
   my.wireguard.home = {
     enable = true;
     sopsFile = ../../secrets/hosts/jay-mopo.yaml;
+    ipv4Address = "10.117.25.242/32";
+    ipv6Address = "fd00:7389:538a:05fd::4/64";
   };
 
   my.displays = {

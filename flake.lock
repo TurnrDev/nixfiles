@@ -259,22 +259,6 @@
         "type": "github"
       }
     },
-    "dux-plugin-tailscale": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1766981404,
-        "narHash": "sha256-cXuljANI8aO5cb7xwIs/ttucJD/y9s9PXuUw7LS+BGI=",
-        "owner": "cglavin50",
-        "repo": "dms-tailscale",
-        "rev": "f035c3a0923e5872f912fc9bd4cc0c7f161fbe2a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cglavin50",
-        "repo": "dms-tailscale",
-        "type": "github"
-      }
-    },
     "dux-plugins": {
       "flake": false,
       "locked": {
@@ -647,7 +631,6 @@
         "dux-greeter": "dux-greeter",
         "dux-plugin-docker-manager": "dux-plugin-docker-manager",
         "dux-plugin-hass": "dux-plugin-hass",
-        "dux-plugin-tailscale": "dux-plugin-tailscale",
         "dux-plugins": "dux-plugins",
         "dux-screenshot": "dux-screenshot",
         "home-manager": "home-manager",

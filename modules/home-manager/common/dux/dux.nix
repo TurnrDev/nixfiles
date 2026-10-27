@@ -102,9 +102,9 @@ in
         };
       };
       emojiLauncher.src = inputs."dux-emoji-launcher";
-      tailscale = {
+      networkStatus = {
         enable = lib.mkDefault false;
-        src = inputs."dux-plugin-tailscale";
+        src = ../../../../packages/dux-network-status;
       };
     };
 
@@ -123,6 +123,7 @@ in
   };
 
   home.packages = with pkgs; [
+    jq
     # Needed for the Home Assistant Monitor plugin's websocket connection.
     qt6.qtwebsockets
     # The standalone Dux file manager is published from its own flake.

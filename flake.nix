@@ -56,10 +56,6 @@
       url = "github:devnullvoid/dms-emoji-launcher";
       flake = false;
     };
-    dux-plugin-tailscale = {
-      url = "github:cglavin50/dms-tailscale";
-      flake = false;
-    };
     zsh-command-time = {
       url = "github:popstas/zsh-command-time";
       flake = false;

@@ -170,6 +170,27 @@ For `jay-framework`, the current layout is:
 - `/dev/nvme0n1p2` for the encrypted root volume
 - `/dev/nvme0n1p3` for a separate encrypted swap volume
 
+Label its GPT partitions once so the storage configuration can use the same
+stable paths as the other machines. Confirm the partition layout with `lsblk`
+before running these commands:
+
+`parted` is not installed permanently. Run it from a temporary Nix shell; the
+resolved store path is passed to `sudo`, so no root profile change is needed:
+
+```sh
+nix shell nixpkgs#parted -c sh -c '
+  sudo "$(command -v parted)" /dev/nvme0n1 name 1 nixos-efi
+  sudo "$(command -v parted)" /dev/nvme0n1 name 2 nixos-crypt
+  sudo "$(command -v parted)" /dev/nvme0n1 name 3 nixos-swap
+'
+```
+
+Verify the labels before rebuilding:
+
+```sh
+ls -l /dev/disk/by-partlabel/nixos-{efi,crypt,swap}
+```
+
 For `jay-mopo`, remove the TPM enrollment from its encrypted root volume:
 
 ```sh
@@ -181,9 +202,9 @@ were enrolled:
 
 ```sh
 sudo systemd-cryptenroll --wipe-slot=tpm2 \
-  /dev/disk/by-uuid/99292f4d-fda6-4bce-9ff5-f6b344d1e449
+  /dev/disk/by-partlabel/nixos-crypt
 sudo systemd-cryptenroll --wipe-slot=tpm2 \
-  /dev/disk/by-uuid/d5a84443-b5a5-485b-848e-8c50df120425
+  /dev/disk/by-partlabel/nixos-swap
 ```
 
 4. Rebuild the laptop configuration, then reboot and confirm that Plymouth

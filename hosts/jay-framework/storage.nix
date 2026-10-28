@@ -6,11 +6,11 @@ _:
     fsType = "ext4";
   };
   boot.initrd.luks.devices."luks-99292f4d-fda6-4bce-9ff5-f6b344d1e449".device =
-    "/dev/disk/by-uuid/99292f4d-fda6-4bce-9ff5-f6b344d1e449";
+    "/dev/disk/by-partlabel/nixos-crypt";
   boot.initrd.luks.devices."luks-d5a84443-b5a5-485b-848e-8c50df120425".device =
-    "/dev/disk/by-uuid/d5a84443-b5a5-485b-848e-8c50df120425";
+    "/dev/disk/by-partlabel/nixos-swap";
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/86A7-6521";
+    device = "/dev/disk/by-partlabel/nixos-efi";
     fsType = "vfat";
     options = [
       "fmask=0077"

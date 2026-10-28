@@ -4,7 +4,6 @@
 
 {
   imports = [
-    ../common/borgmatic.nix
     ../common/identity.nix
     ../common/git.nix
     ../common/zsh.nix

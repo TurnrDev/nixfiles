@@ -22,8 +22,11 @@ in
     ./default.nix
     ./cad.nix
     ./wallet.nix
+    ../common/borgmatic.nix
+    ../common/gradle.nix
     ../common/stylix.nix
     ../common/go-hass-agent.nix
+    ../common/obojima-glyph.nix
     ../common/virtualisation.nix
     inputs.dockmgr.nixosModules.default
     inputs.dux-greeter.nixosModules.default

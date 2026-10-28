@@ -11,10 +11,10 @@ let
   gitName = identity.fullName;
   gitEmail = identity.email;
   inherit (identity) homeDirectory;
+  reposDir = "${homeDirectory}/Repos";
   gpg = lib.getExe config.programs.gpg.package;
   gpgconf = lib.getExe' config.programs.gpg.package "gpgconf";
   sshKeygen = lib.getExe' pkgs.openssh "ssh-keygen";
-  reposDir = "${homeDirectory}/Repos";
   sshDir = "${homeDirectory}/.ssh";
   sshKeyPath = "${sshDir}/id_ed25519";
   gpgHome = toString config.programs.gpg.homedir;
@@ -78,7 +78,6 @@ lib.mkMerge [
 
     home.activation.createReposDirectory = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       run mkdir -p ${lib.escapeShellArg reposDir}
-      run ln -sfnT /etc/nixos ${lib.escapeShellArg reposDir}/nixos
     '';
   }
 

@@ -8,6 +8,8 @@
 {
   imports = [
     ./default.nix
+    ./builders.nix
+    ../common/borgmatic.nix
     ../common/default-apps.nix
     ../common/codex.nix
     ../common/discord.nix

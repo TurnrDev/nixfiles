@@ -18,10 +18,9 @@ in
 {
   imports = [
     inputs.sops-nix.nixosModules.sops
-    ../common/gradle.nix
+    ../common/authorized-keys.nix
     ../common/emudhra.nix
     ../common/identity.nix
-    ../common/obojima-glyph.nix
     ../common/python.nix
     ../common/systemd-boot.nix
   ];
@@ -134,18 +133,6 @@ in
       group = "users";
       mode = "0400";
     };
-    ovh-borg2-s3-access-key-id = {
-      sopsFile = ../../../secrets/shared.yaml;
-      owner = userSecretOwner;
-      group = "users";
-      mode = "0400";
-    };
-    ovh-borg2-s3-secret-access-key = {
-      sopsFile = ../../../secrets/shared.yaml;
-      owner = userSecretOwner;
-      group = "users";
-      mode = "0400";
-    };
   }
   // lib.optionalAttrs hasHostSecrets {
     storagebox-borg-passphrase = {
@@ -165,18 +152,6 @@ in
     group = "root";
     mode = "0400";
     restartUnits = [ "nix-daemon.service" ];
-  };
-
-  sops.templates."ovh-borg2-aws-credentials" = {
-    path = "/run/secrets/ovh-borg2-aws-credentials";
-    content = ''
-      [default]
-      aws_access_key_id=${config.sops.placeholder.ovh-borg2-s3-access-key-id}
-      aws_secret_access_key=${config.sops.placeholder.ovh-borg2-s3-secret-access-key}
-    '';
-    owner = userSecretOwner;
-    group = "users";
-    mode = "0400";
   };
 
   # List packages installed in system profile. To search, run:

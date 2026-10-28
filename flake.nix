@@ -72,6 +72,10 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -105,7 +109,7 @@
         jay-framework = mkHost ./hosts/jay-framework;
         jay-desktop = mkHost ./hosts/jay-desktop;
         jay-mopo = mkHost ./hosts/jay-mopo;
-        wyse-3040 = mkHost ./hosts/wyse-3040;
+        g9-switcher = mkHost ./hosts/g9-switcher;
 
         # Compatibility alias so plain `nixos-rebuild` works on hosts named "nixos".
         # nixos = mkHost ./hosts/<newhost>;

@@ -5,9 +5,8 @@
     inputs.lanzaboote.nixosModules.lanzaboote
   ];
 
-  # systemd in the initrd is what makes TPM-backed LUKS token unlocking work
-  # cleanly during boot once a volume has been enrolled with
-  # `systemd-cryptenroll`.
+  # Keep systemd in the initrd for the graphical, passphrase-based LUKS
+  # unlock flow managed by Plymouth.
   boot.initrd.systemd.enable = true;
   boot.lanzaboote = {
     enable = true;

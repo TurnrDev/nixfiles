@@ -5,7 +5,6 @@ _:
   boot.initrd.luks.devices."cryptroot" = {
     device = "/dev/disk/by-partlabel/nixos-crypt";
     allowDiscards = true;
-    crypttabExtraOpts = [ "tpm2-device=auto" ];
   };
   boot.supportedFilesystems = [ "btrfs" ];
 

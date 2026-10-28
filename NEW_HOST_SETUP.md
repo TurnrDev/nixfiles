@@ -130,19 +130,19 @@ sudo nixos-rebuild switch --flake /etc/nixos#<hostname>
 
 This generates the local SSH and GPG keys automatically when they are missing.
 
-## Optional: Secure Boot And TPM Drive Unlock Setup
+## Secure Boot And Passphrase Drive Unlock Setup
 
-Use this section when setting up Secure Boot and TPM-backed LUKS unlock on a
-new machine.
+Laptop boot uses a graphical Plymouth LUKS prompt instead of TPM-backed
+unlock. After entering the disk passphrase, the configured user is logged into
+the default Hyprland session automatically. Dux remains available as the
+graphical greeter after logout.
 
 Before you start:
 
 - This repo uses `lanzaboote`, stores Secure Boot keys under `/var/lib/sbctl`,
-  and enables `systemd` in the initrd.
-- Keep a normal passphrase or recovery path available for each LUKS volume
-  before changing TPM enrollment.
-- Decide whether you want TPM unlock for root only, or for root plus any
-  separate encrypted swap volume.
+  and enables `systemd` plus Plymouth in the initrd.
+- Keep a tested LUKS passphrase for every encrypted volume before removing a
+  TPM enrollment.
 
 1. Check the current boot and disk state:
 
@@ -162,44 +162,45 @@ sudo sbctl enroll-keys --microsoft
 sudo reboot now
 ```
 
-3. Identify the LUKS volume for root, and decide whether you also want TPM
-   enrollment on any separate encrypted swap volume.
+3. Identify every LUKS volume that may have a TPM enrollment. Remove only the
+   TPM token; this does not remove the normal passphrase keyslot.
 
 For `jay-framework`, the current layout is:
 
 - `/dev/nvme0n1p2` for the encrypted root volume
 - `/dev/nvme0n1p3` for a separate encrypted swap volume
 
-4. Choose the PCR policy deliberately before enrolling TPM.
-
-- Do not blindly reuse `0+2+7+12`.
-- `man systemd-cryptenroll` warns that PCRs `0` and `2` are more brittle
-  across firmware and hardware changes.
-- A less brittle starting point is usually some combination of `7` and `11`,
-  with `14` added when shim/MOK is part of the boot chain.
-
-5. Enroll the root LUKS volume into TPM:
+For `jay-mopo`, remove the TPM enrollment from its encrypted root volume:
 
 ```sh
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs='<chosen-pcrs>' \
-  --wipe-slot=tpm2 /dev/<root-luks-partition>
+sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/disk/by-partlabel/nixos-crypt
 ```
 
-6. If you also want TPM enrollment for a separate encrypted swap volume,
-   enroll that volume too:
+For `jay-framework`, remove TPM enrollment from both encrypted volumes if they
+were enrolled:
 
 ```sh
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs='<chosen-pcrs>' \
-  --wipe-slot=tpm2 /dev/<swap-luks-partition>
+sudo systemd-cryptenroll --wipe-slot=tpm2 \
+  /dev/disk/by-uuid/99292f4d-fda6-4bce-9ff5-f6b344d1e449
+sudo systemd-cryptenroll --wipe-slot=tpm2 \
+  /dev/disk/by-uuid/d5a84443-b5a5-485b-848e-8c50df120425
 ```
 
-7. Reboot and confirm the machine still unlocks as expected.
+4. Rebuild the laptop configuration, then reboot and confirm that Plymouth
+prompts for the LUKS passphrase and starts the desktop without a second login:
+
+```sh
+cd /etc/nixos
+sudo nixos-rebuild switch --flake /etc/nixos#<hostname>
+sudo reboot
+```
 
 Notes:
 
-- `--wipe-slot=tpm2` only replaces TPM-backed enrollments on that LUKS volume.
-- If unlock behavior becomes fragile after firmware or boot-chain changes,
-  revisit the PCR set rather than reusing an old command verbatim.
+- `--wipe-slot=tpm2` removes only TPM-backed enrollments on that volume; it
+  does not remove a passphrase keyslot.
+- Check the configured LUKS tokens before and after the change with
+  `sudo systemd-cryptenroll --dump /dev/<luks-volume>`.
 
 ## 4. Copy The SSH Key To Remote Machines
 

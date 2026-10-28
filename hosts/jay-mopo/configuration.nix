@@ -142,6 +142,8 @@ in
   # jay-mopo uses a Meteor Lake Intel iGPU. Use the generic modesetting stack
   # with Mesa plus Intel's current media/compute userspace drivers.
   services.xserver.videoDrivers = [ "modesetting" ];
+  # Plymouth needs early KMS to show the graphical LUKS prompt.
+  boot.initrd.kernelModules = [ "i915" ];
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [

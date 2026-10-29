@@ -14,11 +14,11 @@ Options:
   -a, --action ACTION     Activate non-interactively using: switch/s, boot/b,
                           test/t, or cancel/c.
   -H, --host HOST         NixOS configuration name (default: local hostname).
-  -t, --target-host HOST  Activate on HOST over SSH. Passed to
-                          `nixos-rebuild --target-host`.
-  -b, --build-host HOST   Build on HOST over SSH. Passed to
-                          `nixos-rebuild --build-host`; use the same host as
-                          --target-host to build and activate remotely.
+  -t, --target-host HOST  Activate the previewed system on HOST over SSH.
+  -b, --build-host HOST   Build the local flake on HOST over SSH, then copy the
+                          resulting candidate back for preview and deployment.
+      --remote-sudo       Use sudo to activate and clean up on a non-root
+                          --target-host.
   -h, --help              Show this help text.
 EOF
 }
@@ -43,11 +43,27 @@ normalize_action() {
   esac
 }
 
+ensure_dependencies() {
+  if [[ -n ${NIXOS_BUILD_AND_ACTIVATE_IN_NIX_SHELL:-} ]]; then
+    return
+  fi
+
+  local script_path quoted_script quoted_args
+  script_path="$(readlink -f "${BASH_SOURCE[0]}")"
+  printf -v quoted_script '%q' "$script_path"
+  printf -v quoted_args ' %q' "$@"
+
+  exec nix-shell -p nix nvd openssh --run \
+    "NIXOS_BUILD_AND_ACTIVATE_IN_NIX_SHELL=1 bash ${quoted_script}${quoted_args}"
+}
+
+original_args=("$@")
 skip_update=false
 action=""
 host="$(hostname)"
 target_host=""
 build_host=""
+remote_sudo=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -98,6 +114,9 @@ while [[ $# -gt 0 ]]; do
   --build-host=*)
     build_host="${1#*=}"
     ;;
+  --remote-sudo)
+    remote_sudo=true
+    ;;
   -h | --help)
     usage
     exit 0
@@ -120,6 +139,17 @@ if [[ -n $action ]]; then
   fi
 fi
 
+if [[ $action == cancel ]]; then
+  exit 0
+fi
+
+if [[ $remote_sudo == true && -z $target_host ]]; then
+  printf '%s requires --target-host.\n' "--remote-sudo" >&2
+  exit 2
+fi
+
+ensure_dependencies "${original_args[@]}"
+
 cd /etc/nixos
 
 if [[ $skip_update != true ]]; then
@@ -135,25 +165,44 @@ if ! nix eval "${flake}.drvPath" --raw >/dev/null; then
   exit 1
 fi
 
-if [[ -z $target_host && -z $build_host ]]; then
-  nix build "$flake" --show-trace --out-link "$build_dir/result"
-  nvd diff /run/current-system "$build_dir/result"
+candidate_link="$build_dir/result"
+if [[ -n $build_host ]]; then
+  (
+    cd "$build_dir"
+    nixos-rebuild build --flake "/etc/nixos#${host}" --build-host "$build_host" --show-trace
+  )
 else
-  printf 'Skipping local build preview; nixos-rebuild will use the requested SSH host(s).\n'
+  nix build "$flake" --show-trace --out-link "$candidate_link"
 fi
+
+candidate_system="$(readlink -f "$candidate_link")"
+
+current_system="/run/current-system"
+if [[ -n $target_host ]]; then
+  remote_system="$(ssh "$target_host" 'readlink -f /run/current-system')"
+  nix copy --from "ssh-ng://${target_host}" "$remote_system"
+  current_system="$remote_system"
+fi
+
+nvd diff "$current_system" "$build_dir/result"
 
 if [[ -z $action ]]; then
   printf 'Activate this build? [s]witch/[b]oot/[T]est/[c]ancel '
   read -r action
-  action="$(normalize_action "$action")"
+  if ! action="$(normalize_action "$action")"; then
+    printf 'Unknown action: %s\n' "$action" >&2
+    exit 2
+  fi
 fi
 
-rebuild_args=("$action" --flake . --show-trace)
+# Use the exact store path that was just built and previewed. This prevents a
+# second evaluation/build from changing what reaches the activation target.
+rebuild_args=("$action" --store-path "$candidate_system" --no-reexec --show-trace)
 if [[ -n $target_host ]]; then
   rebuild_args+=(--target-host "$target_host")
 fi
-if [[ -n $build_host ]]; then
-  rebuild_args+=(--build-host "$build_host")
+if [[ $remote_sudo == true ]]; then
+  rebuild_args+=(--elevate sudo)
 fi
 
 case "$action" in
@@ -173,4 +222,14 @@ cancel | "")
   ;;
 esac
 
-sudo nix-env --delete-generations 7d
+if [[ $action == switch || $action == boot ]]; then
+  if [[ -n $target_host ]]; then
+    if [[ $remote_sudo == true ]]; then
+      ssh "$target_host" 'sudo nix-collect-garbage --delete-older-than 7d'
+    else
+      ssh "$target_host" 'nix-collect-garbage --delete-older-than 7d'
+    fi
+  else
+    sudo nix-collect-garbage --delete-older-than 7d
+  fi
+fi

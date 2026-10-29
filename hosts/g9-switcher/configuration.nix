@@ -1,9 +1,9 @@
-{ inputs, lib, ... }:
+{ lib, ... }:
 
 {
   imports = [
-    inputs.disko.nixosModules.disko
-    ./disko.nix
+    ./hardware-configuration.nix
+    ./storage.nix
     ../../modules/nixos/roles/default.nix
   ];
 
@@ -13,20 +13,10 @@
   # hosts. The Wyse installer uses the standard UEFI systemd-boot path.
   boot.lanzaboote.enable = lib.mkForce false;
   boot.loader.systemd-boot.enable = lib.mkForce true;
-
-  # Keep the TF card adapter available during boot and after installation.
-  boot.initrd.availableKernelModules = [
-    "mmc_block"
-    "sdhci"
-    "sdhci_acpi"
-    "sdhci_pci"
-  ];
-  boot.kernelModules = [
-    "mmc_block"
-    "sdhci"
-    "sdhci_acpi"
-    "sdhci_pci"
-  ];
+  boot.loader.efi = {
+    canTouchEfiVariables = true;
+    efiSysMountPoint = "/boot";
+  };
 
   hardware.enableAllFirmware = true;
 }

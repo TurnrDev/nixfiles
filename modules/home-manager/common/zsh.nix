@@ -23,7 +23,7 @@
     fzf
     (writeShellApplication {
       name = "nixos-build-and-activate";
-      runtimeInputs = [ nvd ];
+      runtimeInputs = [ nix nvd openssh ];
       text = builtins.readFile ../../../scripts/nixos-build-and-activate.sh;
     })
   ];

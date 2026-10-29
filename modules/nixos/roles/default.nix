@@ -194,6 +194,7 @@ in
       extraGroups = [
         "adbusers"
         "docker"
+        "wheel"
       ];
     };
   };

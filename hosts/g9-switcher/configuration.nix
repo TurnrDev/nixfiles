@@ -21,10 +21,19 @@
 
   hardware.enableAllFirmware = true;
 
+  # This is a DDC controller, not a desktop. The default role is console-only;
+  # leave the forced DRM framebuffer on a text console. Avoiding a display
+  # manager also avoids it powering down or reconfiguring the connector behind
+  # monitor-switch's local_video guard.
+  systemd.defaultUnit = "multi-user.target";
+
   # `D` keeps the HDMI connector enabled even when the G9 does not provide an
   # EDID. It is necessary for monitor-switch's local_video safety guard; the
   # requested resolution may still fall back when the EDID is absent.
-  boot.kernelParams = [ "video=HDMI-A-3:1920x1080@60D" ];
+  boot.kernelParams = [
+    "video=HDMI-A-3:1920x1080@60D"
+    "consoleblank=0"
+  ];
 
   sops.secrets.monitorctl-mqtt = {
     # This value is a systemd EnvironmentFile containing

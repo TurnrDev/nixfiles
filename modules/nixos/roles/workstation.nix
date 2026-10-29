@@ -68,6 +68,22 @@ in
   };
 
   config = {
+    # Interactive hosts provide a Wayland session and local sound stack. Xorg
+    # stays disabled; Xwayland supports the remaining legacy X11 applications
+    # inside Hyprland without running an X display server.
+    services.xserver = {
+      enable = false;
+      xkb.layout = "gb";
+    };
+    services.pulseaudio.enable = false;
+    security.rtkit.enable = true;
+    services.pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
+
     # Dux reads the user icon from AccountsService.  Keep its standard icon
     # location backed by the checked-in avatar so the desktop and greeter use
     # the same image on every host.  Nix copies the source into /nix/store,
@@ -178,11 +194,6 @@ in
     environment.etc."xdg/menus/applications.menu".source =
       "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
 
-    # Configure keymap in X11
-    services.xserver.xkb = {
-      layout = "gb";
-    };
-
     # Enable CUPS to print documents.
     services.avahi.enable = true;
     services.printing.enable = true;
@@ -217,6 +228,7 @@ in
 
     programs.hyprland = {
       enable = true;
+      xwayland.enable = true;
       withUWSM = true;
     };
     programs.foot = {
@@ -249,10 +261,12 @@ in
       kdePackages.kio-fuse
       kdePackages.qtsvg
       libreoffice
+      libnotify
       nwg-displays
       postman
       plezy
       qview
+      pwvucontrol
       vlc
     ];
 

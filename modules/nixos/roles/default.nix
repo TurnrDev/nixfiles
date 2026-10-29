@@ -67,36 +67,11 @@ in
     LC_TIME = "en_GB.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = true;
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "gb";
-  };
-
   # Use the XKB layout/variant for the TTY and initrd so the early LUKS
   # unlock prompt matches the desktop keyboard layout.
   console = {
     useXkbConfig = true;
     earlySetup = true;
-  };
-
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
 
   programs.zsh.enable = true;
@@ -177,7 +152,6 @@ in
     file
     gh
     jq
-    libnotify
     localsend
     mtr
     nano
@@ -186,7 +160,6 @@ in
     nmap
     p7zip
     pciutils
-    pwvucontrol
     ripgrep
     sbctl
     screen

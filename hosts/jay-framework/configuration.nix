@@ -34,8 +34,6 @@
     variant = "colemak";
   };
 
-  # Framework laptop has an AMD Radeon iGPU; pin the matching stack explicitly.
-  services.xserver.videoDrivers = [ "amdgpu" ];
   # Plymouth needs early KMS to show the graphical LUKS prompt.
   boot.initrd.kernelModules = [ "amdgpu" ];
   hardware.graphics = {

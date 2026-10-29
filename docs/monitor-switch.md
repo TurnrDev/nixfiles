@@ -32,6 +32,10 @@ be assessed. The requested pixels can fall back when the G9 withholds EDID;
 the successful condition is instead `connected`, `enabled`, `dpms On`, a live
 framebuffer, and `local_video: true` from the API.
 
+The controller intentionally boots to `multi-user.target` with X11 disabled.
+The DRM framebuffer remains on a normal TTY, and `consoleblank=0` prevents the
+console from blanking the HDMI output. No display manager is used.
+
 ## MQTT and credentials
 
 The bottom G9 uses node ID `g9_bottom`. Upstream consequently publishes retained

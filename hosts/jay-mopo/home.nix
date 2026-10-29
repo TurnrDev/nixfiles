@@ -28,6 +28,7 @@ in
 {
   imports = [
     ../../modules/home-manager/roles/laptop.nix
+    ./grafana.nix
     ./google-drive.nix
   ];
 

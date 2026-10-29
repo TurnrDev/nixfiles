@@ -208,7 +208,7 @@ sudo systemd-cryptenroll --wipe-slot=tpm2 \
 ```
 
 4. Rebuild the laptop configuration, then reboot and confirm that Plymouth
-prompts for the LUKS passphrase and starts the desktop automatically:
+prompts for the LUKS passphrase and starts the desktop without a second login:
 
 ```sh
 cd /etc/nixos

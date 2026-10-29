@@ -22,8 +22,9 @@
   services.upower.enable = true;
   services.power-profiles-daemon.enable = true;
 
-  # Dux's greetd module turns this into greetd's initial session. The normal
-  # Dux greeter remains available after logout or session failure.
+  # The LUKS passphrase is the only login required at boot.  Dux's greetd
+  # module turns this into greetd's initial session, while retaining the Dux
+  # login screen for explicit logins after logout or session failure.
   services.displayManager.autoLogin = {
     enable = true;
     user = config.my.identity.username;

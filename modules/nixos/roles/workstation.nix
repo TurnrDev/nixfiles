@@ -21,6 +21,7 @@ in
   imports = [
     ./default.nix
     ./cad.nix
+    ./wallet.nix
     ../common/borgmatic.nix
     ../common/gradle.nix
     ../common/stylix.nix
@@ -152,6 +153,7 @@ in
         [
           xdg-desktop-portal-hyprland
           kdePackages.xdg-desktop-portal-kde
+          kdePackages.kwallet
           inputs.dux-files.packages.${stdenv.hostPlatform.system}.default
         ]
       );

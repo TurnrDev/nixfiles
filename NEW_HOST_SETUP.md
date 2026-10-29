@@ -94,7 +94,9 @@ cd /etc/nixos/secrets
 nix shell nixpkgs#sops --command sops hosts/<hostname>.yaml
 ```
 
-Set `storagebox-borg-passphrase` in that file.
+If the host enables Borgmatic, set `storagebox-borg-passphrase` in that file.
+Monitor-only and other non-Borgmatic hosts can keep their host-specific secret
+file limited to the credentials they actually consume.
 
 - Generate a unique value for this host; never reuse it on another host.
 - The host's Borg 1.4 and Borg 2 repositories deliberately share this one

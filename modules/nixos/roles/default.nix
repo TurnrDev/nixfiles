@@ -13,7 +13,14 @@
 let
   userSecretOwner = config.my.identity.username;
   hostSecretsFile = ../../../secrets/hosts + "/${config.networking.hostName}.yaml";
-  hasHostSecrets = builtins.pathExists hostSecretsFile;
+  borgmaticEnabled = lib.attrByPath [
+    "home-manager"
+    "users"
+    config.my.identity.username
+    "programs"
+    "borgmatic"
+    "enable"
+  ] false config;
 in
 {
   imports = [
@@ -103,6 +110,12 @@ in
     ];
   };
   nix = {
+    # The normal deployment user is already in wheel. Trust it for Nix store
+    # imports so locally-built closures can be copied to every host over SSH.
+    settings.trusted-users = [
+      "root"
+      config.my.identity.username
+    ];
     settings.experimental-features = [
       "nix-command"
       "flakes"
@@ -134,7 +147,7 @@ in
       mode = "0400";
     };
   }
-  // lib.optionalAttrs hasHostSecrets {
+  // lib.optionalAttrs borgmaticEnabled {
     storagebox-borg-passphrase = {
       sopsFile = hostSecretsFile;
       owner = userSecretOwner;

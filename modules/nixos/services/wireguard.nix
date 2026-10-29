@@ -113,12 +113,14 @@ in
           method = "manual";
           address1 = cfg.ipv4Address;
           never-default = true;
+          route-metric = 2000;
         };
 
         ipv6 = {
           method = "manual";
           address1 = cfg.ipv6Address;
           never-default = true;
+          route-metric = 2000;
         };
       };
     };

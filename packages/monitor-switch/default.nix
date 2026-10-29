@@ -17,7 +17,7 @@ let
     ]
   );
 in
-stdenvNoCC.mkDerivation (finalAttrs: {
+stdenvNoCC.mkDerivation (_finalAttrs: {
   pname = "monitor-switch";
   version = "0.1.0-unstable-2026-08-08";
 

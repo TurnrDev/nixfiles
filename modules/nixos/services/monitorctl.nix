@@ -9,7 +9,6 @@ let
   inherit (lib)
     filterAttrs
     literalExpression
-    mapAttrs
     mkEnableOption
     mkIf
     mkOption
@@ -25,7 +24,7 @@ let
     yaml.generate "monitorctl-${name}.yaml" {
       inherit (instance) connector profile;
       host = instance.bindAddress;
-      port = instance.port;
+      inherit (instance) port;
       profile_dir = "${instance.package}/lib/monitorctl/profiles";
       feature_overrides = instance.featureOverrides;
       include_unknown_features = instance.includeUnknownFeatures;

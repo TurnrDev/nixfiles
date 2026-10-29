@@ -1,5 +1,4 @@
-_:
-{
+_: {
   # The Wyse firmware boots the internal eMMC reliably, whereas it fails to
   # load EFI binaries from the M.2-to-microSD adapter. The root filesystem and
   # Nix store remain on that SD card. The GPT partition labels are unique and

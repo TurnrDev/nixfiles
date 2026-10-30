@@ -362,7 +362,8 @@
   "barElevationEnabled": false,
   "batteryAutoPowerSaver": true,
   "batteryChargeLimitNotificationType": 1,
-  "batteryLowNotificationType": 1,
+  "batteryLowNotificationType": 0,
+  "batteryNotifyLow": true,
   "batteryProfileName": "1",
   "builtInPluginSettings": {
     "dms_clipboard_search": {

@@ -23,7 +23,8 @@ in
 {
   warnings =
     # pip-override # remove
-    lib.optional (lib.versionAtLeast pkgs.python3Packages.pip.version "26.2.2") "nixos-unstable now provides pip 26.2.2 or later; remove # pip-override.";
+    lib.optional (lib.versionAtLeast pkgs.python3Packages.pip.version "26.2.2")
+      "nixos-unstable now provides pip 26.2.2 or later; remove # pip-override.";
 
   programs.nix-ld = {
     enable = true;

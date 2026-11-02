@@ -36,7 +36,8 @@ in
 
   warnings =
     # node-override # remove
-    lib.optional (lib.versionAtLeast pkgs.nodejs_24.version "24.22.1") "nixos-unstable now provides Node.js 24.22.1 or later; remove # node-override.";
+    lib.optional (lib.versionAtLeast pkgs.nodejs_24.version "24.22.1")
+      "nixos-unstable now provides Node.js 24.22.1 or later; remove # node-override.";
 
   sops.secrets.rclone-gdrive-config = {
     sopsFile = ../../secrets/hosts/jay-mopo.yaml;

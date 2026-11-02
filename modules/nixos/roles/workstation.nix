@@ -20,16 +20,17 @@ in
 {
   imports = [
     ./default.nix
-    ./cad.nix
     ../common/borgmatic.nix
-    ../common/gradle.nix
-    ../common/stylix.nix
+    ../common/cad.nix
     ../common/go-hass-agent.nix
-    ../common/obojima-glyph.nix
-    ../common/virtualisation.nix
     inputs.dockmgr.nixosModules.default
     inputs.dux-greeter.nixosModules.default
     ../services/dux-home-assistant-monitor.nix
+    ../common/gradle.nix
+    ../common/obojima-glyph.nix
+    ../common/python.nix
+    ../common/stylix.nix
+    ../common/virtualisation.nix
   ];
 
   options.my.syncthing.personalDeviceList = lib.mkOption {

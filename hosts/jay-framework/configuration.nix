@@ -10,6 +10,7 @@
     # sudo nixos-generate-config --show-hardware-config --no-filesystems > /etc/nixos/hosts/$(hostname)/hardware-configuration.nix
     ./hardware-configuration.nix
     ./storage.nix
+    ../../modules/nixos/roles/nix-builder.nix
     ../../modules/nixos/roles/laptop.nix
     ../../modules/nixos/roles/gaming.nix
   ];

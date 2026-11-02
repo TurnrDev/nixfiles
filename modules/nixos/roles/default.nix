@@ -28,7 +28,6 @@ in
     ../common/authorized-keys.nix
     ../common/emudhra.nix
     ../common/identity.nix
-    ../common/python.nix
     ../common/bootloader.nix
   ];
 
@@ -88,6 +87,7 @@ in
       config.my.identity.username
     ];
     settings.experimental-features = [
+      # Enables flake commands such as `nix fmt`.
       "nix-command"
       "flakes"
     ];

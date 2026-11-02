@@ -10,7 +10,7 @@
     nix-tree
     nvd
   ];
-  settings.experimental-features = [
+  nix.settings.experimental-features = [
     # Enables flake commands such as `nix fmt`.
     "nix-command"
     "flakes"

@@ -12,12 +12,9 @@
   nixpkgs.hostPlatform = "x86_64-linux";
   # The shared default role enables Lanzaboote for the existing Secure Boot
   # hosts. The Wyse installer uses the standard UEFI systemd-boot path.
-  boot.lanzaboote.enable = lib.mkForce false;
-  boot.loader.systemd-boot.enable = lib.mkForce true;
-  boot.loader.efi = {
-    canTouchEfiVariables = true;
-    efiSysMountPoint = "/boot";
-  };
+  boot.lanzaboote.enable = false;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.efiSysMountPoint = "/boot";
 
   hardware.enableAllFirmware = true;
 

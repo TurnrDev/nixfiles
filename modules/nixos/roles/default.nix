@@ -29,12 +29,8 @@ in
     ../common/emudhra.nix
     ../common/identity.nix
     ../common/python.nix
-    ../common/systemd-boot.nix
+    ../common/bootloader.nix
   ];
-
-  # Bootloader.
-  # boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   boot.kernelModules = [ "fuse" ];
   programs.fuse.enable = true;

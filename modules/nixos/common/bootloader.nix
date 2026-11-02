@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 
 {
   imports = [
@@ -7,9 +7,8 @@
 
   # Keep systemd in the initrd for the graphical, passphrase-based LUKS
   # unlock flow managed by Plymouth.
-  boot.initrd.systemd.enable = true;
   boot.lanzaboote = {
-    enable = true;
+    enable = lib.mkDefault true;
     # Reuse the sbctl PKI so Secure Boot key creation and Lanzaboote's UKI
     # signing both point at the same trust chain.
     pkiBundle = "/var/lib/sbctl";
@@ -20,7 +19,7 @@
     efi.canTouchEfiVariables = true;
     timeout = 1;
     systemd-boot = {
-      enable = false;
+      enable = lib.mkDefault false;
       configurationLimit = 10;
     };
   };

@@ -5,43 +5,43 @@
 }:
 
 let
-  es-de = pkgs.callPackage ../../../packages/es-de { };
-  greenlight = pkgs.callPackage ../../../packages/greenlight { };
-  kytyps5 = pkgs.callPackage ../../../packages/kytyps5 { };
-  sharpemu = pkgs.callPackage ../../../packages/sharpemu { };
+  # es-de = pkgs.callPackage ../../../packages/es-de { };
+  # greenlight = pkgs.callPackage ../../../packages/greenlight { };
+  # kytyps5 = pkgs.callPackage ../../../packages/kytyps5 { };
+  # sharpemu = pkgs.callPackage ../../../packages/sharpemu { };
 in
 {
   boot.supportedFilesystems = [ "nfs" ];
 
   environment.systemPackages = with pkgs; [
-    es-de
+    # es-de
     nfs-utils
 
     # Multi-system emulation and arcade hardware.
     retroarch-full
-    ares
-    mame
+    # ares
+    # mame
 
     # Nintendo.
-    melonds
-    azahar
-    dolphin-emu
-    cemu
-    ryubing
+    # melonds
+    # azahar
+    # dolphin-emu
+    # cemu
+    # ryubing
 
-    # Sony.
-    pcsx2
-    rpcs3
-    shadps4
-    sharpemu
-    kytyps5
-    ppsspp
-    vita3k
+    # # Sony.
+    # pcsx2
+    # rpcs3
+    # shadps4
+    # sharpemu
+    # kytyps5
+    # ppsspp
+    # vita3k
 
-    # Microsoft.
-    xemu
-    xenia-canary
-    greenlight
+    # # Microsoft.
+    # xemu
+    # xenia-canary
+    # greenlight
   ];
 
   fileSystems."/srv/nfs/games" = {

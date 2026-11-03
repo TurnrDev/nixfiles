@@ -4,12 +4,12 @@
   ...
 }:
 
-let
-  # es-de = pkgs.callPackage ../../../packages/es-de { };
-  # greenlight = pkgs.callPackage ../../../packages/greenlight { };
-  # kytyps5 = pkgs.callPackage ../../../packages/kytyps5 { };
-  # sharpemu = pkgs.callPackage ../../../packages/sharpemu { };
-in
+# let
+#   es-de = pkgs.callPackage ../../../packages/es-de { };
+#   greenlight = pkgs.callPackage ../../../packages/greenlight { };
+#   kytyps5 = pkgs.callPackage ../../../packages/kytyps5 { };
+#   sharpemu = pkgs.callPackage ../../../packages/sharpemu { };
+# in
 {
   boot.supportedFilesystems = [ "nfs" ];
 

@@ -4,6 +4,7 @@
   "avatarRing": "primary",
   "barConfigs": [
     {
+      "attachToScreenEdge": true,
       "autoHide": false,
       "autoHideDelay": 250,
       "borderColor": "surfaceText",
@@ -11,14 +12,10 @@
       "borderOpacity": 1,
       "borderThickness": 1,
       "bottomGap": 0,
+      "centerOverflowPosition": 3,
       "centerWidgets": [
         "music",
         "clock",
-        "weather",
-        {
-          "enabled": true,
-          "id": "dockerManager"
-        },
         {
           "enabled": true,
           "id": "homeAssistantMonitor"
@@ -29,18 +26,19 @@
         }
       ],
       "clickThrough": false,
+      "dot": false,
       "enabled": true,
       "followInterfaceStyle": true,
       "fontScale": 1,
       "gothCornerRadiusOverride": false,
       "gothCornerRadiusValue": 12,
-      "gothCornersEnabled": false,
+      "gothCornersEnabled": true,
       "hideOnLastDisplay": false,
       "hoverPopouts": false,
       "iconScale": 1,
       "id": "default",
       "innerPadding": 4,
-      "island": true,
+      "island": false,
       "islandAlongOffset": 0,
       "islandFloating": false,
       "islandHomeLayout": [
@@ -121,14 +119,6 @@
       "popupGapsManual": 4,
       "position": 0,
       "rightWidgets": [
-        {
-          "enabled": true,
-          "id": "homeAssistantMonitor"
-        },
-        {
-          "enabled": true,
-          "id": "dmsScreenshot"
-        },
         {
           "enabled": true,
           "id": "dankKDEConnect"
@@ -379,6 +369,7 @@
       "trigger": "?"
     }
   },
+  "centeringMode": "geometric",
   "clockDateFormat": "yyyy-MM-dd (ddd)",
   "clockFormat": "24h",
   "configVersion": 42,
@@ -638,6 +629,7 @@
       "margin": 0,
       "maxVisibleApps": 0,
       "maxVisibleRunningApps": 0,
+      "middleClickAction": "close",
       "mode": "compact",
       "name": "Dock",
       "openOnOverview": false,

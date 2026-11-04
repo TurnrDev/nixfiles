@@ -86,11 +86,11 @@
     "dank-qml-common": {
       "flake": false,
       "locked": {
-        "lastModified": 1793637751,
-        "narHash": "sha256-FmRmKutFOblVf8j2sU38qF4BCpOvRmf0txwCX/nLy1U=",
+        "lastModified": 1793720721,
+        "narHash": "sha256-A266EMSFs169/cqH+9elzMX/6N+ycuEBXFw4qXdTD7k=",
         "owner": "duxlabs-dev",
         "repo": "dux-qml-common",
-        "rev": "2e4fef62b026aaa3101f8b0e288ca22113a6210f",
+        "rev": "be3e16ca62866a749b34cfefe1aaed81cfe21e94",
         "type": "github"
       },
       "original": {
@@ -102,11 +102,11 @@
     "dank-qml-common_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1793649683,
-        "narHash": "sha256-ds+c9H29DlTkKl6L09d4JQgr1vxExxa7sTBpa+Rs+W8=",
+        "lastModified": 1793739121,
+        "narHash": "sha256-tuZawVduVTBkUo2e5SrmA5tGEVEHZiIPqbOUwA007H4=",
         "owner": "duxlabs-dev",
         "repo": "dux-qml-common",
-        "rev": "a0d6dee400ed8288838f61235efa3dacb0b85da6",
+        "rev": "69971fe7203deaca031d04c434b3fcc016a2fb9e",
         "type": "github"
       },
       "original": {
@@ -118,11 +118,11 @@
     "dank-qml-common_3": {
       "flake": false,
       "locked": {
-        "lastModified": 1793444058,
-        "narHash": "sha256-YL9pm7n++0r6uXMQDg4CmB0++JGUezXIlgmp87KiUxM=",
+        "lastModified": 1793720721,
+        "narHash": "sha256-A266EMSFs169/cqH+9elzMX/6N+ycuEBXFw4qXdTD7k=",
         "owner": "duxlabs-dev",
         "repo": "dux-qml-common",
-        "rev": "934de22f3e246dff16ab06368582c5ae8cbdc304",
+        "rev": "be3e16ca62866a749b34cfefe1aaed81cfe21e94",
         "type": "github"
       },
       "original": {
@@ -176,11 +176,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793676617,
-        "narHash": "sha256-MMhtP0B+F0dJTmURXxOrvvGzbIL2aZ0pRezM4BmCSxc=",
+        "lastModified": 1793755420,
+        "narHash": "sha256-LOk2cYs0dosNFKmG91uszcZnBooye4bD3yTMrkQL32c=",
         "owner": "duxlabs-dev",
         "repo": "dux-shell",
-        "rev": "f1507fa4fa3f25842dc73a8b25f747f98bcf55fc",
+        "rev": "d27fbad38721f76deb2b133e38c7efa08b071277",
         "type": "github"
       },
       "original": {
@@ -213,11 +213,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793649815,
-        "narHash": "sha256-tKYUbflaOP+x1D1HWVMBfBVzGYKh3W8yaJSUuejk9ZQ=",
+        "lastModified": 1793746424,
+        "narHash": "sha256-xyXOKEtkKwtn2MzghakN9bECSHWnGsBzy/6Sd6K7yiw=",
         "owner": "duxlabs-dev",
         "repo": "dux-files",
-        "rev": "7a20dd02f0e8bec192b63bc197b0383347f804d1",
+        "rev": "4d2d4782f1f843931346b55e9226c93766a0870e",
         "type": "github"
       },
       "original": {
@@ -234,11 +234,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793444119,
-        "narHash": "sha256-4pQhSCByOSrC1XCXvpBgHrJHwMs3BU3IH02fZdREoPg=",
+        "lastModified": 1793746430,
+        "narHash": "sha256-Ukg2UWCYa6BlnC45Qh2FoafwTdimJASTxoBcR/yIQbo=",
         "owner": "duxlabs-dev",
         "repo": "dux-greeter",
-        "rev": "45b82d84d947a2c6491d4f16a5d0a84ee379dfeb",
+        "rev": "3fac5b686bf38d2df429541c8102c9f43b4883bf",
         "type": "github"
       },
       "original": {
@@ -282,11 +282,11 @@
     "dux-plugins": {
       "flake": false,
       "locked": {
-        "lastModified": 1793631333,
-        "narHash": "sha256-+J7g8iYCRKuMpjrv2xnKZioQXxMyLLMpjLEm7KayzGg=",
+        "lastModified": 1793735750,
+        "narHash": "sha256-wwp+t9RJQ3yoGekIORuMawNWwH0FNXdZNEYLRxUgBy4=",
         "owner": "duxlabs-dev",
         "repo": "dux-plugins",
-        "rev": "be0b733a4036e0d1e5b3a1f11933569e61719be3",
+        "rev": "1418988cd8d9e21fed6404ec707ebe8df3fba066",
         "type": "github"
       },
       "original": {
@@ -527,11 +527,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1793605555,
-        "narHash": "sha256-XNs7pmJdFdLcMeidrbleceG6sks8A1fDuDOQEbpUSx8=",
+        "lastModified": 1793752145,
+        "narHash": "sha256-0MQ+lueIAltz5ozXTPhwbhJobM9r4jqGTNzfiHElkIM=",
         "owner": "4evy",
         "repo": "nixcord",
-        "rev": "ddb50a3aeda9ff2e5fbbbb140dda5bf1e216e764",
+        "rev": "2d3b66a8d3f517d74a6f25c6fedb1496dbc4214f",
         "type": "github"
       },
       "original": {

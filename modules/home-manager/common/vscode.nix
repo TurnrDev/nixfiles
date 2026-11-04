@@ -1,77 +1,18 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 
 let
-  marketplaceExtension =
-    mktplcRef: pkgs.vscode-utils.buildVscodeMarketplaceExtension { inherit mktplcRef; };
-
-  marketplaceExtensions = [
-    (marketplaceExtension {
-      publisher = "fireblast";
-      name = "hyprlang-vscode";
-      version = "0.0.3";
-      hash = "sha256-iMCyomgMGGUXaVqq1l7bgyvFgZa/W/eWHaqkA5RmExE=";
-    })
-    (marketplaceExtension {
-      publisher = "junstyle";
-      name = "vscode-django-support";
-      version = "1.0.35";
-      hash = "sha256-JIcOSCBqqXqXfi0S9v+9cgfjCd5keiga1Vf/PC2aUlk=";
-    })
-    (marketplaceExtension {
-      publisher = "marioqueiros";
-      name = "camelcase";
-      version = "1.0.5";
-      hash = "sha256-4HO0pGiTfWRrY1i1G03EDOWoEEdVEgO0VwztyJKjfTI=";
-    })
-    (marketplaceExtension {
-      publisher = "shakram02";
-      name = "bash-beautify";
-      version = "0.1.1";
-      hash = "sha256-pg1nGEk+cn7VlmJeDifXkXeZJLRrEFOyW0bK9W6VGfc=";
-    })
-    (marketplaceExtension {
-      publisher = "trond-snekvik";
-      name = "simple-rst";
-      version = "1.5.4";
-      hash = "sha256-W3LydBsc7rEHIcjE/0jESFS87uc1DfjuZt6lZhMiQcs=";
-    })
-    (marketplaceExtension {
-      publisher = "yinfei";
-      name = "luahelper";
-      version = "0.2.29";
-      hash = "sha256-/2RTIl3avuQb0DRciUwDYyJ/vfHjtGWyxSuB8ssYZuo=";
-    })
-    (pkgs.vscode-utils.buildVscodeMarketplaceExtension {
-      mktplcRef = {
-        publisher = "openai";
-        name = "chatgpt";
-        version = "26.810.52044";
-        hash = "sha256-k4hVOv6upwuKLx209KjAMMQmr9cIgSRW00qAAbLQfyc=";
-      };
-      vsix = pkgs.fetchurl {
-        name = "openai-chatgpt-26.810.52044-linux-x64.vsix";
-        url = "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/openai/vsextensions/chatgpt/26.810.52044/vspackage?targetPlatform=linux-x64";
-        hash = "sha256-k4hVOv6upwuKLx209KjAMMQmr9cIgSRW00qAAbLQfyc=";
-      };
-      unpackPhase = ''
-        runHook preUnpack
-        ${pkgs.gzip}/bin/gunzip -c "$src" > extension.vsix
-        ${pkgs.unzip}/bin/unzip -q extension.vsix
-        sourceRoot=extension
-        runHook postUnpack
-      '';
-    })
-  ];
+  extensions = (pkgs.extend inputs.nix-vscode-extensions.overlays.default).nix-vscode-extensions.vscode-marketplace;
 in
 {
   programs.vscode = {
     enable = true;
     profiles.default = {
       extensions =
-        with pkgs.vscode-extensions;
+        with extensions;
         [
           aaron-bond.better-comments
           bbenoist.nix
@@ -104,8 +45,14 @@ in
           samuelcolvin.jinjahtml
           tamasfe.even-better-toml
           vue.volar
-        ]
-        ++ marketplaceExtensions;
+          fireblast.hyprlang-vscode
+          junstyle.vscode-django-support
+          marioqueiros.camelcase
+          shakram02.bash-beautify
+          trond-snekvik.simple-rst
+          yinfei.luahelper
+          openai.chatgpt
+        ];
 
       userSettings = {
         "telemetry.telemetryLevel" = "off";

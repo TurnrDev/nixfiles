@@ -3,6 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    # The Marketplace expressions are regenerated daily. Renovate updates this
+    # lock-file input, keeping VS Code extensions independent of nixpkgs.
+    nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     # Historical Nixpkgs package sets, evaluated only when a version is selected.
     # Keep `nixpkgs` as the real base input: flake inputs that follow it require
     # the normal nixpkgs lib and legacyPackages interface.

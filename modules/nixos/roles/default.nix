@@ -43,6 +43,18 @@ in
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.hosts = {
+    "10.117.25.10" = [
+      "home"
+      "home.turnr.net"
+    ];
+    "10.117.25.11" = [ "jay-desktop" ];
+    # WireGuard peers, available regardless of public DNS availability.
+    "10.117.25.241" = [ "jay-framework" ];
+    "10.117.25.242" = [ "jay-mopo" ];
+    "fd00:7389:538a:05fd::3" = [ "jay-framework" ];
+    "fd00:7389:538a:05fd::4" = [ "jay-mopo" ];
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/London";

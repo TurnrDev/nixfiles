@@ -2,7 +2,10 @@
 
 {
   home = {
-    packages = [ pkgs.codex ];
+    packages = [
+      pkgs.codex
+      pkgs.chatgpt
+    ];
 
     file.".codex/AGENTS.md".text = ''
       ## Git safety

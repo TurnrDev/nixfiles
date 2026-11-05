@@ -5,54 +5,54 @@
 }:
 
 let
-  extensions = (pkgs.extend inputs.nix-vscode-extensions.overlays.default).nix-vscode-extensions.vscode-marketplace;
+  extensions =
+    (pkgs.extend inputs.nix-vscode-extensions.overlays.default)
+    .nix-vscode-extensions.vscode-marketplace;
 in
 {
   programs.vscode = {
     enable = true;
     profiles.default = {
-      extensions =
-        with extensions;
-        [
-          aaron-bond.better-comments
-          bbenoist.nix
-          bierner.color-info
-          bierner.markdown-preview-github-styles
-          brettm12345.nixfmt-vscode
-          charliermarsh.ruff
-          christian-kohler.npm-intellisense
-          coolbear.systemd-unit-file
-          davidanson.vscode-markdownlint
-          dbaeumer.vscode-eslint
-          dotjoshjohnson.xml
-          eamodio.gitlens
-          esbenp.prettier-vscode
-          firefox-devtools.vscode-firefox-debug
-          inferrinizzard.prettier-sql-vscode
-          mathiasfrohlich.kotlin
-          mechatroner.rainbow-csv
-          mikestead.dotenv
-          ms-python.debugpy
-          ms-python.python
-          ms-python.vscode-pylance
-          ms-vscode.remote-explorer
-          ms-vscode-remote.remote-ssh
-          ms-vscode-remote.remote-ssh-edit
-          pkief.material-icon-theme
-          quicktype.quicktype
-          redhat.vscode-xml
-          redhat.vscode-yaml
-          samuelcolvin.jinjahtml
-          tamasfe.even-better-toml
-          vue.volar
-          fireblast.hyprlang-vscode
-          junstyle.vscode-django-support
-          marioqueiros.camelcase
-          shakram02.bash-beautify
-          trond-snekvik.simple-rst
-          yinfei.luahelper
-          openai.chatgpt
-        ];
+      extensions = with extensions; [
+        aaron-bond.better-comments
+        bbenoist.nix
+        bierner.color-info
+        bierner.markdown-preview-github-styles
+        brettm12345.nixfmt-vscode
+        charliermarsh.ruff
+        christian-kohler.npm-intellisense
+        coolbear.systemd-unit-file
+        davidanson.vscode-markdownlint
+        dbaeumer.vscode-eslint
+        dotjoshjohnson.xml
+        eamodio.gitlens
+        esbenp.prettier-vscode
+        firefox-devtools.vscode-firefox-debug
+        inferrinizzard.prettier-sql-vscode
+        mathiasfrohlich.kotlin
+        mechatroner.rainbow-csv
+        mikestead.dotenv
+        ms-python.debugpy
+        ms-python.python
+        ms-python.vscode-pylance
+        ms-vscode.remote-explorer
+        ms-vscode-remote.remote-ssh
+        ms-vscode-remote.remote-ssh-edit
+        pkief.material-icon-theme
+        quicktype.quicktype
+        redhat.vscode-xml
+        redhat.vscode-yaml
+        samuelcolvin.jinjahtml
+        tamasfe.even-better-toml
+        vue.volar
+        fireblast.hyprlang-vscode
+        junstyle.vscode-django-support
+        marioqueiros.camelcase
+        shakram02.bash-beautify
+        trond-snekvik.simple-rst
+        yinfei.luahelper
+        openai.chatgpt
+      ];
 
       userSettings = {
         "telemetry.telemetryLevel" = "off";

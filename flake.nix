@@ -106,6 +106,14 @@
     {
       formatter.${system} = treefmtEval.config.build.wrapper;
 
+      devShells.${system}.default = pkgs.mkShell {
+        packages = [ pkgs.coreutils ];
+
+        shellHook = ''
+          ${pkgs.coreutils}/bin/install -m 755 .githooks/pre-commit .git/hooks/pre-commit
+        '';
+      };
+
       checks.${system}.formatting = treefmtEval.config.build.check self;
 
       nixosConfigurations = {

@@ -32,6 +32,22 @@ in
     ./google-drive.nix
   ];
 
+  # The keyboard's dedicated screenshot key emits Super+Shift+R.
+  wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
+    hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("dms screenshot"), {
+      description = "Take Screenshot",
+      device = { inclusive = true, list = { "at-translated-set-2-keyboard" } },
+    })
+    hl.bind("SUPER + SHIFT + CTRL + R", hl.dsp.exec_cmd("dms screenshot full"), {
+      description = "Take Full Screenshot",
+      device = { inclusive = true, list = { "at-translated-set-2-keyboard" } },
+    })
+    hl.bind("SUPER + SHIFT + ALT + R", hl.dsp.exec_cmd("dms screenshot window"), {
+      description = "Take Window Screenshot",
+      device = { inclusive = true, list = { "at-translated-set-2-keyboard" } },
+    })
+  '';
+
   programs.vscode.profiles.default.userSettings = {
     "editor.formatOnSave" = lib.mkForce false;
     "editor.codeActionsOnSave" = lib.mkForce { };

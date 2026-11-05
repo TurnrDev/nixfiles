@@ -8,7 +8,7 @@ local zoom_out = 'hyprctl eval "hl.config({ cursor = { zoom_factor = $(hyprctl g
 	.. " '(.float / 1.1) | if . < 1 then 1 else . end') }})\""
 
 -- Applications and session management.
-hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("dms ipc call spotlight toggle"), { description = "Launch Spotlight" })
+hl.bind("Super_L", hl.dsp.exec_cmd("dms ipc call spotlight toggle"), { description = "Launch Spotlight", release = true })
 hl.bind("SUPER + W", hl.dsp.exec_cmd("uwsm app -- firefox"), { description = "Launch Firefox" })
 hl.bind("SUPER + C", hl.dsp.exec_cmd("uwsm app -- code"), { description = "Launch IDE" })
 hl.bind("SUPER + T", hl.dsp.exec_cmd("uwsm app -- ghostty"), { description = "Launch Terminal" })

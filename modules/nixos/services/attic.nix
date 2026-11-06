@@ -8,43 +8,40 @@
 let
   cfg = config.my.attic;
   atticTokenPath = config.sops.secrets.attic-token.path;
-  uploadQueue = "/var/lib/attic-upload/pending";
+  uploadQueueDirectory = "/var/lib/attic-upload/pending";
   enqueueUpload = pkgs.writeShellScript "attic-enqueue-upload" ''
-    # The Nix daemon runs post-build hooks as root. Keep this hook tiny: the
-    # actual network transfer is handled asynchronously by attic-upload.service.
-    set -eu
-    ${pkgs.coreutils}/bin/install -d -m 0700 /var/lib/attic-upload
-    ${pkgs.util-linux}/bin/flock /var/lib/attic-upload/queue.lock \
-      ${pkgs.coreutils}/bin/sh -c '
-        for path in $1; do
-          printf "%s\\n" "$path"
-        done
-      ' -- "$OUT_PATHS" >> ${uploadQueue}
+    # Do not make a post-build hook interfere with Nix's build loop. The hook
+    # can run as an unprivileged Nix build user, so it only creates one private
+    # queue file in a group-writable spool; systemd performs network I/O later.
+    set -u
+    queue_file="$(${pkgs.coreutils}/bin/mktemp ${uploadQueueDirectory}/paths.XXXXXX)" || exit 0
+    ${pkgs.coreutils}/bin/chmod 0600 "$queue_file" || exit 0
+    for path in ''${OUT_PATHS:-}; do
+      printf "%s\\n" "$path" >> "$queue_file" || {
+        ${pkgs.coreutils}/bin/rm -f "$queue_file"
+        exit 0
+      }
+    done
   '';
   uploadPending = pkgs.writeShellScript "attic-upload-pending" ''
     set -eu
-    ${pkgs.coreutils}/bin/install -d -m 0700 /var/lib/attic-upload
+    for queue in ${uploadQueueDirectory}/paths.*; do
+      [ -e "$queue" ] || break
+      while IFS= read -r path || [ -n "$path" ]; do
+        [ -n "$path" ] || continue
 
-    ${pkgs.util-linux}/bin/flock /var/lib/attic-upload/queue.lock \
-      ${pkgs.bash}/bin/bash -eu -c '
-        queue=${uploadQueue}
-        touch "$queue"
-        while IFS= read -r path || [ -n "$path" ]; do
-          [ -n "$path" ] || continue
+        # A path can be garbage collected before a disconnected machine gets
+        # back online. Drop that stale queue item instead of retrying forever.
+        if ! ${pkgs.nix}/bin/nix path-info "$path" >/dev/null 2>&1; then
+          continue
+        fi
 
-          # A path can be garbage collected before a disconnected machine gets
-          # back online. Drop that stale queue item instead of retrying forever.
-          if ! ${pkgs.nix}/bin/nix path-info "$path" >/dev/null 2>&1; then
-            ${pkgs.gnused}/bin/sed -i "1d" "$queue"
-            continue
-          fi
-
-          # attic push checks which paths are already present and honours the
-          # cache upstream-key filter, so this does not republish Nixpkgs paths.
-          ${pkgs.attic-client}/bin/attic push home "$path"
-          ${pkgs.gnused}/bin/sed -i "1d" "$queue"
-        done
-      '
+        # attic push checks which paths are already present and honours the
+        # cache upstream-key filter, so this does not republish Nixpkgs paths.
+        ${pkgs.attic-client}/bin/attic push home "$path"
+      done < "$queue"
+      ${pkgs.coreutils}/bin/rm -f "$queue"
+    done
   '';
 in
 {
@@ -102,7 +99,8 @@ in
     nix.settings.post-build-hook = lib.mkIf cfg.upload.enable enqueueUpload;
 
     systemd.tmpfiles.rules = lib.mkIf cfg.upload.enable [
-      "d /var/lib/attic-upload 0700 root root -"
+      "d /var/lib/attic-upload 0750 root nixbld -"
+      "d ${uploadQueueDirectory} 0730 root nixbld -"
     ];
 
     systemd.services.attic-upload = lib.mkIf cfg.upload.enable {
@@ -125,7 +123,7 @@ in
 
     systemd.paths.attic-upload = lib.mkIf cfg.upload.enable {
       wantedBy = [ "multi-user.target" ];
-      pathConfig.PathChanged = uploadQueue;
+      pathConfig.PathChanged = uploadQueueDirectory;
     };
 
     # A timer covers boots and missed inotify events, and retries work left in

@@ -35,8 +35,9 @@ keys are in `keys/known_hosts/nix-builders`. The target account is restricted to
 
 Attic's native `watch-store` is intentionally not used. It only observes store
 events while it is running and has no persistent offline queue, so paths built
-while it cannot connect can be missed. Instead, Nix's post-build hook appends
-only newly-built output paths to a root-only local spool. `attic-upload.service`
+while it cannot connect can be missed. Instead, Nix's post-build hook writes
+only newly-built output paths to a private per-build local spool file.
+`attic-upload.service`
 uses native `attic push` asynchronously, and its path unit plus persistent
 five-minute timer retry after network loss or reboot. `attic push` checks the
 cache and honours Attic's upstream-key filter, avoiding uploads already signed
@@ -59,8 +60,8 @@ nix show-config | rg 'substituters|netrc-file|builders|builders-use-substitutes'
 
 Use `nix store info --json` or Nix build logs to see the selected remote
 builder. `nix show-config | rg '^builders'` shows the generated machine list.
-If an optional builder is offline, the five-second connection timeout lets Nix
-continue with the next machine or local work where eligible.
+If an optional builder is offline, the SSH five-second connection timeout lets
+Nix continue with the next machine or local work where eligible.
 
 Nix's `speedFactor` is advisory scheduling input, not a strict failover or
 capacity guarantee. When `home-server` has migrated to NixOS, import

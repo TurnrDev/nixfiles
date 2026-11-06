@@ -67,6 +67,16 @@ in
       };
     };
 
+    # Nix invokes SSH for these builders. Keep unavailable laptops from waiting
+    # on the operating system's much longer TCP timeout; Nix then tries the
+    # next eligible builder or uses this host's non-zero local capacity.
+    programs.ssh.extraConfig = lib.mkIf (cfg.builders != [ ]) ''
+      Host ${lib.concatStringsSep " " cfg.builders}
+        BatchMode yes
+        ConnectTimeout 5
+        ConnectionAttempts 1
+    '';
+
     # Only the client private key is secret. The public client and host keys are
     # declarative in keys/authorized and keys/known_hosts respectively.
     sops.secrets = lib.optionalAttrs (cfg.builders != [ ]) {

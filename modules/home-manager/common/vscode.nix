@@ -10,10 +10,6 @@ let
     .nix-vscode-extensions.vscode-marketplace;
 in
 {
-  nixpkgs.config.permittedInsecurePackages = [ "pulsar-1.132.1" ];
-
-  home.packages = [ pkgs.pulsar ];
-
   programs.vscode = {
     enable = true;
     profiles.default = {

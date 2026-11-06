@@ -17,6 +17,14 @@
 
   networking.hostName = "jay-framework";
 
+  # One-way delegation keeps the fleet free of cyclic build routing.
+  my.nixDistributedBuilds = {
+    enable = true;
+    maxJobs = 6;
+    builders = [ "jay-desktop" ];
+    remoteBuilder.enable = true;
+  };
+
   my.wireguard.home = {
     enable = true;
     sopsFile = ../../secrets/hosts/jay-framework.yaml;

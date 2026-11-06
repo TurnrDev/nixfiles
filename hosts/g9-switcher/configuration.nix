@@ -5,10 +5,17 @@
     ./hardware-configuration.nix
     ./storage.nix
     ../../modules/nixos/roles/default.nix
+    ../../modules/nixos/services/distributed-builds.nix
     ../../modules/nixos/services/monitorctl.nix
   ];
 
   networking.hostName = "g9-switcher";
+  # Nix generally will not build here. `preferLocalBuild` derivations are the
+  # documented exception, so deploy.sh always builds this host elsewhere.
+  my.nixDistributedBuilds = {
+    enable = true;
+    maxJobs = 0;
+  };
   nixpkgs.hostPlatform = "x86_64-linux";
   # The shared default role enables Lanzaboote for the existing Secure Boot
   # hosts. The Wyse installer uses the standard UEFI systemd-boot path.

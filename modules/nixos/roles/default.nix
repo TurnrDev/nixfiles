@@ -29,11 +29,16 @@ in
     ../common/emudhra.nix
     ../common/identity.nix
     ../common/bootloader.nix
+    ../services/attic.nix
   ];
 
   boot.kernelModules = [ "fuse" ];
   programs.fuse.enable = true;
   programs.fuse.userAllowOther = true;
+
+  # Builder host keys are public trust anchors. Keep them available to every
+  # system SSH client, including deployment initiators and appliance targets.
+  programs.ssh.knownHostsFiles = [ ../../../keys/known_hosts/nix-builders ];
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -49,6 +54,7 @@ in
       "home.turnr.net"
     ];
     "10.117.25.11" = [ "jay-desktop" ];
+    "10.117.25.14" = [ "g9-switcher" ];
     # WireGuard peers, available regardless of public DNS availability.
     "10.117.25.241" = [ "jay-framework" ];
     "10.117.25.242" = [ "jay-mopo" ];

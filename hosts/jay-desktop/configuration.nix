@@ -26,6 +26,14 @@
     };
   };
 
+  # Desktop is the preferred builder. It builds locally so remote requests
+  # cannot recurse through another builder.
+  my.nixDistributedBuilds = {
+    enable = true;
+    maxJobs = 12;
+    remoteBuilder.enable = true;
+  };
+
   programs.dockmgr.profiles = [
     {
       name = "Default";

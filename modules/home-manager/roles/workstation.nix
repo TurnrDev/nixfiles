@@ -8,7 +8,7 @@
 {
   imports = [
     ./default.nix
-    ./builders.nix
+    ./repository.nix
     ../common/borgmatic.nix
     ../common/default-apps.nix
     ../common/codex.nix

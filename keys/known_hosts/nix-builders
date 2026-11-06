@@ -1,0 +1,5 @@
+# Verified from jay-mopo's existing ~/.ssh/known_hosts.
+jay-desktop,10.117.25.11 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKoi0W/pwWgDmiu15ZSaU19YhsTNt3o8c3pz/jwy4tDe
+jay-framework,10.117.25.241 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHhBbQWPyASI7H4Wc0E8OxV5jL5pTqZ++QyuntW7FPEY
+g9-switcher,10.117.25.14 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDbxqk55J8PYbWk5MtctaIkKhaWjR596x+EEsT8x9mLQ
+home,home.turnr.net,10.117.25.10 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINToIOJ1ZlBHfFgwrw0zfJgFhz2W8p2jumlxH5Y0p0p6

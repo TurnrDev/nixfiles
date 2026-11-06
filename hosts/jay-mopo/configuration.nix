@@ -35,6 +35,16 @@ in
 
   networking.hostName = "jay-mopo";
 
+  # May offload work, but never exposes a remote-builder account itself.
+  my.nixDistributedBuilds = {
+    enable = true;
+    maxJobs = 4;
+    builders = [
+      "jay-desktop"
+      "jay-framework"
+    ];
+  };
+
   warnings =
     # node-override # remove
     lib.optional (lib.versionAtLeast pkgs.nodejs_24.version "24.22.1")

@@ -176,11 +176,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793905190,
-        "narHash": "sha256-U69KWv74WJUN7xsJxvf4iEugKx5boUDVxWWOGlgvBhw=",
+        "lastModified": 1793928460,
+        "narHash": "sha256-rSxATRHdq/scHlsOLfB1AAuXZVOV6b6LH3a66+oFbjk=",
         "owner": "duxlabs-dev",
         "repo": "dux-shell",
-        "rev": "1dab9c5420095cbbe05c5bcc87cec211bb28c3a7",
+        "rev": "c1c789a1584fb09446293c923b434dcb6325b354",
         "type": "github"
       },
       "original": {
@@ -545,11 +545,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1793907564,
-        "narHash": "sha256-eUGFa3Mc8rn8sbGJu8Ix+KTZLOOAFh8HcmByBo55TuY=",
+        "lastModified": 1793926849,
+        "narHash": "sha256-aaotoNiwqG5y5T1TSPRARXFbYMmRQ7tvR/UhcMs6IeM=",
         "owner": "4evy",
         "repo": "nixcord",
-        "rev": "a3ce2391d300b9608d01946dd033139df3a4ccc6",
+        "rev": "a7ec248e9e7d8ed1f3c7fb0a8ff8a0ca4bf3da5f",
         "type": "github"
       },
       "original": {

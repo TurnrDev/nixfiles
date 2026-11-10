@@ -1,31 +1,9 @@
 {
-  lib,
   pkgs,
-  repoLib,
   ...
 }:
 
-let
-  # pip-override # remove-begin
-  pipPatched = pkgs.python3Packages.pip.overridePythonAttrs (
-    _finalAttrs: _previousAttrs: {
-      version = "26.2.2";
-      src = pkgs.fetchFromGitHub {
-        owner = "pypa";
-        repo = "pip";
-        tag = "26.2.2";
-        hash = "sha256-iH5O1kneYzoHpzbfgrJc/8gVr57CNX3/xpwel4ueNqE=";
-      };
-    }
-  );
-  # pip-override # remove-end
-in
 {
-  warnings =
-    # pip-override # remove
-    lib.optional (lib.versionAtLeast pkgs.python3Packages.pip.version "26.2.2")
-      "nixos-unstable now provides pip 26.2.2 or later; remove # pip-override.";
-
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
@@ -51,7 +29,7 @@ in
     ruff
     (python3.withPackages (
       ps: with ps; [
-        (repoLib.versionAtLeastOrLocal pip "26.2.2" pipPatched) # pip-override # pip
+        pip
         requests
         virtualenv
       ]

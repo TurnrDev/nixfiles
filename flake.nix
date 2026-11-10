@@ -1,5 +1,3 @@
-# DO-NOT-EDIT. This file was auto-generated using github:denful/flake-file.
-# Use `nix run .#write-flake` to regenerate it.
 {
   outputs =
     inputs:

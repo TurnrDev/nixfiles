@@ -5,6 +5,7 @@
 {
   imports = [
     ./workstation.nix
+    ../hardware/kemove.nix
   ];
 
   programs.dank-material-shell.plugins.networkStatus.enable = true;

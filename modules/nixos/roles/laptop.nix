@@ -11,6 +11,7 @@
   imports = [
     ./workstation.nix
     ../hardware/bluetooth.nix
+    ../hardware/kemove.nix
     ../hardware/keychron.nix
     ../hardware/logitech-mx-master-3s.nix
     ../common/dockmgr-laptop-monitors.nix

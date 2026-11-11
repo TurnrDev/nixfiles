@@ -26,7 +26,6 @@ in
   imports = [
     inputs.sops-nix.nixosModules.sops
     ../common/authorized-keys.nix
-    ../common/emudhra.nix
     ../common/identity.nix
     ../common/bootloader.nix
     ../services/attic.nix

@@ -28,6 +28,7 @@ let
       // {
         buildInputs = (old.buildInputs or [ ]) ++ [
           final.oniguruma
+          final.sqlite
           final.zstd
         ];
       }

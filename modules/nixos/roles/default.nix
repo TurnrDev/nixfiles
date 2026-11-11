@@ -164,6 +164,7 @@ in
     dmidecode
     file
     gh
+    gnumake
     jq
     localsend
     mtr

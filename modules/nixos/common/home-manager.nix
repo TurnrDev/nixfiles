@@ -40,7 +40,12 @@ in
       identity = config.my.identity;
     };
     users = lib.mkIf config.my.identity.enable {
-      ${config.my.identity.username}.imports = [ homeModule ];
+      ${config.my.identity.username} = {
+        # Home Manager has its own package set, so pass through system
+        # overlays for declaratively installed user packages as well.
+        nixpkgs.overlays = config.nixpkgs.overlays;
+        imports = [ homeModule ];
+      };
     };
   };
 }

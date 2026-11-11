@@ -22,7 +22,8 @@ let
     '';
   };
   tectonicAwsLcWorkaround = final: prev: {
-    codex = prev.codex.overrideAttrs (old:
+    codex = prev.codex.overrideAttrs (
+      old:
       unsetAwsLcSystem old
       // {
         buildInputs = (old.buildInputs or [ ]) ++ [
@@ -89,8 +90,8 @@ in
   };
 
   config = {
-    # aws-lc-sys 0.42.0 cannot use nixpkgs' system-library override when
-    # Tectonic supplies OpenSSL. Build that crate's bundled AWS-LC instead.
+    # aws-lc-sys cannot use nixpkgs' system-library override when a package
+    # supplies OpenSSL. Build that crate's bundled AWS-LC instead.
     nixpkgs.overlays = [ tectonicAwsLcWorkaround ];
 
     # Interactive hosts provide a Wayland session and local sound stack. Xorg

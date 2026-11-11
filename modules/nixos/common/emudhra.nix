@@ -6,21 +6,10 @@
 }:
 
 {
-  # certificate-blacklist # remove-begin
-  security.pki.caCertificateBlacklist = [
-    "Comodo AAA Services root"
-  ];
-  # certificate-blacklist # remove-end
-
   warnings =
-    # certificate-blacklist # remove
-    lib.optional (lib.versionAtLeast pkgs.cacert.version "3.131.1") ''
-      nixos-unstable now includes CA data 3.131.1 or later. Review the eMudhra
-      incident response, then remove security.pki.caCertificateBlacklist if the
-      upstream CA bundle covers the required distrusts.
-    ''
     # mozilla-ca-override # remove
-    ++ lib.optional (lib.versionAtLeast pkgs.emudhraUpstreamMozillaCA.version "20261020") "nixos-unstable now provides Mozilla::CA 20261020 or later; remove # mozilla-ca-override.";
+    lib.optional (lib.versionAtLeast pkgs.emudhraUpstreamMozillaCA.version "20261020")
+      "nixos-unstable now provides Mozilla::CA 20261020 or later; remove # mozilla-ca-override.";
 
   nixpkgs.overlays = [
     (_final: prev: {

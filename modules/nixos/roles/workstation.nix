@@ -16,6 +16,26 @@ let
   hasPersonalFolders = lib.elem hostName config.my.syncthing.personalFolderHosts;
   hasWorkFolders = lib.elem hostName config.my.syncthing.workFolderHosts;
   hasAllFolders = hasPersonalFolders || hasWorkFolders;
+  unsetAwsLcSystem = old: {
+    preBuild = (old.preBuild or "") + ''
+      unset AWS_LC_SYS_USE_SYSTEM
+    '';
+  };
+  tectonicAwsLcWorkaround = final: prev: {
+    codex = prev.codex.overrideAttrs (old:
+      unsetAwsLcSystem old
+      // {
+        buildInputs = (old.buildInputs or [ ]) ++ [
+          final.oniguruma
+          final.zstd
+        ];
+      }
+    );
+    tectonic-unwrapped = prev.tectonic-unwrapped.overrideAttrs unsetAwsLcSystem;
+    tectonic = prev.tectonic.override {
+      inherit (final) tectonic-unwrapped;
+    };
+  };
 in
 {
   imports = [
@@ -69,6 +89,10 @@ in
   };
 
   config = {
+    # aws-lc-sys 0.42.0 cannot use nixpkgs' system-library override when
+    # Tectonic supplies OpenSSL. Build that crate's bundled AWS-LC instead.
+    nixpkgs.overlays = [ tectonicAwsLcWorkaround ];
+
     # Interactive hosts provide a Wayland session and local sound stack. Xorg
     # stays disabled; Xwayland supports the remaining legacy X11 applications
     # inside Hyprland without running an X display server.
@@ -105,7 +129,6 @@ in
     programs.dms-greeter = {
       enable = true;
       configHome = config.my.identity.homeDirectory;
-      quickshell.package = pkgs.quickshell;
       compositor = {
         name = "hyprland";
         customConfig = ''

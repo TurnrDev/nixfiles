@@ -9,17 +9,6 @@
 
 let
   mv = inputs.multiverse.multiverse.${pkgs.stdenv.hostPlatform.system};
-  # node-override # remove-begin
-  nodePatched = pkgs.nodejs_24.overrideAttrs (
-    _finalAttrs: _previousAttrs: {
-      version = "24.22.1";
-      src = pkgs.fetchurl {
-        url = "https://nodejs.org/dist/v24.22.1/node-v24.22.1.tar.xz";
-        hash = "sha256-T1N5eWKAza6wwvNY/QS2oWzE+336g7WoyRqdljtDUjE=";
-      };
-    }
-  );
-  # node-override # remove-end
   borgVersion = repoLib.versionBetween mv "borgbackup" "1.2.6" "2.0.0";
 in
 {
@@ -44,11 +33,6 @@ in
       "jay-framework"
     ];
   };
-
-  warnings =
-    # node-override # remove
-    lib.optional (lib.versionAtLeast pkgs.nodejs_24.version "24.22.1")
-      "nixos-unstable now provides Node.js 24.22.1 or later; remove # node-override.";
 
   sops.secrets.rclone-gdrive-config = {
     sopsFile = ../../secrets/hosts/jay-mopo.yaml;
@@ -158,7 +142,7 @@ in
       jetbrains.idea
       jetbrains.jdk
       kotlin
-      (repoLib.multiverseVersionBetweenOrLocal mv "nodejs" "24.22.1" "25.0.0" nodePatched) # node-override # (mv.version "nodejs" (repoLib.versionBetween mv "nodejs" "24.22.1" "25.0.0"))
+      (mv.version "nodejs" (repoLib.versionBetween mv "nodejs" "24.22.1" "25.0.0"))
       (mv.version "python3" (repoLib.versionBetween mv "python3" "3.11.5" "3.12.0"))
       python313
     ]

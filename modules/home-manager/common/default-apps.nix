@@ -13,10 +13,7 @@ _:
       "x-scheme-handler/about" = [ "firefox.desktop" ];
       "x-scheme-handler/unknown" = [ "firefox.desktop" ];
 
-      "inode/directory" = [ "dev.duxlabs.files.desktop" ];
-      "x-scheme-handler/trash" = [ "dev.duxlabs.files.desktop" ];
-      "x-scheme-handler/sftp" = [ "dev.duxlabs.files.desktop" ];
-      "x-scheme-handler/smb" = [ "dev.duxlabs.files.desktop" ];
+      "inode/directory" = [ "org.kde.dolphin.desktop" ];
 
       "application/pdf" = [ "firefox.desktop" ];
 

@@ -35,10 +35,6 @@
       url = "github:duxlabs-dev/dux-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dux-files = {
-      url = "github:duxlabs-dev/dux-files";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     dux-plugins = {
       url = "github:duxlabs-dev/dux-plugins";
       flake = false;

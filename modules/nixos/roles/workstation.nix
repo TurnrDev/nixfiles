@@ -194,21 +194,18 @@ in
         [
           xdg-desktop-portal-hyprland
           kdePackages.xdg-desktop-portal-kde
-          inputs.dux-files.packages.${stdenv.hostPlatform.system}.default
         ]
       );
       config = {
         common = {
           default = [ "hyprland" ];
           "org.freedesktop.impl.portal.FileChooser" = [
-            "dfiles"
             "kde"
           ];
         };
         hyprland = {
           default = [ "hyprland" ];
           "org.freedesktop.impl.portal.FileChooser" = [
-            "dfiles"
             "kde"
           ];
         };
@@ -223,8 +220,6 @@ in
     # Enable CUPS to print documents.
     services.avahi.enable = true;
     services.printing.enable = true;
-    # Dux Files uses GVfs for browsing network and other remote locations.
-    services.gvfs.enable = true;
 
     # Define workstation-specific groups and packages for the shared user.
     users.users = lib.mkIf config.my.identity.enable {

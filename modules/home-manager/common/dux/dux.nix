@@ -126,8 +126,6 @@ in
     jq
     # Needed for the Home Assistant Monitor plugin's websocket connection.
     qt6.qtwebsockets
-    # The standalone Dux file manager is published from its own flake.
-    inputs.dux-files.packages.${stdenv.hostPlatform.system}.default
   ];
 
   # A widely supported per-user fallback.  Dux itself prefers AccountsService,

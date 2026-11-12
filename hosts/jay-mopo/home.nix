@@ -90,12 +90,15 @@ in
         "borg2"
       ]
       (_: {
-        settings.exclude_patterns = lib.mkAfter [
-          "${config.home.homeDirectory}/Repos/mopo/.db_data"
-          "${config.home.homeDirectory}/Repos/mopo/.redis_data"
-          "*.xb"
-          "*.xb.zstd"
-        ];
+        settings = {
+          exclude_patterns = lib.mkAfter [
+            "${config.home.homeDirectory}/Repos/mopo/.db_data"
+            "${config.home.homeDirectory}/Repos/mopo/.redis_data"
+            "${config.home.homeDirectory}/NoBackup"
+            "*.xb"
+            "*.xb.zstd"
+          ];
+        };
       });
 
 }

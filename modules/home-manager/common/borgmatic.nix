@@ -54,6 +54,7 @@ let
       source_directories = [ homeDirectory ];
       archive_name_format = "{hostname}-{utcnow}";
       exclude_patterns = defaultExcludePatterns;
+      exclude_if_present = [ ".nobackup" ];
       encryption_passcommand = "${pkgs.coreutils}/bin/cat ${borgPassphrasePath}";
       keep_hourly = 4;
       keep_daily = 7;

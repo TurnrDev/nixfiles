@@ -21,6 +21,7 @@
           "${identity.homeDirectory}/.local/share/Steam"
           "${identity.homeDirectory}/.steam-shared"
           "${identity.homeDirectory}/.steam"
+          "srv/nfs/games"
         ];
       });
 }

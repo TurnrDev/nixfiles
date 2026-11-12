@@ -10,6 +10,12 @@ let
     .nix-vscode-extensions.vscode-marketplace;
 in
 {
+  # VS Code 1.144 ignores Home Manager's unversioned extension link and falls
+  # back to a stale manually installed Codex extension. Give its declarative
+  # package the versioned directory name VS Code's scanner expects.
+  home.file.".vscode/extensions/openai.chatgpt-${extensions.openai.chatgpt.version}-linux-x64".source =
+    "${extensions.openai.chatgpt}/share/vscode/extensions/openai.chatgpt";
+
   programs.vscode = {
     enable = true;
     profiles.default = {

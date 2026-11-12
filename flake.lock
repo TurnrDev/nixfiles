@@ -177,11 +177,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794422139,
-        "narHash": "sha256-UTkdyUeyoh0mHriv9kIErM8BOcKUQDi/0Cz1iQnXyrQ=",
+        "lastModified": 1794435745,
+        "narHash": "sha256-u1HQqsNcqjZoS1Wl1ixb+3FARS5CmyEojp/G7ya8Flw=",
         "owner": "duxlabs-dev",
         "repo": "dux-shell",
-        "rev": "565e3ef1f431ae301a18d2953ca5d42b24967404",
+        "rev": "d0456597a637e16b27b815675b132a40c31dc62e",
         "type": "github"
       },
       "original": {
@@ -533,11 +533,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1792270892,
-        "narHash": "sha256-aefPlhND0AelMxBw8g1R0JZKpm/Wkamhj49sbR60pHw=",
+        "lastModified": 1794426370,
+        "narHash": "sha256-l7z9fKPK6ydFFuq3ZmCoRGS+osRrqjZLyOd1ZW5VaOo=",
         "owner": "nix-community",
         "repo": "lanzaboote",
-        "rev": "4b98333073bdaf9b1b5dd7d87c2dab96883b234e",
+        "rev": "2857d5b105c8c41a3f9535aeef544aa7b17ee32e",
         "type": "github"
       },
       "original": {
@@ -611,11 +611,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1794415071,
-        "narHash": "sha256-xbwzslUgUPVXgWMiz6YPsEF+PDFFJqQ8K/pCu/oYA7w=",
+        "lastModified": 1794436729,
+        "narHash": "sha256-kmpJJiXNeV4mqTUvTDOBDGRVMRZJ8b8risxAfbiZTyo=",
         "owner": "4evy",
         "repo": "nixcord",
-        "rev": "fd5203fc8298bef54245dacc5b5c30cd807b6b90",
+        "rev": "07a72fa53b347694ef101aa2ff5aadfc522a79c6",
         "type": "github"
       },
       "original": {

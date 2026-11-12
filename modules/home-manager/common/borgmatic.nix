@@ -39,6 +39,9 @@ let
     "${homeDirectory}/.thumbnails"
     "${homeDirectory}/Downloads"
     "${homeDirectory}/Repos/nixpkgs"
+    "sh:**/.venv"
+    "sh:**/venv"
+    "sh:**/node_modules"
   ];
 
   secretName = "storagebox-borg-passphrase";

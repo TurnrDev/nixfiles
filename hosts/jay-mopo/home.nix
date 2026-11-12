@@ -96,7 +96,7 @@ in
             "${config.home.homeDirectory}/Repos/mopo/.redis_data"
             "${config.home.homeDirectory}/NoBackup"
             "*.xb"
-            "*.xb.zstd"
+            "*.xb.*"
           ];
         };
       });

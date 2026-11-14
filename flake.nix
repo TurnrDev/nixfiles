@@ -1,129 +1,37 @@
 {
-  description = "A very basic flake";
+  outputs =
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        ./core.nix
+        (inputs.import-tree ./modules)
+      ];
+    };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    # The Marketplace expressions are regenerated daily. Renovate updates this
-    # lock-file input, keeping VS Code extensions independent of nixpkgs.
-    nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
-    # Historical Nixpkgs package sets, evaluated only when a version is selected.
-    # Keep `nixpkgs` as the real base input: flake inputs that follow it require
-    # the normal nixpkgs lib and legacyPackages interface.
-    multiverse.url = "github:fzakaria/nixpkgs-multiverse";
-    kytyps5 = {
-      url = "github:KytyPS5/KytyPS5";
-      inputs.nixpkgs.follows = "nixpkgs";
+    AquaticOS = {
+      url = "git+https://git.aquaticservers.com/aqua/AquaticOS";
+      inputs = {
+        flake-file.follows = "flake-file";
+        flake-parts.follows = "flake-parts";
+        home-manager.follows = "home-manager";
+        import-tree.follows = "import-tree";
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-master.follows = "nixpkgs-master";
+        nixpkgs-unstable.follows = "nixpkgs-unstable";
+        nur.follows = "nur";
+      };
     };
-    dockmgr = {
-      url = "path:./packages/dockmgr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    flake-file.url = "github:vic/flake-file";
+    flake-parts.url = "github:hercules-ci/flake-parts";
     home-manager = {
-      url = "github:nix-community/home-manager/";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    stylix = {
-      url = "github:nix-community/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixcord.url = "github:4evy/nixcord";
-    dux = {
-      url = "github:duxlabs-dev/dux-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    dux-greeter = {
-      url = "github:duxlabs-dev/dux-greeter";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    dux-plugins = {
-      url = "github:duxlabs-dev/dux-plugins";
-      flake = false;
-    };
-    dux-screenshot = {
-      url = "github:JDKamalakar/DMS-Screenshot";
-      flake = false;
-    };
-    dux-plugin-hass = {
-      url = "github:xxyangyoulin/dms-plugin-hass";
-      flake = false;
-    };
-    dux-plugin-docker-manager = {
-      url = "github:LuckShiba/DmsDockerManager";
-      flake = false;
-    };
-    dux-emoji-launcher = {
-      url = "github:devnullvoid/dms-emoji-launcher";
-      flake = false;
-    };
-    zsh-command-time = {
-      url = "github:popstas/zsh-command-time";
-      flake = false;
-    };
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    spicetify-nix = {
-      url = "github:Gerg-L/spicetify-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    import-tree.url = "github:vic/import-tree";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    nixpkgs-master.url = "github:nixos/nixpkgs";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nur.url = "github:nix-community/nur";
   };
-
-  outputs =
-    { self, nixpkgs, ... }@inputs:
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-      repoLib = import ./lib { inherit (nixpkgs) lib; };
-      treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-      mkHost =
-        hostDirectory:
-        nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs repoLib;
-            homeModule = hostDirectory + "/home.nix";
-          };
-          modules = [
-            (hostDirectory + "/configuration.nix")
-            inputs.stylix.nixosModules.stylix
-            inputs.home-manager.nixosModules.default
-            ./modules/nixos/common/home-manager.nix
-          ];
-        };
-    in
-    {
-      formatter.${system} = treefmtEval.config.build.wrapper;
-
-      devShells.${system}.default = pkgs.mkShell {
-        packages = [ pkgs.coreutils ];
-
-        shellHook = ''
-          ${pkgs.coreutils}/bin/install -m 755 .githooks/pre-commit .git/hooks/pre-commit
-        '';
-      };
-
-      checks.${system}.formatting = treefmtEval.config.build.check self;
-
-      nixosConfigurations = {
-        jay-framework = mkHost ./hosts/jay-framework;
-        jay-desktop = mkHost ./hosts/jay-desktop;
-        jay-mopo = mkHost ./hosts/jay-mopo;
-        g9-switcher = mkHost ./hosts/g9-switcher;
-
-        # Compatibility alias so plain `nixos-rebuild` works on hosts named "nixos".
-        # nixos = mkHost ./hosts/<newhost>;
-      };
-    };
 }

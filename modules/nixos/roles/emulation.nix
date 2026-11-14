@@ -1,13 +1,20 @@
 {
   config,
+  # inputs,
   pkgs,
   ...
 }:
 
-# let
-#   es-de = pkgs.callPackage ../../../packages/es-de { };
-#   sharpemu = pkgs.callPackage ../../../packages/sharpemu { };
-# in
+let
+  # multiverse = inputs.multiverse.lib.mkMultiverse {
+  #   system = pkgs.stdenv.hostPlatform.system;
+  #   config = {
+  #     allowUnfree = true;
+  #     permittedInsecurePackages = [ "es-de-3.4.1" ];
+  #   };
+  # };
+  # es-de = multiverse.version "es-de" "3.4.1";
+in
 {
   boot.supportedFilesystems = [ "nfs" ];
 

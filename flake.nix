@@ -10,6 +10,10 @@
     # Keep `nixpkgs` as the real base input: flake inputs that follow it require
     # the normal nixpkgs lib and legacyPackages interface.
     multiverse.url = "github:fzakaria/nixpkgs-multiverse";
+    kytyps5 = {
+      url = "github:KytyPS5/KytyPS5";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     dockmgr = {
       url = "path:./packages/dockmgr";
       inputs.nixpkgs.follows = "nixpkgs";

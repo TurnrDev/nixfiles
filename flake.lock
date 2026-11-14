@@ -464,6 +464,26 @@
         "type": "github"
       }
     },
+    "kytyps5": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794648838,
+        "narHash": "sha256-WgLsNQUBaRbN0DupWtsdpIQL+lP3MQhMDJdLC1WtC0c=",
+        "owner": "KytyPS5",
+        "repo": "KytyPS5",
+        "rev": "3e226bff9d757cf973672979050d82d77e5a30ef",
+        "type": "github"
+      },
+      "original": {
+        "owner": "KytyPS5",
+        "repo": "KytyPS5",
+        "type": "github"
+      }
+    },
     "lanzaboote": {
       "inputs": {
         "crane": "crane",
@@ -695,6 +715,7 @@
         "dux-plugins": "dux-plugins",
         "dux-screenshot": "dux-screenshot",
         "home-manager": "home-manager",
+        "kytyps5": "kytyps5",
         "lanzaboote": "lanzaboote",
         "multiverse": "multiverse",
         "nix-vscode-extensions": "nix-vscode-extensions",

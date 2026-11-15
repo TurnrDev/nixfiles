@@ -1,0 +1,158 @@
+{ inputs, ... }:
+
+{
+  flake.modules.nixos.role-default =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    {
+      imports = with inputs.self.modules.nixos; [
+        inputs.sops-nix.nixosModules.sops
+        program-zsh
+        system-bootloader
+      ];
+
+      boot.kernelModules = [ "fuse" ];
+      programs.fuse.enable = true;
+      programs.fuse.userAllowOther = true;
+
+      # Use latest kernel.
+      boot.kernelPackages = pkgs.linuxPackages_latest;
+
+      # Include firmware needed by GPUs, wireless adapters and other devices.
+      hardware.enableRedistributableFirmware = lib.mkDefault true;
+
+      # Keep /tmp clean
+      boot.tmp.cleanOnBoot = true;
+
+      # Enable networking
+      networking.networkmanager.enable = true;
+      networking.hosts = {
+        "10.117.25.10" = [
+          "home"
+          "home.turnr.net"
+        ];
+        "10.117.25.11" = [ "jay-desktop" ];
+        "10.117.25.14" = [ "g9-switcher" ];
+        # WireGuard peers, available regardless of public DNS availability.
+        "10.117.25.241" = [ "jay-framework" ];
+        "10.117.25.242" = [ "jay-mopo" ];
+        "fd00:7389:538a:05fd::3" = [ "jay-framework" ];
+        "fd00:7389:538a:05fd::4" = [ "jay-mopo" ];
+      };
+
+      # Set your time zone.
+      time.timeZone = "Europe/London";
+
+      # Select internationalisation properties.
+      i18n.defaultLocale = "en_GB.UTF-8";
+
+      i18n.extraLocaleSettings = {
+        LC_ADDRESS = "en_GB.UTF-8";
+        LC_IDENTIFICATION = "en_GB.UTF-8";
+        LC_MEASUREMENT = "en_GB.UTF-8";
+        LC_MONETARY = "en_GB.UTF-8";
+        LC_NAME = "en_GB.UTF-8";
+        LC_NUMERIC = "en_GB.UTF-8";
+        LC_PAPER = "en_GB.UTF-8";
+        LC_TELEPHONE = "en_GB.UTF-8";
+        LC_TIME = "en_GB.UTF-8";
+      };
+
+      # Use the XKB layout/variant for the TTY and initrd so the early LUKS
+      # unlock prompt matches the desktop keyboard layout.
+      console = {
+        useXkbConfig = true;
+        earlySetup = true;
+      };
+
+      # Allow unfree packages
+      nixpkgs.config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          "electron-39.8.10"
+        ];
+      };
+      nix = {
+        # Jay's additional Nix trust is configured by user-jay.
+        settings.trusted-users = [
+          "root"
+        ];
+        settings.experimental-features = [
+          # Enables flake commands such as `nix fmt`.
+          "nix-command"
+          "flakes"
+        ];
+      };
+
+      # Every host decrypts system and user-consumed secrets with its root-only
+      # OpenSSH host identity, which is available before /home is mounted.
+      sops.age.sshKeyPaths = [
+        "/etc/ssh/ssh_host_ed25519_key"
+      ];
+
+      environment.systemPackages = with pkgs; [
+        android-tools
+        busybox
+        dig
+        dmidecode
+        file
+        gh
+        gnumake
+        jq
+        localsend
+        mtr
+        nano
+        nmap
+        p7zip
+        pciutils
+        ripgrep
+        sbctl
+        screen
+        smartmontools
+        sops
+        tpm2-tss
+        unzip
+        usbutils
+        wakeonlan
+        wget
+        whois
+        yq
+        zstd
+      ];
+
+      users.users = lib.optionalAttrs (config.my.users ? jay) {
+        ${config.my.users.jay.username} = {
+          extraGroups = [
+            "adbusers"
+            "docker"
+            "wheel"
+          ];
+        };
+      };
+
+      virtualisation.docker.enable = true;
+
+      services.fwupd.enable = true;
+
+      services.openssh.enable = true;
+
+      # Preserve the release used for the initial installation.
+      system.stateVersion = "25.11";
+    };
+
+  flake.modules.homeManager.role-default = {
+    imports = with inputs.self.modules.homeManager; [
+      program-git
+      program-zsh
+    ];
+
+    home.stateVersion = "25.11";
+    nixpkgs.config.allowUnfree = true;
+
+    programs.btop.enable = true;
+  };
+}

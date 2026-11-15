@@ -53,7 +53,6 @@ The recovery recipient must be present both in `.sops.yaml` and in each
 encrypted file's SOPS metadata. Adding it to `.sops.yaml` alone is not enough.
 
 - [x] `secrets/shared.yaml`
-- [x] `secrets/obojima-glyph.ttf.json`
 - [x] `secrets/hosts/jay-mopo.yaml`
 - [x] `secrets/hosts/jay-framework.yaml`
 - [x] `secrets/hosts/jay-desktop.yaml`
@@ -154,11 +153,13 @@ old public key.
 
 ### 4. Rebuild and verify services
 
-Follow the bootstrap and rebuild steps in `NEW_HOST_SETUP.md`, then start the
-user secret service:
+Follow the bootstrap and rebuild steps in [the new host guide](docs/new-host.md),
+then check system secret provisioning:
 
 ```sh
-systemctl --user start sops-nix.service
+systemctl status sops-nix.service
+test -r /run/secrets/storagebox-borg-passphrase
+test -r /run/secrets/ovh-borg2-aws-credentials
 ```
 
 Verify both backup generations:
@@ -265,9 +266,6 @@ exposed, create a new repository with fresh encryption key material, make and
 verify a fresh backup, and retire the old repository. Previously copied data
 from the old repository cannot be made confidential again.
 
-Follow the compromise-specific warning in
-[`migration/borg-passphrases.md`](migration/borg-passphrases.md#compromise-changes-the-procedure)
-when planning the per-host passphrase migration and repository replacement.
 Borg explicitly documents that changing the passphrase after the key and
 passphrase were compromised does not protect past or future backups in that
 repository:

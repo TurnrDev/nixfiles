@@ -49,9 +49,7 @@
       '';
     in
     {
-      imports = with inputs.self.modules.nixos; [
-        system-nix-github-auth
-      ];
+      imports = [ inputs.sops-nix.nixosModules.sops ];
 
       options.my.attic = {
         enable = lib.mkEnableOption "the private home Attic binary cache" // {

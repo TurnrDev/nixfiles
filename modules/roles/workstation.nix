@@ -45,17 +45,17 @@
     in
     {
       imports = with inputs.self.modules.nixos; [
-        role-default
+        desktop-dux
         desktop-hyprland
-        service-borgmatic
+        inputs.dockmgr.nixosModules.default
         role-cad
+        role-default
+        role-python-development
+        service-borgmatic
         service-go-hass-agent
         service-kdeconnect
-        inputs.dockmgr.nixosModules.default
-        desktop-dux
-        role-python-development
-        theme-stylix
         service-libvirt
+        theme-stylix
       ];
 
       options.my.syncthing.personalDeviceList = lib.mkOption {

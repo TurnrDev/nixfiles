@@ -15,9 +15,9 @@ in
     {
       key = "user-jay";
       imports = with inputs.self.modules.nixos; [
-        system-home-manager
-        program-zsh
         program-git
+        program-zsh
+        system-home-manager
       ];
 
       options.my.users.${username} = {

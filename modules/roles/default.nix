@@ -16,8 +16,8 @@
     }:
     {
       imports = with inputs.self.modules.nixos; [
-        program-zsh
         inputs.sops-nix.nixosModules.sops
+        program-zsh
         system-bootloader
       ];
 

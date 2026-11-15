@@ -23,11 +23,11 @@
     in
     {
       imports = with inputs.self.modules.nixos; [
-        user-jay
         desk-work
         role-java-development
         role-laptop
         role-nix-builder
+        user-jay
       ];
 
       networking.hostName = "jay-mopo";
@@ -176,9 +176,9 @@
     in
     {
       imports = with inputs.self.modules.homeManager; [
-        role-laptop
-        jay-mopo-grafana
         jay-mopo-google-drive
+        jay-mopo-grafana
+        role-laptop
       ];
 
       # The keyboard's dedicated screenshot key emits Super+Shift+R.

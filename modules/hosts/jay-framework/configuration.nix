@@ -12,10 +12,10 @@
       networking.hostName = "jay-framework";
 
       imports = with inputs.self.modules.nixos; [
-        user-jay
-        role-nix-builder
-        role-laptop
         role-gaming
+        role-laptop
+        role-nix-builder
+        user-jay
       ];
 
       my.wireguard.home = {
@@ -47,8 +47,8 @@
     { config, lib, ... }:
     {
       imports = with inputs.self.modules.homeManager; [
-        role-laptop
         role-gaming
+        role-laptop
       ];
 
       programs.borgmatic.backups =

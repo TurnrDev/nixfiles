@@ -5,8 +5,8 @@
     { pkgs, ... }:
     {
       imports = with inputs.self.modules.nixos; [
-        system-nix-github-auth
         service-attic-client
+        system-nix-github-auth
       ];
 
       # Build/deploy tools and standalone formatters; nix fmt uses the flake formatter.

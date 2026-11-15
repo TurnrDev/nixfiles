@@ -9,10 +9,10 @@
     { config, ... }:
     {
       imports = with inputs.self.modules.nixos; [
-        user-jay
-        role-default
-        hardware-low-ram
         g9-switcher-monitorctl
+        hardware-low-ram
+        role-default
+        user-jay
       ];
 
       networking.hostName = "g9-switcher";

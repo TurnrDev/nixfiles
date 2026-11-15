@@ -8,14 +8,14 @@
     { config, ... }:
     {
       imports = with inputs.self.modules.nixos; [
-        role-workstation
-        system-plymouth-luks
+        desk-azelphur-workbench
+        desk-base
+        desk-home
         hardware-bluetooth
         hardware-laptop-displays
-        desk-base
-        desk-azelphur-workbench
-        desk-home
+        role-workstation
         service-wireguard
+        system-plymouth-luks
       ];
 
       # Enable touchpad input.
@@ -40,8 +40,8 @@
     { ... }:
     {
       imports = with inputs.self.modules.homeManager; [
-        role-workstation
         desk-azelphur-workbench
+        role-workstation
       ];
 
       programs.dank-material-shell.plugins.networkStatus.enable = true;

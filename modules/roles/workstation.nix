@@ -1,11 +1,4 @@
-{
-  config,
-  inputs,
-  lib,
-  osConfig,
-  pkgs,
-  ...
-}:
+{ inputs, ... }:
 
 {
   flake.modules.nixos.role-workstation =

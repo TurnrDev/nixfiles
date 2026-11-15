@@ -5,6 +5,8 @@
     { lib, pkgs, ... }:
 
     {
+      imports = [ inputs.stylix.nixosModules.stylix ];
+
       # System-wide Stylix complements the Home Manager configuration: it owns
       # TTY, boot, display-manager, GTK/Qt, and font integration where those
       # targets are configured at the NixOS layer.

@@ -71,7 +71,7 @@
         };
 
         sops.secrets.attic-token = {
-          sopsFile = ../../../secrets/shared.yaml;
+          sopsFile = ../../secrets/shared.yaml;
           owner = "root";
           group = "root";
           mode = "0400";

@@ -1,10 +1,4 @@
-{
-  config,
-  inputs,
-  lib,
-  pkgs,
-  ...
-}:
+{ inputs, ... }:
 
 {
   flake.modules.nixos.role-default =

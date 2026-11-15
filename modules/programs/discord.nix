@@ -1,9 +1,4 @@
-{
-  osConfig,
-  inputs,
-  lib,
-  ...
-}:
+{ inputs, ... }:
 
 {
   flake.modules.homeManager.program-discord =

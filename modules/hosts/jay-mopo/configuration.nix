@@ -1,11 +1,4 @@
-{
-  config,
-  inputs,
-  lib,
-  pkgs,
-  repoLib,
-  ...
-}:
+{ inputs, ... }:
 
 {
   flake.modules.nixos.jay-mopo =
@@ -33,7 +26,7 @@
       networking.hostName = "jay-mopo";
 
       sops.secrets.rclone-gdrive-config = {
-        sopsFile = ../../secrets/hosts/jay-mopo.yaml;
+        sopsFile = ../../../secrets/hosts/jay-mopo.yaml;
         owner = config.users.users.jay.name;
         group = "users";
         mode = "0400";
@@ -43,7 +36,7 @@
 
       my.wireguard.home = {
         enable = true;
-        sopsFile = ../../secrets/hosts/jay-mopo.yaml;
+        sopsFile = ../../../secrets/hosts/jay-mopo.yaml;
         ipv4Address = "10.117.25.242/32";
         ipv6Address = "fd00:7389:538a:05fd::4/64";
       };

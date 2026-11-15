@@ -187,7 +187,7 @@ in
           emojiLauncher.src = inputs."dux-emoji-launcher";
           networkStatus = {
             enable = lib.mkDefault false;
-            src = ../../../../packages/dux-network-status;
+            src = ../../../packages/dux-network-status;
           };
         };
 

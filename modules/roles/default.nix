@@ -22,6 +22,9 @@
       # Use latest kernel.
       boot.kernelPackages = pkgs.linuxPackages_latest;
 
+      # Include firmware needed by GPUs, wireless adapters and other devices.
+      hardware.enableRedistributableFirmware = lib.mkDefault true;
+
       # Keep /tmp clean
       boot.tmp.cleanOnBoot = true;
 

@@ -1,0 +1,128 @@
+{ inputs, ... }:
+
+let
+  sharedGitSettings = {
+    init.defaultBranch = "main";
+  };
+in
+{
+  flake.modules.nixos.program-git =
+    { config, ... }:
+    {
+      imports = with inputs.self.modules.nixos; [
+        system-nix-github-auth
+      ];
+
+      # Decrypt the signing key during system activation for the user service.
+      sops.secrets.git-signing-secret-key = {
+        sopsFile = ../../secrets/shared.yaml;
+        owner = config.my.identity.username;
+        group = "users";
+        mode = "0400";
+      };
+
+      programs.git = {
+        enable = true;
+        lfs.enable = true;
+        config = sharedGitSettings;
+      };
+    };
+
+  flake.modules.homeManager.program-git =
+    {
+      config,
+      lib,
+      osConfig,
+      pkgs,
+      ...
+    }:
+
+    let
+      gitName = osConfig.my.users.${config.home.username}.fullName;
+      gitEmail = osConfig.my.users.${config.home.username}.email;
+      inherit (osConfig.my.users.${config.home.username}) homeDirectory;
+      reposDir = "${homeDirectory}/Repos";
+      gpg = lib.getExe config.programs.gpg.package;
+      gpgconf = lib.getExe' config.programs.gpg.package "gpgconf";
+      sshKeygen = lib.getExe' pkgs.openssh "ssh-keygen";
+      sshDir = "${homeDirectory}/.ssh";
+      sshKeyPath = "${sshDir}/id_ed25519";
+      gpgHome = toString config.programs.gpg.homedir;
+      signingKey = "E4C8D6EEB05503E94B2896CA53C55D34138B4E04";
+      signingSecretName = "git-signing-secret-key";
+      signingSecretPath = osConfig.sops.secrets.${signingSecretName}.path;
+      importSigningKey = pkgs.writeShellScript "import-git-signing-key" ''
+        set -eu
+
+        export GNUPGHOME=${lib.escapeShellArg gpgHome}
+
+        if ${gpg} --batch --list-secret-keys ${lib.escapeShellArg signingKey} >/dev/null 2>&1; then
+          exit 0
+        fi
+
+        ${gpgconf} --launch gpg-agent >/dev/null 2>&1 || true
+        ${gpg} --batch --import ${lib.escapeShellArg signingSecretPath}
+      '';
+    in
+    lib.mkMerge [
+      {
+        programs.git = {
+          enable = true;
+          lfs.enable = true;
+          settings = sharedGitSettings // {
+            user = {
+              name = gitName;
+              email = gitEmail;
+            };
+          };
+          signing = {
+            format = "openpgp";
+            key = signingKey;
+            signByDefault = true;
+          };
+        };
+
+        programs.gpg = {
+          enable = true;
+        };
+
+        services.gpg-agent = {
+          enable = true;
+          enableZshIntegration = true;
+          defaultCacheTtl = 1800;
+          maxCacheTtl = 7200;
+          pinentry.package = pkgs.pinentry-qt;
+        };
+
+        systemd.user.services.import-git-signing-key = {
+          Unit = {
+            Description = "Import Git signing GPG key";
+            AssertPathExists = [ signingSecretPath ];
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = importSigningKey;
+          };
+          Install.WantedBy = [ "default.target" ];
+        };
+
+        home.activation.createReposDirectory = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          run mkdir -p ${lib.escapeShellArg reposDir}
+        '';
+      }
+
+      (lib.mkIf osConfig.my.users.${config.home.username}.keyBootstrap.enable {
+        home.activation.generateIdentityKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          export GNUPGHOME=${lib.escapeShellArg gpgHome}
+
+          if [[ ! -d ${lib.escapeShellArg sshDir} ]]; then
+            run mkdir -m 700 -p ${lib.escapeShellArg sshDir}
+          fi
+
+          if [[ ! -f ${lib.escapeShellArg sshKeyPath} ]]; then
+            run ${sshKeygen} -q -t ed25519 -a 100 -C ${lib.escapeShellArg gitEmail} -N "" -f ${lib.escapeShellArg sshKeyPath}
+          fi
+        '';
+      })
+    ];
+}

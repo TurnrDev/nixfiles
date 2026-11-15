@@ -52,7 +52,6 @@ When `.sops.yaml` changes, rewrap every affected secret file:
 
 ```sh
 sops updatekeys -y shared.yaml
-sops updatekeys -y obojima-glyph.ttf.json
 sops updatekeys -y hosts/"$(hostname)".yaml
 ```
 

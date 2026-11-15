@@ -14,23 +14,11 @@
       pkgs,
       ...
     }:
-    let
-      userSecretOwner = config.my.identity.username;
-      hostSecretsFile = ../../../secrets/hosts + "/${config.networking.hostName}.yaml";
-      borgmaticEnabled = lib.attrByPath [
-        "home-manager"
-        "users"
-        config.my.identity.username
-        "programs"
-        "borgmatic"
-        "enable"
-      ] false config;
-    in
     {
-      imports = [
+      imports = with inputs.self.modules.nixos; [
+        program-zsh
         inputs.sops-nix.nixosModules.sops
-        ../common/bootloader.nix
-        ../services/attic.nix
+        system-bootloader
       ];
 
       boot.kernelModules = [ "fuse" ];
@@ -84,9 +72,6 @@
         earlySetup = true;
       };
 
-      programs.zsh.enable = true;
-      users.defaultUserShell = pkgs.zsh;
-
       # Allow unfree packages
       nixpkgs.config = {
         allowUnfree = true;
@@ -106,9 +91,6 @@
           "nix-command"
           "flakes"
         ];
-        extraOptions = ''
-          !include /etc/nix/github-access-token.conf
-        '';
       };
 
       # Every host decrypts system and user-consumed secrets with its root-only
@@ -116,42 +98,6 @@
       sops.age.sshKeyPaths = [
         "/etc/ssh/ssh_host_ed25519_key"
       ];
-
-      # Decrypt user-consumed secrets during system activation so Home Manager
-      # services never need access to a SOPS identity. The files remain readable
-      # only by their intended desktop user.
-      sops.secrets = {
-        github-token = {
-          sopsFile = ../../../secrets/shared.yaml;
-        };
-      }
-      // {
-        git-signing-secret-key = {
-          sopsFile = ../../../secrets/shared.yaml;
-          owner = userSecretOwner;
-          group = "users";
-          mode = "0400";
-        };
-      }
-      // lib.optionalAttrs borgmaticEnabled {
-        storagebox-borg-passphrase = {
-          sopsFile = hostSecretsFile;
-          owner = userSecretOwner;
-          group = "users";
-          mode = "0400";
-        };
-      };
-
-      sops.templates."github-access-token.conf" = {
-        path = "/etc/nix/github-access-token.conf";
-        content = ''
-          access-tokens = github.com=${config.sops.placeholder.github-token}
-        '';
-        owner = "root";
-        group = "root";
-        mode = "0400";
-        restartUnits = [ "nix-daemon.service" ];
-      };
 
       # List packages installed in system profile. To search, run:
       # $ nix search wget
@@ -167,8 +113,6 @@
         localsend
         mtr
         nano
-        nixfmt
-        nixfmt-tree
         nmap
         p7zip
         pciutils
@@ -197,28 +141,11 @@
         };
       };
 
-      # Some programs need SUID wrappers, can be configured further or are
-      # started in user sessions.
-      # programs.mtr.enable = true;
-      # programs.gnupg.agent = {
-      #   enable = true;
-      #   enableSSHSupport = true;
-      # };
-
-      # List services that you want to enable:
-
       virtualisation.docker.enable = true;
 
       services.fwupd.enable = true;
 
-      # Enable the OpenSSH daemon.
       services.openssh.enable = true;
-
-      # Open ports in the firewall.
-      # networking.firewall.allowedTCPPorts = [ ... ];
-      # networking.firewall.allowedUDPPorts = [ ... ];
-      # Or disable the firewall altogether.
-      # networking.firewall.enable = false;
 
       # This value determines the NixOS release from which the default
       # settings for stateful data, like file locations and database versions

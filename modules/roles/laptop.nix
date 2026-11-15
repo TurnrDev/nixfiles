@@ -9,6 +9,7 @@
     {
       imports = with inputs.self.modules.nixos; [
         role-workstation
+        system-plymouth-luks
         hardware-bluetooth
         desk-azelphur-floating
         desk-home
@@ -27,8 +28,6 @@
         enable = true;
         user = config.home.username;
       };
-
-      boot.plymouth.enable = true;
 
       services.logind.settings.Login = {
         HandleLidSwitch = "suspend";

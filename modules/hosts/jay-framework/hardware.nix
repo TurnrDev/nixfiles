@@ -19,7 +19,8 @@
       "usb_storage"
       "sd_mod"
     ];
-    boot.initrd.kernelModules = [ ];
+    # Plymouth needs early KMS to show the graphical LUKS prompt.
+    boot.initrd.kernelModules = [ "amdgpu" ];
     boot.kernelModules = [ "kvm-amd" ];
     boot.extraModulePackages = [ ];
 

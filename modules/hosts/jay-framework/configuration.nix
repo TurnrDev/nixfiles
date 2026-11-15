@@ -33,13 +33,6 @@
       variant = "colemak";
     };
 
-    # Plymouth needs early KMS to show the graphical LUKS prompt.
-    boot.initrd.kernelModules = [ "amdgpu" ];
-    hardware.graphics = {
-      enable = true;
-      enable32Bit = true;
-    };
-
     users.users = {
       ${config.home.username} = {
         extraGroups = [ "kvm" ];

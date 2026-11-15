@@ -17,7 +17,6 @@
     }:
     let
       hostName = config.networking.hostName;
-      avatar = ../../../assets/jay.png;
       hasPersonalFolders = lib.elem hostName config.my.syncthing.personalFolderHosts;
       hasWorkFolders = lib.elem hostName config.my.syncthing.workFolderHosts;
       hasAllFolders = hasPersonalFolders || hasWorkFolders;
@@ -47,17 +46,17 @@
     {
       imports = with inputs.self.modules.nixos; [
         role-default
-        ../common/borgmatic.nix
-        ../common/cad.nix
-        ../common/go-hass-agent.nix
+        desktop-hyprland
+        program-git
+        service-borgmatic
+        role-cad
+        service-go-hass-agent
+        service-kdeconnect
         inputs.dockmgr.nixosModules.default
-        inputs.dux-greeter.nixosModules.default
-        ../services/dux-home-assistant-monitor.nix
-        ../common/gradle.nix
-        ../common/obojima-glyph.nix
-        ../common/python.nix
-        ../common/stylix.nix
-        ../common/virtualisation.nix
+        desktop-dux
+        role-python-development
+        theme-stylix
+        service-libvirt
       ];
 
       options.my.syncthing.personalDeviceList = lib.mkOption {
@@ -116,111 +115,7 @@
           pulse.enable = true;
         };
 
-        # Dux reads the user icon from AccountsService.  Keep its standard icon
-        # location backed by the checked-in avatar so the desktop and greeter use
-        # the same image on every host.  Nix copies the source into /nix/store,
-        # so the link never points at the working tree.
-        services.accounts-daemon.enable = true;
-        systemd.tmpfiles.rules = [
-          "d /var/lib/AccountsService/icons 0755 root root -"
-          "L+ /var/lib/AccountsService/icons/${config.my.identity.username} - - - - ${avatar}"
-        ];
-
         programs.dockmgr.enable = true;
-        # Use Hyprland's built-in UWSM session and let Dux remember whichever
-        # session was chosen last, while still defaulting system-side to UWSM.
-        services.displayManager = {
-          defaultSession = "hyprland-uwsm";
-        };
-
-        programs.dms-greeter = {
-          enable = true;
-          configHome = config.my.identity.homeDirectory;
-          compositor = {
-            name = "hyprland";
-            customConfig = ''
-              hl.env("DMS_RUN_GREETER", "1")
-              hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
-              hl.env("XCURSOR_SIZE", "24")
-              hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
-              hl.env("HYPRCURSOR_SIZE", "24")
-              hl.config({
-                misc = {
-                  disable_hyprland_logo = true,
-                  disable_splash_rendering = true,
-                },
-                input = {
-                  kb_layout = "${config.services.xserver.xkb.layout}",
-                  kb_variant = "${config.services.xserver.xkb.variant}",
-                  numlock_by_default = true,
-                  resolve_binds_by_sym = true,
-                },
-              })
-
-              hl.device({
-                name = "keychron-keychron-v6-max",
-                kb_layout = "gb",
-                kb_variant = "",
-                resolve_binds_by_sym = true,
-              })
-
-              hl.device({
-                name = "keychron--keychron-link--keyboard",
-                kb_layout = "gb",
-                kb_variant = "",
-                resolve_binds_by_sym = true,
-              })
-
-              hl.on("hyprland.start", function()
-                hl.exec_cmd("${config.programs.dockmgr.package}/bin/dockmgr watch --config ${config.programs.dockmgr.configFile} --context greeter")
-              end)
-            '';
-          };
-        };
-
-        # The greeter owns a separate Hyprland instance. Restart it on a dockmgr
-        # update so its compositor-local watcher immediately uses the new package
-        # and generated profile configuration.
-        systemd.services.greetd.restartTriggers = [
-          config.programs.dockmgr.package
-          config.programs.dockmgr.configFile
-        ];
-
-        # Keep the full Plasma session easy to restore for troubleshooting, but
-        # don't install it in the normal day-to-day Hyprland setup.
-        services.displayManager.sddm.enable = false;
-        # services.desktopManager.plasma6.enable = true;
-
-        xdg.portal = {
-          enable = true;
-          xdgOpenUsePortal = false;
-          extraPortals = lib.mkForce (
-            with pkgs;
-            [
-              xdg-desktop-portal-hyprland
-              kdePackages.xdg-desktop-portal-kde
-            ]
-          );
-          config = {
-            common = {
-              default = [ "hyprland" ];
-              "org.freedesktop.impl.portal.FileChooser" = [
-                "kde"
-              ];
-            };
-            hyprland = {
-              default = [ "hyprland" ];
-              "org.freedesktop.impl.portal.FileChooser" = [
-                "kde"
-              ];
-            };
-          };
-        };
-
-        # Some KDE utilities launched under Hyprland still look for the generic
-        # applications.menu instead of honoring XDG_MENU_PREFIX=plasma-.
-        environment.etc."xdg/menus/applications.menu".source =
-          "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
 
         # Enable CUPS to print documents.
         services.avahi.enable = true;
@@ -234,35 +129,6 @@
               "wheel"
             ];
             packages = with pkgs; [ ];
-          };
-        };
-
-        programs.kdeconnect.enable = true;
-
-        programs.git = {
-          enable = true;
-          lfs.enable = true;
-          config = {
-            core.excludesFile = "/etc/gitignore";
-            init.defaultBranch = "main";
-          };
-        };
-
-        environment.etc."gitignore".text = ''
-          .codex
-        '';
-
-        programs.hyprland = {
-          enable = true;
-          xwayland.enable = true;
-          withUWSM = true;
-        };
-        programs.foot = {
-          enable = true;
-          settings = {
-            main = {
-              shell = "zsh";
-            };
           };
         };
 
@@ -371,19 +237,20 @@
     }:
     {
       imports = with inputs.self.modules.homeManager; [
-        role-default
-        ../common/borgmatic.nix
-        ../common/default-apps.nix
-        ../common/codex.nix
-        program-discord
+        desktop-default-apps
+        desktop-hyprland
         inputs.dockmgr.homeManagerModules.default
-        ../common/firefox.nix
-        ../common/go-hass-agent.nix
-        ../common/hyprland/hyprland.nix
-        ../common/kdeconnect.nix
+        program-codex
+        program-discord
+        program-firefox
         program-spotify
-        ../common/stylix.nix
-        ../common/vscode.nix
+        program-vscode
+        role-default
+        role-python-development
+        service-borgmatic
+        service-go-hass-agent
+        service-kdeconnect
+        theme-stylix
       ];
 
       fonts.fontconfig = {

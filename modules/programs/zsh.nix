@@ -6,10 +6,14 @@
 }:
 
 {
-  flake.modules.homeManager.program-zsh = {
-    # `uv tool install` places executables in ~/.local/bin by default.  # TODO: Move to python.nix
-    home.sessionPath = [ "$HOME/.local/bin" ];
+  flake.modules.nixos.program-zsh =
+    { pkgs, ... }:
+    {
+      programs.zsh.enable = true;
+      users.defaultUserShell = pkgs.zsh;
+    };
 
+  flake.modules.homeManager.program-zsh = {
     home.sessionVariables = {
       EDITOR = "nano";
       VISUAL = "code --wait";

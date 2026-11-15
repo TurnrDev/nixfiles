@@ -53,7 +53,6 @@ The recovery recipient must be present both in `.sops.yaml` and in each
 encrypted file's SOPS metadata. Adding it to `.sops.yaml` alone is not enough.
 
 - [x] `secrets/shared.yaml`
-- [x] `secrets/obojima-glyph.ttf.json`
 - [x] `secrets/hosts/jay-mopo.yaml`
 - [x] `secrets/hosts/jay-framework.yaml`
 - [x] `secrets/hosts/jay-desktop.yaml`

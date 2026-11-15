@@ -78,8 +78,7 @@ nix shell nixpkgs#ssh-to-age --command sh -c \
 Add the new recipient to `secrets/.sops.yaml`:
 
 - add a new key anchor under `keys:`
-- add it alongside recovery to the `shared.yaml`, `obojima-glyph.ttf.json`,
-  and `hosts/<hostname>.yaml` rules
+- add it alongside recovery to the `shared.yaml` and `hosts/<hostname>.yaml` rules
 
 The shared NixOS role already configures
 `/etc/ssh/ssh_host_ed25519_key` as the SOPS identity, so do not add a host

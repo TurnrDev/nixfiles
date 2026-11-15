@@ -23,9 +23,10 @@
     in
     {
       imports = with inputs.self.modules.nixos; [
-        role-nix-builder
-        role-laptop
         desk-work
+        role-java-development
+        role-laptop
+        role-nix-builder
       ];
 
       networking.hostName = "jay-mopo";
@@ -111,7 +112,7 @@
 
       my.users.jay.email = "jay.turner@mopo.co";
 
-      stylix.base16Scheme = ../../modules/home-manager/common/stylix/themes/mopo.yaml;
+      stylix.base16Scheme = ../../themes/themes/mopo.yaml;
 
       services.xserver.xkb = {
         layout = "gb";

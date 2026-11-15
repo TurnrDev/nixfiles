@@ -9,7 +9,9 @@
     ];
   };
 
-  flake.modules.homeManager.hardware-gpu-amd = {
-    programs.btop.package = lib.mkForce pkgs.btop-rocm;
-  };
+  flake.modules.homeManager.hardware-gpu-amd =
+    { lib, pkgs, ... }:
+    {
+      programs.btop.package = lib.mkForce pkgs.btop-rocm;
+    };
 }

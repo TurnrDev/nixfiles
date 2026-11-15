@@ -9,7 +9,7 @@
     in
     {
       imports = with inputs.self.modules.nixos; [
-        hardware-mouse-logitech-mx-master-3s
+        desk-azelphur-base
       ];
 
       programs.dockmgr.profiles = lib.mkIf (internal != null) [
@@ -35,4 +35,10 @@
         }
       ];
     };
+
+  flake.modules.homeManager.desk-azelphur-workbench = {
+    imports = with inputs.self.modules.homeManager; [
+      desk-azelphur-base
+    ];
+  };
 }

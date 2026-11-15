@@ -17,8 +17,8 @@
     in
     {
       imports = with inputs.self.modules.nixos; [
+        desk-base
         hardware-keyboard-Keychron-v6-max
-        hardware-mouse-logitech-mx-master-3s
       ];
 
       programs.dockmgr.profiles = lib.mkIf (internal != null) [

@@ -12,7 +12,7 @@
         system-plymouth-luks
         hardware-bluetooth
         hardware-laptop-displays
-        desk-azelphur-floating
+        desk-base
         desk-azelphur-workbench
         desk-home
         service-wireguard
@@ -41,7 +41,7 @@
     {
       imports = with inputs.self.modules.homeManager; [
         role-workstation
-        desk-azelphur-floating
+        desk-azelphur-workbench
       ];
 
       programs.dank-material-shell.plugins.networkStatus.enable = true;

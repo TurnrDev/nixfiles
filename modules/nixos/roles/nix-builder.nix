@@ -4,8 +4,6 @@
 }:
 
 {
-  imports = [ ../services/distributed-builds.nix ];
-
   # Tools for building, inspecting, and deploying NixOS configurations.
   # `nix fmt` is provided by the flake formatter and enabled in the default
   # role through the `nix-command` experimental feature.

@@ -26,7 +26,7 @@ in
 
     email = mkOption {
       type = types.str;
-      default = "jay@turnr.dev";
+      default = "jay@turnr.net";
       description = "Default Git email for the shared personal identity profile.";
     };
 

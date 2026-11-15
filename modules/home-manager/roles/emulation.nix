@@ -1,12 +1,13 @@
 {
-  identity,
+  config,
   lib,
   pkgs,
+  osConfig,
   ...
 }:
 
 let
-  esDeSettingsDirectory = "${identity.homeDirectory}/ES-DE/settings";
+  esDeSettingsDirectory = "${osConfig.my.users.${config.home.username}.homeDirectory}/ES-DE/settings";
   esDeSettingsFile = "${esDeSettingsDirectory}/es_settings.xml";
   initialEsDeSettings = pkgs.writeText "es-de-settings.xml" ''
     <?xml version="1.0"?>

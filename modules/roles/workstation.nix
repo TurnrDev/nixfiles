@@ -1,0 +1,411 @@
+{
+  config,
+  inputs,
+  lib,
+  osConfig,
+  pkgs,
+  ...
+}:
+
+{
+  flake.modules.nixos.roles.workstation =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      hostName = config.networking.hostName;
+      avatar = ../../../assets/jay.png;
+      hasPersonalFolders = lib.elem hostName config.my.syncthing.personalFolderHosts;
+      hasWorkFolders = lib.elem hostName config.my.syncthing.workFolderHosts;
+      hasAllFolders = hasPersonalFolders || hasWorkFolders;
+      unsetAwsLcSystem = old: {
+        preBuild = (old.preBuild or "") + ''
+          unset AWS_LC_SYS_USE_SYSTEM
+        '';
+      };
+      tectonicAwsLcWorkaround = final: prev: {
+        codex = prev.codex.overrideAttrs (
+          old:
+          unsetAwsLcSystem old
+          // {
+            buildInputs = (old.buildInputs or [ ]) ++ [
+              final.oniguruma
+              final.sqlite
+              final.zstd
+            ];
+          }
+        );
+        tectonic-unwrapped = prev.tectonic-unwrapped.overrideAttrs unsetAwsLcSystem;
+        tectonic = prev.tectonic.override {
+          inherit (final) tectonic-unwrapped;
+        };
+      };
+    in
+    {
+      imports = with inputs.self.modules.nixos; [
+        roles.default
+        ../common/borgmatic.nix
+        ../common/cad.nix
+        ../common/go-hass-agent.nix
+        inputs.dockmgr.nixosModules.default
+        inputs.dux-greeter.nixosModules.default
+        ../services/dux-home-assistant-monitor.nix
+        ../common/gradle.nix
+        ../common/obojima-glyph.nix
+        ../common/python.nix
+        ../common/stylix.nix
+        ../common/virtualisation.nix
+      ];
+
+      options.my.syncthing.personalDeviceList = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        readOnly = true;
+        default = [
+          "home-server"
+          "jay-framework"
+          "jay-desktop"
+        ];
+        description = "Internal shared Syncthing device list for personal folders.";
+      };
+
+      options.my.syncthing.workDeviceList = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        readOnly = true;
+        default = [ "jay-mopo" ];
+        description = "Internal shared Syncthing device list for work-only peers.";
+      };
+
+      options.my.syncthing.personalFolderHosts = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        readOnly = true;
+        default = [
+          "jay-desktop"
+          "jay-framework"
+        ];
+        description = "Hosts that should declare personal Syncthing folders locally.";
+      };
+
+      options.my.syncthing.workFolderHosts = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        readOnly = true;
+        default = [ "jay-mopo" ];
+        description = "Hosts that should declare work-only Syncthing folders locally.";
+      };
+
+      config = {
+        # aws-lc-sys cannot use nixpkgs' system-library override when a package
+        # supplies OpenSSL. Build that crate's bundled AWS-LC instead.
+        nixpkgs.overlays = [ tectonicAwsLcWorkaround ];
+
+        # Interactive hosts provide a Wayland session and local sound stack. Xorg
+        # stays disabled; Xwayland supports the remaining legacy X11 applications
+        # inside Hyprland without running an X display server.
+        services.xserver = {
+          enable = false;
+          xkb.layout = "gb";
+        };
+        services.pulseaudio.enable = false;
+        security.rtkit.enable = true;
+        services.pipewire = {
+          enable = true;
+          alsa.enable = true;
+          alsa.support32Bit = true;
+          pulse.enable = true;
+        };
+
+        # Dux reads the user icon from AccountsService.  Keep its standard icon
+        # location backed by the checked-in avatar so the desktop and greeter use
+        # the same image on every host.  Nix copies the source into /nix/store,
+        # so the link never points at the working tree.
+        services.accounts-daemon.enable = true;
+        systemd.tmpfiles.rules = [
+          "d /var/lib/AccountsService/icons 0755 root root -"
+          "L+ /var/lib/AccountsService/icons/${config.my.identity.username} - - - - ${avatar}"
+        ];
+
+        programs.dockmgr.enable = true;
+        # Use Hyprland's built-in UWSM session and let Dux remember whichever
+        # session was chosen last, while still defaulting system-side to UWSM.
+        services.displayManager = {
+          defaultSession = "hyprland-uwsm";
+        };
+
+        programs.dms-greeter = {
+          enable = true;
+          configHome = config.my.identity.homeDirectory;
+          compositor = {
+            name = "hyprland";
+            customConfig = ''
+              hl.env("DMS_RUN_GREETER", "1")
+              hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
+              hl.env("XCURSOR_SIZE", "24")
+              hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
+              hl.env("HYPRCURSOR_SIZE", "24")
+              hl.config({
+                misc = {
+                  disable_hyprland_logo = true,
+                  disable_splash_rendering = true,
+                },
+                input = {
+                  kb_layout = "${config.services.xserver.xkb.layout}",
+                  kb_variant = "${config.services.xserver.xkb.variant}",
+                  numlock_by_default = true,
+                  resolve_binds_by_sym = true,
+                },
+              })
+
+              hl.device({
+                name = "keychron-keychron-v6-max",
+                kb_layout = "gb",
+                kb_variant = "",
+                resolve_binds_by_sym = true,
+              })
+
+              hl.device({
+                name = "keychron--keychron-link--keyboard",
+                kb_layout = "gb",
+                kb_variant = "",
+                resolve_binds_by_sym = true,
+              })
+
+              hl.on("hyprland.start", function()
+                hl.exec_cmd("${config.programs.dockmgr.package}/bin/dockmgr watch --config ${config.programs.dockmgr.configFile} --context greeter")
+              end)
+            '';
+          };
+        };
+
+        # The greeter owns a separate Hyprland instance. Restart it on a dockmgr
+        # update so its compositor-local watcher immediately uses the new package
+        # and generated profile configuration.
+        systemd.services.greetd.restartTriggers = [
+          config.programs.dockmgr.package
+          config.programs.dockmgr.configFile
+        ];
+
+        # Keep the full Plasma session easy to restore for troubleshooting, but
+        # don't install it in the normal day-to-day Hyprland setup.
+        services.displayManager.sddm.enable = false;
+        # services.desktopManager.plasma6.enable = true;
+
+        xdg.portal = {
+          enable = true;
+          xdgOpenUsePortal = false;
+          extraPortals = lib.mkForce (
+            with pkgs;
+            [
+              xdg-desktop-portal-hyprland
+              kdePackages.xdg-desktop-portal-kde
+            ]
+          );
+          config = {
+            common = {
+              default = [ "hyprland" ];
+              "org.freedesktop.impl.portal.FileChooser" = [
+                "kde"
+              ];
+            };
+            hyprland = {
+              default = [ "hyprland" ];
+              "org.freedesktop.impl.portal.FileChooser" = [
+                "kde"
+              ];
+            };
+          };
+        };
+
+        # Some KDE utilities launched under Hyprland still look for the generic
+        # applications.menu instead of honoring XDG_MENU_PREFIX=plasma-.
+        environment.etc."xdg/menus/applications.menu".source =
+          "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
+
+        # Enable CUPS to print documents.
+        services.avahi.enable = true;
+        services.printing.enable = true;
+
+        # Define workstation-specific groups and packages for the shared user.
+        users.users = lib.mkIf config.my.identity.enable {
+          ${config.my.identity.username} = {
+            extraGroups = [
+              "networkmanager"
+              "wheel"
+            ];
+            packages = with pkgs; [ ];
+          };
+        };
+
+        programs.kdeconnect.enable = true;
+
+        programs.git = {
+          enable = true;
+          lfs.enable = true;
+          config = {
+            core.excludesFile = "/etc/gitignore";
+            init.defaultBranch = "main";
+          };
+        };
+
+        environment.etc."gitignore".text = ''
+          .codex
+        '';
+
+        programs.hyprland = {
+          enable = true;
+          xwayland.enable = true;
+          withUWSM = true;
+        };
+        programs.foot = {
+          enable = true;
+          settings = {
+            main = {
+              shell = "zsh";
+            };
+          };
+        };
+
+        # List packages installed in system profile. To search, run:
+        # $ nix search wget
+        environment.systemPackages = with pkgs; [
+          bibata-cursors
+          cameractrls-gtk4
+          gimp
+          sourcegit
+          gnome-disk-utility
+          imagemagick
+          jetbrains.pycharm
+          (josm.override {
+            jre = pkgs.jre.override { enableJavaFX = true; };
+          })
+          kdePackages.ark
+          kdePackages.dolphin
+          kdePackages.kate
+          kdePackages.kio
+          kdePackages.kio-extras
+          kdePackages.kio-fuse
+          kdePackages.qtsvg
+          libreoffice
+          libnotify
+          nwg-displays
+          postman
+          plezy
+          qview
+          pwvucontrol
+          vlc
+        ];
+
+        fonts = {
+          enableDefaultPackages = true;
+          packages = with pkgs; [
+            fira-code-symbols
+            font-awesome
+            nerd-fonts.fira-code
+            noto-fonts
+            noto-fonts-cjk-sans
+            noto-fonts-color-emoji
+          ];
+        };
+
+        services.syncthing = {
+          enable = true;
+          user = "${config.my.identity.username}";
+          configDir = "${config.my.identity.homeDirectory}/.config/syncthing";
+          settings = {
+            devices = {
+              "home-server" = {
+                id = "D6Y3JIQ-HCGMVPG-K6YLKDK-7X4D7YI-4BSGQ5J-WJW3WNY-ZHCJYT5-2VMAKAT";
+              };
+              "jay-desktop" = {
+                id = "6U7MTAP-I2W2B7O-F7D73JH-PKPBJXW-2NRDBP6-BHOKMS7-B5YTIBQ-2JGQLQL";
+              };
+              "jay-framework" = {
+                id = "VUUG6YN-SHPRRSW-44UADVY-VQ4MQZX-3T5PPN5-65MCQ6K-GIP4Y5T-CXH2UAQ";
+              };
+              "jay-mopo" = {
+                id = "SN4ZRBM-SUQN22Q-IM65G3R-XITRUKX-AQAL4AI-RZCIKAJ-7RAPCVC-JO3O5QB";
+              };
+            };
+            folders = {
+            }
+            // lib.optionalAttrs hasPersonalFolders {
+              "3D Printing" = {
+                path = "${config.my.identity.homeDirectory}/3D Printing/";
+                devices = config.my.syncthing.personalDeviceList;
+                versioning = {
+                  type = "simple";
+                  params.keep = "10";
+                };
+              };
+              "Documents" = {
+                path = "${config.my.identity.homeDirectory}/Documents/";
+                devices = config.my.syncthing.personalDeviceList;
+                versioning = {
+                  type = "simple";
+                  params.keep = "10";
+                };
+              };
+            }
+            // lib.optionalAttrs hasAllFolders {
+              "JOSM" = {
+                path = "${config.my.identity.homeDirectory}/.config/JOSM/";
+                devices = config.my.syncthing.personalDeviceList ++ config.my.syncthing.workDeviceList;
+                versioning = {
+                  type = "simple";
+                  params.keep = "10";
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+  flake.modules.homeManager.roles.workstation =
+    {
+      config,
+      lib,
+      osConfig,
+      ...
+    }:
+    {
+      imports = with inputs.self.modules.homeManager; [
+        roles.default
+        ./repository.nix
+        ../common/borgmatic.nix
+        ../common/default-apps.nix
+        ../common/codex.nix
+        programs.discord
+        inputs.dockmgr.homeManagerModules.default
+        ../common/firefox.nix
+        ../common/go-hass-agent.nix
+        ../common/hyprland/hyprland.nix
+        ../common/kdeconnect.nix
+        programs.spotify
+        ../common/stylix.nix
+        ../common/vscode.nix
+      ];
+
+      fonts.fontconfig = {
+        enable = true;
+        antialiasing = true;
+      };
+
+      programs.borgmatic.backups =
+        lib.genAttrs
+          [
+            "borg1.4"
+            "borg2"
+          ]
+          (_: {
+            settings.exclude_patterns = lib.mkAfter [
+              "${osConfig.my.users.${config.home.username}.homeDirectory}/.config/Code"
+              "${osConfig.my.users.${config.home.username}.homeDirectory}/.config/GitKraken"
+              "${osConfig.my.users.${config.home.username}.homeDirectory}/.gitkraken"
+              "${osConfig.my.users.${config.home.username}.homeDirectory}/.vscode"
+              "${osConfig.my.users.${config.home.username}.homeDirectory}/.vscode-server"
+            ];
+          });
+    };
+}

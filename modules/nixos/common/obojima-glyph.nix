@@ -19,27 +19,31 @@ let
   secretName = "obojima-glyph";
   # Fontconfig applications (including GIMP and LibreOffice) list this as
   # “Obojima Glyphs_update_glyphfont”, not the filename or directory name.
-  fontDirectory = "${config.my.identity.homeDirectory}/.local/share/fonts/Obojima Glyph";
+  fontDirectory = "${
+    config.my.users.${config.home.username}.homeDirectory
+  }/.local/share/fonts/Obojima Glyph";
   fontPath = "${fontDirectory}/ObojimaGlyphs-Regular.ttf";
 in
 {
   sops.secrets.${secretName} = {
     sopsFile = ../../../secrets/obojima-glyph.ttf.json;
     format = "binary";
-    owner = config.my.identity.username;
+    owner = config.my.users.${config.home.username}.username;
     group = "users";
     mode = "0444";
     restartUnits = [ "install-obojima-glyph-font.service" ];
   };
 
   systemd.services.install-obojima-glyph-font = {
-    description = "Install the Obojima Glyph font for ${config.my.identity.username}";
+    description = "Install the Obojima Glyph font for ${
+      config.my.users.${config.home.username}.username
+    }";
     wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
       Type = "oneshot";
       # Run as the desktop user so fc-cache updates the cache GIMP reads.
-      User = config.my.identity.username;
+      User = config.my.users.${config.home.username}.username;
     };
 
     script = ''

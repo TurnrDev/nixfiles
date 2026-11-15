@@ -1,7 +1,7 @@
 { config, ... }:
 
 let
-  userSecretOwner = config.my.identity.username;
+  userSecretOwner = config.home.username;
 in
 {
   sops.secrets = {

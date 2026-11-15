@@ -1,6 +1,7 @@
 {
-  identity,
+  config,
   lib,
+  osConfig,
   ...
 }:
 
@@ -18,9 +19,9 @@
       ]
       (_: {
         settings.exclude_patterns = lib.mkAfter [
-          "${identity.homeDirectory}/.local/share/Steam"
-          "${identity.homeDirectory}/.steam-shared"
-          "${identity.homeDirectory}/.steam"
+          "${osConfig.my.users.${config.home.username}.homeDirectory}/.local/share/Steam"
+          "${osConfig.my.users.${config.home.username}.homeDirectory}/.steam-shared"
+          "${osConfig.my.users.${config.home.username}.homeDirectory}/.steam"
           "srv/nfs/games"
         ];
       });

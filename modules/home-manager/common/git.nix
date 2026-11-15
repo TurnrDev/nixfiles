@@ -1,6 +1,5 @@
 {
   config,
-  identity,
   lib,
   osConfig,
   pkgs,
@@ -8,9 +7,9 @@
 }:
 
 let
-  gitName = identity.fullName;
-  gitEmail = identity.email;
-  inherit (identity) homeDirectory;
+  gitName = osConfig.my.users.${config.home.username}.fullName;
+  gitEmail = osConfig.my.users.${config.home.username}.email;
+  inherit (osConfig.my.users.${config.home.username}) homeDirectory;
   reposDir = "${homeDirectory}/Repos";
   gpg = lib.getExe config.programs.gpg.package;
   gpgconf = lib.getExe' config.programs.gpg.package "gpgconf";
@@ -81,7 +80,7 @@ lib.mkMerge [
     '';
   }
 
-  (lib.mkIf identity.keyBootstrap.enable {
+  (lib.mkIf osConfig.my.users.${config.home.username}.keyBootstrap.enable {
     home.activation.generateIdentityKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       export GNUPGHOME=${lib.escapeShellArg gpgHome}
 

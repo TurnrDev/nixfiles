@@ -1,3 +1,7 @@
 */* linguist-detectable
 secrets/obojima-glyph.ttf.json linguist-generated
 secrets/obojima-glyph.ttf.json linguist-vendored
+
+
+flake.nix linguist-generated
+flake.lock linguist-generated

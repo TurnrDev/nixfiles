@@ -11,9 +11,10 @@
         role-workstation
         system-plymouth-luks
         hardware-bluetooth
+        hardware-laptop-displays
         desk-azelphur-floating
+        desk-azelphur-workbench
         desk-home
-        ../common/dockmgr-laptop-monitors.nix
         service-wireguard
       ];
 

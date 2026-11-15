@@ -1,31 +1,38 @@
-# Copy this file into modules/ and replace `example` with a unique module name.
-# Keep either or both blocks. Registering a module does not enable it on a host.
 { inputs, ... }:
 
 {
   flake.modules.nixos.desk-azelphur-workbench =
-    # Add config, lib, or pkgs here when needed: { config, lib, pkgs, ... }:
-    { ... }:
+    { config, lib, ... }:
+    let
+      internal = lib.attrByPath [ "my" "displays" "internal" ] null config;
+      display = "desc:Samsung Electric Company LC49G95T H1AK500000";
+    in
     {
       imports = with inputs.self.modules.nixos; [
-        # Import other modules, never this module itself:
-        # core_system-core
+        hardware-mouse-logitech-mx-master-3s
       ];
 
-      # NixOS settings go here.
-      # environment.systemPackages = [ pkgs.ripgrep ];
-    };
-
-  flake.modules.homeManager.desk-azelphur-workbench =
-    # Add config, lib, pkgs, or osConfig here when needed.
-    # config is the user's Home Manager config; osConfig is the NixOS config.
-    { ... }:
-    {
-      imports = with inputs.self.modules.homeManager; [
-        # core_system-core
+      programs.dockmgr.profiles = lib.mkIf (internal != null) [
+        {
+          name = "Azelphur Workbench";
+          match.and = [
+            { displays.connectedAnyOf = [ display ]; }
+            { usb.noneOf = [ "046d:c548" ]; }
+          ];
+          outputs = {
+            ${internal.identifier} = config.my.displays.internalOutput // {
+              disabled = true;
+            };
+            ${display} = {
+              mode = "5120x1440@59.977";
+              position = {
+                x = 0;
+                y = 0;
+              };
+              scale = 1.0;
+            };
+          };
+        }
       ];
-
-      # Home Manager settings go here.
-      # home.packages = [ pkgs.ripgrep ];
     };
 }

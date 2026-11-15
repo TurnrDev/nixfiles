@@ -1,4 +1,4 @@
-{ inputs, ... }:
+_:
 
 {
   flake.modules.nixos.service-borgmatic =

@@ -1,4 +1,4 @@
-{ inputs, ... }:
+_:
 
 {
   flake.modules.nixos.hardware-mouse-logitech-mx-master-3s =

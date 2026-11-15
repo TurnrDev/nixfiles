@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   flake.modules.nixos.g9-switcher-monitorctl =

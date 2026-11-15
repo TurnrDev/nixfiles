@@ -1,4 +1,4 @@
-{ inputs, ... }:
+_:
 
 {
   flake.modules.homeManager.program-elite-dangerous =

@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 let
   # Kemove K68 exposes several keyboard interfaces.

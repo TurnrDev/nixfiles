@@ -1,4 +1,4 @@
-{ inputs, ... }:
+_:
 
 {
   flake.modules.nixos.hardware-keyboard-Keychron-v6-max =

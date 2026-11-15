@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   flake.modules.nixos.hardware-gpu-intel =
     { pkgs, ... }:
     {

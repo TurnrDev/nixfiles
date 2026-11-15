@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   flake.modules.nixos.service-go-hass-agent = _: {

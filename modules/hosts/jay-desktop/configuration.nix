@@ -6,6 +6,7 @@
 {
   flake.modules.nixos.jay-desktop = {
     imports = with inputs.self.modules.nixos; [
+      user-jay
       role-nix-builder
       role-desktop
       role-gaming

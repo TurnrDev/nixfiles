@@ -9,6 +9,7 @@
     { config, ... }:
     {
       imports = with inputs.self.modules.nixos; [
+        user-jay
         role-default
         hardware-low-ram
         g9-switcher-monitorctl

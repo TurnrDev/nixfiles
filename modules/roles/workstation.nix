@@ -47,7 +47,6 @@
       imports = with inputs.self.modules.nixos; [
         role-default
         desktop-hyprland
-        program-git
         service-borgmatic
         role-cad
         service-go-hass-agent
@@ -122,8 +121,8 @@
         services.printing.enable = true;
 
         # Define workstation-specific groups and packages for the shared user.
-        users.users = lib.mkIf config.my.identity.enable {
-          ${config.my.identity.username} = {
+        users.users = lib.optionalAttrs (config.my.users ? jay) {
+          ${config.my.users.jay.username} = {
             extraGroups = [
               "networkmanager"
               "wheel"
@@ -176,8 +175,8 @@
 
         services.syncthing = {
           enable = true;
-          user = "${config.my.identity.username}";
-          configDir = "${config.my.identity.homeDirectory}/.config/syncthing";
+          user = "${config.my.users.jay.username}";
+          configDir = "${config.my.users.jay.homeDirectory}/.config/syncthing";
           settings = {
             devices = {
               "home-server" = {
@@ -197,7 +196,7 @@
             }
             // lib.optionalAttrs hasPersonalFolders {
               "3D Printing" = {
-                path = "${config.my.identity.homeDirectory}/3D Printing/";
+                path = "${config.my.users.jay.homeDirectory}/3D Printing/";
                 devices = config.my.syncthing.personalDeviceList;
                 versioning = {
                   type = "simple";
@@ -205,7 +204,7 @@
                 };
               };
               "Documents" = {
-                path = "${config.my.identity.homeDirectory}/Documents/";
+                path = "${config.my.users.jay.homeDirectory}/Documents/";
                 devices = config.my.syncthing.personalDeviceList;
                 versioning = {
                   type = "simple";
@@ -215,7 +214,7 @@
             }
             // lib.optionalAttrs hasAllFolders {
               "JOSM" = {
-                path = "${config.my.identity.homeDirectory}/.config/JOSM/";
+                path = "${config.my.users.jay.homeDirectory}/.config/JOSM/";
                 devices = config.my.syncthing.personalDeviceList ++ config.my.syncthing.workDeviceList;
                 versioning = {
                   type = "simple";

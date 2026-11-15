@@ -1,7 +1,7 @@
 { inputs, ... }:
 
 let
-  avatar = ../../../assets/jay.png;
+  avatar = ../../user/jay.png;
 in
 {
   flake.modules.nixos.desktop-dux =
@@ -12,7 +12,7 @@ in
       sops.secrets.hass_token = {
         sopsFile = ../../../secrets/shared.yaml;
         path = "/run/secrets/hass_token";
-        owner = config.my.identity.username;
+        owner = config.my.users.jay.username;
         group = "users";
         mode = "0400";
       };
@@ -24,12 +24,12 @@ in
       services.accounts-daemon.enable = true;
       systemd.tmpfiles.rules = [
         "d /var/lib/AccountsService/icons 0755 root root -"
-        "L+ /var/lib/AccountsService/icons/${config.my.identity.username} - - - - ${avatar}"
+        "L+ /var/lib/AccountsService/icons/${config.my.users.jay.username} - - - - ${avatar}"
       ];
 
       programs.dms-greeter = {
         enable = true;
-        configHome = config.my.identity.homeDirectory;
+        configHome = config.my.users.jay.homeDirectory;
         compositor = {
           name = "hyprland";
           customConfig = ''

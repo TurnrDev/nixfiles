@@ -13,10 +13,10 @@ in
         system-nix-github-auth
       ];
 
-      # Decrypt the signing key during system activation for the user service.
+      # Decrypt Jay's signing key during system activation for the user service.
       sops.secrets.git-signing-secret-key = {
         sopsFile = ../../secrets/shared.yaml;
-        owner = config.my.identity.username;
+        owner = config.my.users.jay.username;
         group = "users";
         mode = "0400";
       };
@@ -38,9 +38,10 @@ in
     }:
 
     let
-      gitName = osConfig.my.users.${config.home.username}.fullName;
-      gitEmail = osConfig.my.users.${config.home.username}.email;
-      inherit (osConfig.my.users.${config.home.username}) homeDirectory;
+      user = osConfig.my.users.jay;
+      gitName = user.fullName;
+      gitEmail = user.email;
+      inherit (user) homeDirectory;
       reposDir = "${homeDirectory}/Repos";
       gpg = lib.getExe config.programs.gpg.package;
       gpgconf = lib.getExe' config.programs.gpg.package "gpgconf";
@@ -111,7 +112,7 @@ in
         '';
       }
 
-      (lib.mkIf osConfig.my.users.${config.home.username}.keyBootstrap.enable {
+      (lib.mkIf user.keyBootstrap.enable {
         home.activation.generateIdentityKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           export GNUPGHOME=${lib.escapeShellArg gpgHome}
 

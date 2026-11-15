@@ -26,7 +26,7 @@
       # Dux greeter remains available after logout or session failure.
       services.displayManager.autoLogin = {
         enable = true;
-        user = config.home.username;
+        user = config.my.users.jay.username;
       };
 
       services.logind.settings.Login = {

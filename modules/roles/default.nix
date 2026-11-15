@@ -84,7 +84,6 @@
         # imports so locally-built closures can be copied to every host over SSH.
         settings.trusted-users = [
           "root"
-          config.my.identity.username
         ];
         settings.experimental-features = [
           # Enables flake commands such as `nix fmt`.
@@ -131,8 +130,8 @@
         zstd
       ];
 
-      users.users = lib.mkIf config.my.identity.enable {
-        ${config.my.identity.username} = {
+      users.users = lib.optionalAttrs (config.my.users ? jay) {
+        ${config.my.users.jay.username} = {
           extraGroups = [
             "adbusers"
             "docker"
@@ -158,7 +157,7 @@
 
   flake.modules.homeManager.role-default = {
     imports = with inputs.self.modules.homeManager; [
-      ../common/git.nix
+      program-git
       program-zsh
     ];
 

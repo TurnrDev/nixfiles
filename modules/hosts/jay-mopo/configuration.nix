@@ -23,6 +23,7 @@
     in
     {
       imports = with inputs.self.modules.nixos; [
+        user-jay
         desk-work
         role-java-development
         role-laptop
@@ -132,12 +133,14 @@
           (mv.version "python3" (repoLib.versionBetween mv "python3" "3.11.5" "3.12.0"))
           python313
         ]
-        ++ lib.optionals (!config.home-manager.users.${config.home.username}.programs.borgmatic.enable) [
-          (mv.version "borgbackup" borgVersion)
-        ];
+        ++
+          lib.optionals (!config.home-manager.users.${config.my.users.jay.username}.programs.borgmatic.enable)
+            [
+              (mv.version "borgbackup" borgVersion)
+            ];
 
       users.users = {
-        ${config.home.username} = {
+        ${config.my.users.jay.username} = {
           extraGroups = [ "kvm" ];
         };
       };

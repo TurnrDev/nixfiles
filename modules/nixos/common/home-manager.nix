@@ -1,51 +1,34 @@
+{ inputs, ... }:
+
 {
-  config,
-  inputs,
-  lib,
-  pkgs,
-  homeModule,
-  repoLib,
-  ...
-}:
+  flake.modules.nixos.system-home-manager =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      repoLib = import ../../../lib { inherit lib; };
+      backupCommand = pkgs.writeShellScript "home-manager-backup" (
+        builtins.readFile ../../../scripts/home-manager-backup.sh
+      );
+    in
+    {
+      imports = with inputs.self.modules.nixos; [
+        core_home-manager
+      ];
 
-let
-  backupCommand = pkgs.writeShellScript "home-manager-backup" ''
-    set -eu
-
-    target="$1"
-    backup="$target.hm-backup"
-
-    if [ ! -e "$backup" ]; then
-      exec mv -- "$target" "$backup"
-    fi
-
-    i=1
-    while [ -e "$backup.$i" ]; do
-      i=$((i + 1))
-    done
-
-    exec mv -- "$target" "$backup.$i"
-  '';
-in
-{
-  users.manageLingering = true;
-  users.users = lib.mkIf config.my.identity.enable {
-    ${config.my.identity.username}.linger = true;
-  };
-
-  home-manager = {
-    inherit backupCommand;
-    extraSpecialArgs = {
-      inherit inputs repoLib;
-      identity = config.my.identity;
-    };
-    users = lib.mkIf config.my.identity.enable {
-      ${config.my.identity.username} = {
-        # Home Manager has its own package set, so pass through system
-        # overlays for declaratively installed user packages as well.
-        nixpkgs.overlays = config.nixpkgs.overlays;
-        imports = [ homeModule ];
+      _module.args.repoLib = repoLib;
+      users.manageLingering = true;
+      home-manager = {
+        inherit backupCommand;
+        extraSpecialArgs = { inherit inputs repoLib; };
+        users.jay = {
+          home.username = config.my.users.jay.username;
+          home.homeDirectory = config.my.users.jay.homeDirectory;
+          nixpkgs.overlays = config.nixpkgs.overlays;
+        };
       };
     };
-  };
 }

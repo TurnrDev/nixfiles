@@ -5,12 +5,12 @@
     { config, lib, ... }:
 
     let
-      userSecretOwner = config.my.identity.username;
+      userSecretOwner = config.my.users.jay.username;
       hostSecretsFile = ../../secrets/hosts + "/${config.networking.hostName}.yaml";
       borgmaticEnabled = lib.attrByPath [
         "home-manager"
         "users"
-        config.my.identity.username
+        config.my.users.jay.username
         "programs"
         "borgmatic"
         "enable"
@@ -19,13 +19,13 @@
     {
       sops.secrets = {
         ovh-borg2-s3-access-key-id = {
-          sopsFile = ../../../secrets/shared.yaml;
+          sopsFile = ../../secrets/shared.yaml;
           owner = userSecretOwner;
           group = "users";
           mode = "0400";
         };
         ovh-borg2-s3-secret-access-key = {
-          sopsFile = ../../../secrets/shared.yaml;
+          sopsFile = ../../secrets/shared.yaml;
           owner = userSecretOwner;
           group = "users";
           mode = "0400";
@@ -56,7 +56,6 @@
   flake.modules.homeManager.service-borgmatic =
     {
       config,
-      identity,
       inputs,
       lib,
       osConfig,
@@ -70,9 +69,9 @@
       borg1Version = repoLib.versionBetween multiverse "borgbackup" "1.4.0" "2.0.0";
       borg1Package = multiverse.version "borgbackup" borg1Version;
       borg2Package = repoLib.multiverseVersionBetweenOrLocal multiverse "borgbackup" "2.0.0" "3.0.0" (
-        pkgs.callPackage ../../../packages/borg2 { }
+        pkgs.callPackage ../../packages/borg2 { }
       );
-      inherit (identity) homeDirectory;
+      inherit (config.home) homeDirectory;
       hostName = osConfig.networking.hostName;
       defaultRepositories = [
         {

@@ -195,7 +195,7 @@
       config = lib.mkMerge [
         {
           my.emulation.stateFolders = lib.mapAttrs (
-            _: directory: lib.mkDefault "${config.my.identity.homeDirectory}/${directory}"
+            _: directory: lib.mkDefault "${config.my.users.jay.homeDirectory}/${directory}"
           ) stateDirectories;
           services.syncthing.settings.folders = lib.mapAttrs (
             name: path:

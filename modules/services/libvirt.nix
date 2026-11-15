@@ -5,8 +5,8 @@
     { config, lib, ... }:
 
     {
-      users.users = lib.mkIf config.my.identity.enable {
-        ${config.my.identity.username} = {
+      users.users = lib.optionalAttrs (config.my.users ? jay) {
+        ${config.my.users.jay.username} = {
           extraGroups = [
             "libvirtd"
             "kvm"

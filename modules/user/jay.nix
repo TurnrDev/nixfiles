@@ -13,57 +13,55 @@ in
       ...
     }:
     {
-      options.my.users.${username} = with lib; {
-        username = mkOption {
-          type = types.str;
+      key = "user-jay";
+      imports = with inputs.self.modules.nixos; [
+        system-home-manager
+        program-zsh
+        program-git
+      ];
+
+      options.my.users.${username} = {
+        username = lib.mkOption {
+          type = lib.types.str;
+          readOnly = true;
           default = username;
-          description = "Default username for the shared personal identity profile.";
         };
-
-        fullName = mkOption {
-          type = types.str;
+        fullName = lib.mkOption {
+          type = lib.types.str;
           default = "Jay Turner";
-          description = "Display name for the shared personal identity profile.";
         };
-
-        email = mkOption {
-          type = types.str;
+        email = lib.mkOption {
+          type = lib.types.str;
           default = "jay@turnr.net";
-          description = "Default Git email for the shared personal identity profile.";
         };
-
-        homeDirectory = mkOption {
-          type = types.str;
+        homeDirectory = lib.mkOption {
+          type = lib.types.str;
           default = "/home/${username}";
-          defaultText = literalExpression ''"/home/${username}"'';
-          description = "Home directory for the shared personal identity profile.";
         };
-
-        keyBootstrap.enable = mkOption {
-          type = types.bool;
+        keyBootstrap.enable = lib.mkOption {
+          type = lib.types.bool;
           default = true;
-          description = ''
-            Whether Home Manager should auto-generate missing SSH and GPG identity
-            keys for this user.
-
-            This only creates local keys. Remote key distribution is documented in
-            `NEW_HOST_SETUP.md` so it can happen interactively with password
-            prompts when needed.
-          '';
+          description = "Generate Jay's missing SSH identity keys through Home Manager.";
         };
       };
 
       config = {
         nix.settings.trusted-users = [ username ];
 
-        home-manager.users."${username}" = {
-          imports = [
-            inputs.self.modules.homeManager."user-${username}"
-          ];
-        };
+        # Apply this host's Home Manager configuration to Jay.
+        home-manager.users.${username}.imports = [
+          inputs.self.modules.homeManager."user-${username}"
+        ]
+        ++
+          lib.optional (builtins.hasAttr config.networking.hostName inputs.self.modules.homeManager)
+            inputs.self.modules.homeManager.${config.networking.hostName};
+
+        # Preserve the root password previously supplied by identity.nix.
+        users.users.root.hashedPassword = passwordHash;
 
         users.users.${username} = {
-          description = "Jay Turner";
+          description = config.my.users.${username}.fullName;
+          home = config.my.users.${username}.homeDirectory;
           isNormalUser = true;
           extraGroups = [
             "networkmanager"

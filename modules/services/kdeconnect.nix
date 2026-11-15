@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.nixos.example =
+  flake.modules.nixos.service-kdeconnect =
     { ... }:
     {
       programs.kdeconnect.enable = true;

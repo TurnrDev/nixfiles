@@ -4,7 +4,7 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         ./core.nix
-        (inputs.import-tree ./modules)
+        (inputs.import-tree.filter (path: builtins.baseNameOf path != "example.nix") ./modules)
       ];
     };
 

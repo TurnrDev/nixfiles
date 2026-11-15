@@ -18,7 +18,7 @@
         service-wireguard
       ];
 
-      # Enable touchpad support (enabled default in most desktopManager).
+      # Enable touchpad input.
       services.libinput.enable = true;
       services.upower.enable = true;
       services.power-profiles-daemon.enable = true;

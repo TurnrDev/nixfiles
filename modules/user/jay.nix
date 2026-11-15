@@ -57,7 +57,7 @@ in
           lib.optional (builtins.hasAttr config.networking.hostName inputs.self.modules.homeManager)
             inputs.self.modules.homeManager.${config.networking.hostName};
 
-        # Preserve the root password previously supplied by identity.nix.
+        # Preserve the existing root password.
         users.users.root.hashedPassword = passwordHash;
 
         users.users.${username} = {

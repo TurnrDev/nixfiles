@@ -101,7 +101,7 @@
 
   flake-file.outputs = lib.mkForce ''
     inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [ ./core.nix (inputs.import-tree ./modules) ];
+      imports = [ ./core.nix (inputs.import-tree.filter (path: builtins.baseNameOf path != "example.nix") ./modules) ];
     }
   '';
 

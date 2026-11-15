@@ -1,5 +1,3 @@
-# Copy this file into modules/ and replace `example` with a unique module name.
-# Keep either or both blocks. Registering a module does not enable it on a host.
 { inputs, ... }:
 
 {

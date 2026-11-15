@@ -6,7 +6,7 @@
 }:
 
 {
-  flake.modules.homeManager.programs.discord =
+  flake.modules.homeManager.program-discord =
     {
       config,
       osConfig,

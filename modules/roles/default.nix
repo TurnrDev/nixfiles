@@ -7,7 +7,7 @@
 }:
 
 {
-  flake.modules.nixos.roles.default =
+  flake.modules.nixos.role-default =
     {
       config,
       lib,
@@ -36,10 +36,6 @@
       boot.kernelModules = [ "fuse" ];
       programs.fuse.enable = true;
       programs.fuse.userAllowOther = true;
-
-      # Builder host keys are public trust anchors. Keep them available to every
-      # system SSH client, including deployment initiators and appliance targets.
-      programs.ssh.knownHostsFiles = [ ../../../keys/known_hosts/nix-builders ];
 
       # Use latest kernel.
       boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -233,10 +229,10 @@
       system.stateVersion = "25.11"; # Did you read the comment?
     };
 
-  flake.modules.homeManager.roles.default = {
+  flake.modules.homeManager.role-default = {
     imports = with inputs.self.modules.homeManager; [
       ../common/git.nix
-      zsh
+      program-zsh
     ];
 
     home.stateVersion = "25.11";

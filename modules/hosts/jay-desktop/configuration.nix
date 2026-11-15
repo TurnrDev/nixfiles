@@ -6,13 +6,10 @@
 {
   flake.modules.nixos.jay-desktop = {
     imports = with inputs.self.modules.nixos; [
-      ../../modules/nixos/roles/nix-builder.nix
-      roles.desktop
-      ../../modules/nixos/roles/low-memory.nix
-      # ../../modules/nixos/hardware/bluetooth.nix
-      ../../modules/nixos/hardware/keychron.nix
-      ../../modules/nixos/hardware/logitech-mx-master-3s.nix
-      ../../modules/nixos/roles/gaming.nix
+      role-nix-builder
+      role-desktop
+      role-gaming
+      desk-home
     ];
 
     networking = {
@@ -41,9 +38,8 @@
 
   flake.modules.homeManager.jay-desktop = {
     imports = with inputs.self.modules.homeManager; [
-      roles.desktop
-      ../../modules/home-manager/roles/gaming.nix
-      ../../modules/home-manager/hardware/amd.nix
+      role-desktop
+      role-gaming
     ];
 
     programs.borgmatic.backups =

@@ -1,11 +1,17 @@
 {
   config,
+  inputs,
   lib,
   ...
 }:
 
 {
-  flake.modules.nixos.jay-framework = {
+  flake.modules.nixos.jay-mopo = {
+    imports = with inputs.self.modules.nixos; [
+      hardware-cpu-intel
+      hardware-gpu-intel
+      hardware-npu-intel
+    ];
 
     boot.initrd.availableKernelModules = [
       "xhci_pci"
@@ -14,11 +20,8 @@
       "usbhid"
       "rtsx_usb_sdmmc"
     ];
-    boot.initrd.kernelModules = [ ];
-    boot.kernelModules = [ "kvm-intel" ];
+    # Plymouth needs early KMS to show the graphical LUKS prompt.
+    boot.initrd.kernelModules = [ "i915" ];
     boot.extraModulePackages = [ ];
-
-    hardware.cpu.intel.npu.enable = true;
-    hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   };
 }

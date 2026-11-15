@@ -9,8 +9,9 @@
     { config, ... }:
     {
       imports = with inputs.self.modules.nixos; [
-        roles.default
-        ../../modules/nixos/services/monitorctl.nix
+        role-default
+        hardware-low-ram
+        g9-switcher-monitorctl
       ];
 
       networking.hostName = "g9-switcher";
@@ -40,7 +41,7 @@
       sops.secrets.monitorctl-mqtt = {
         # This value is a systemd EnvironmentFile containing
         # MONITORCTL_MQTT_USERNAME/PASSWORD lines.
-        sopsFile = ../../secrets/hosts/g9-switcher.yaml;
+        sopsFile = ../../../secrets/hosts/g9-switcher.yaml;
         mode = "0400";
       };
 
@@ -120,7 +121,7 @@
     { ... }:
     {
       imports = with inputs.self.modules.homeManager; [
-        roles.default
+        role-default
       ];
     };
 }

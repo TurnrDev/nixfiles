@@ -4,15 +4,14 @@
 }:
 
 {
-  flake.modules.nixos.roles.laptop =
+  flake.modules.nixos.role-laptop =
     { config, ... }:
     {
       imports = with inputs.self.modules.nixos; [
-        roles.workstation
-        ../hardware/bluetooth.nix
-        ../hardware/kemove.nix
-        ../hardware/keychron.nix
-        ../hardware/logitech-mx-master-3s.nix
+        role-workstation
+        hardware-bluetooth
+        desk-azelphur-floating
+        desk-home
         ../common/dockmgr-laptop-monitors.nix
         ../services/wireguard.nix
       ];
@@ -37,12 +36,12 @@
       };
     };
 
-  flake.modules.homeManager.roles.laptop =
+  flake.modules.homeManager.role-laptop =
     { ... }:
     {
       imports = with inputs.self.modules.homeManager; [
-        roles.workstation
-        ../hardware/kemove.nix
+        role-workstation
+        desk-azelphur-floating
       ];
 
       programs.dank-material-shell.plugins.networkStatus.enable = true;

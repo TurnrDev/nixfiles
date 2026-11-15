@@ -23,9 +23,9 @@
     in
     {
       imports = with inputs.self.modules.nixos; [
-        ../../modules/nixos/roles/nix-builder.nix
-        roles.laptop
-        ../../modules/nixos/hardware/intel-arc.nix
+        role-nix-builder
+        role-laptop
+        desk-work
       ];
 
       networking.hostName = "jay-mopo";
@@ -118,17 +118,6 @@
         variant = "colemak";
       };
 
-      # Plymouth needs early KMS to show the graphical LUKS prompt.
-      boot.initrd.kernelModules = [ "i915" ];
-      hardware.graphics = {
-        enable = true;
-        extraPackages = with pkgs; [
-          intel-compute-runtime
-          intel-media-driver
-          vpl-gpu-rt
-        ];
-      };
-
       environment.systemPackages =
         with pkgs;
         [
@@ -183,9 +172,9 @@
     in
     {
       imports = with inputs.self.modules.homeManager; [
-        roles.laptop
-        ./grafana.nix
-        ./google-drive.nix
+        role-laptop
+        jay-mopo-grafana
+        jay-mopo-google-drive
       ];
 
       # The keyboard's dedicated screenshot key emits Super+Shift+R.

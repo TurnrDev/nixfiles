@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   modulesPath,
   ...
@@ -7,6 +8,12 @@
 
 {
   flake.modules.nixos.jay-desktop = {
+    imports = with inputs.self.modules.nixos; [
+      hardware-cpu-amd
+      hardware-gpu-amd
+      hardware-low-ram
+    ];
+
     boot.initrd.availableKernelModules = [
       "xhci_pci"
       "ahci"
@@ -15,9 +22,13 @@
       "sd_mod"
     ];
     boot.initrd.kernelModules = [ ];
-    boot.kernelModules = [ "kvm-amd" ];
     boot.extraModulePackages = [ ];
 
-    hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  };
+
+  flake.modules.homeManager.jay-desktop = {
+    imports = with inputs.self.modules.homeManager; [
+      hardware-gpu-amd
+    ];
   };
 }

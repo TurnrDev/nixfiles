@@ -1,7 +1,7 @@
 _:
 
 {
-  flake.modules.nixos.jay-framework = {
+  flake.modules.nixos.jay-mopo = {
     boot.initrd.supportedFilesystems = [ "btrfs" ];
     boot.initrd.luks.devices."cryptroot" = {
       device = "/dev/disk/by-partlabel/nixos-crypt";

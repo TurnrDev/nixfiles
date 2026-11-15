@@ -4,19 +4,19 @@
 }:
 
 {
-  flake.modules.nixos.roles.desktop =
+  flake.modules.nixos.role-desktop =
     { ... }:
     {
       imports = with inputs.self.modules.nixos; [
-        roles.workstation
+        role-workstation
       ];
     };
 
-  flake.modules.homeManager.roles.desktop =
+  flake.modules.homeManager.role-desktop =
     { ... }:
     {
       imports = with inputs.self.modules.homeManager; [
-        roles.workstation
+        role-workstation
       ];
     };
 }

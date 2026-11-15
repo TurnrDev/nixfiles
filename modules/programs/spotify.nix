@@ -7,7 +7,7 @@
 }:
 
 {
-  flake.modules.homeManager.programs.spotify = {
+  flake.modules.homeManager.program-spotify = {
     imports = [
       inputs.spicetify-nix.homeManagerModules.spicetify
     ];

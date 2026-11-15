@@ -10,9 +10,9 @@
     networking.hostName = "jay-framework";
 
     imports = with inputs.self.modules.nixos; [
-      ../../modules/nixos/roles/nix-builder.nix
-      roles.laptop
-      ../../modules/nixos/roles/gaming.nix
+      role-nix-builder
+      role-laptop
+      role-gaming
     ];
 
     my.wireguard.home = {
@@ -49,9 +49,8 @@
 
   flake.modules.homeManager.jay-framework = {
     imports = with inputs.self.modules.homeManager; [
-      roles.laptop
-      ../../modules/home-manager/roles/gaming.nix
-      ../../modules/home-manager/hardware/amd.nix
+      role-laptop
+      role-gaming
     ];
 
     programs.borgmatic.backups =

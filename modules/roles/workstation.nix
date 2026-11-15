@@ -8,7 +8,7 @@
 }:
 
 {
-  flake.modules.nixos.roles.workstation =
+  flake.modules.nixos.role-workstation =
     {
       config,
       lib,
@@ -46,7 +46,7 @@
     in
     {
       imports = with inputs.self.modules.nixos; [
-        roles.default
+        role-default
         ../common/borgmatic.nix
         ../common/cad.nix
         ../common/go-hass-agent.nix
@@ -362,7 +362,7 @@
       };
     };
 
-  flake.modules.homeManager.roles.workstation =
+  flake.modules.homeManager.role-workstation =
     {
       config,
       lib,
@@ -371,18 +371,17 @@
     }:
     {
       imports = with inputs.self.modules.homeManager; [
-        roles.default
-        ./repository.nix
+        role-default
         ../common/borgmatic.nix
         ../common/default-apps.nix
         ../common/codex.nix
-        programs.discord
+        program-discord
         inputs.dockmgr.homeManagerModules.default
         ../common/firefox.nix
         ../common/go-hass-agent.nix
         ../common/hyprland/hyprland.nix
         ../common/kdeconnect.nix
-        programs.spotify
+        program-spotify
         ../common/stylix.nix
         ../common/vscode.nix
       ];
@@ -391,6 +390,12 @@
         enable = true;
         antialiasing = true;
       };
+
+      # Workstations hold the configuration checkout and perform builds/deployments.
+      # Appliance hosts use Git but do not carry the checkout itself.
+      home.activation.linkNixosRepository = lib.hm.dag.entryAfter [ "createReposDirectory" ] ''
+        run ln -sfnT /etc/nixos "$HOME/Repos/nixos"
+      '';
 
       programs.borgmatic.backups =
         lib.genAttrs

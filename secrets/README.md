@@ -56,5 +56,5 @@ sops updatekeys -y hosts/"$(hostname)".yaml
 ```
 
 New-host setup and recovery procedures are documented in
-[NEW_HOST_SETUP.md](../NEW_HOST_SETUP.md) and
+[the new host guide](../docs/new-host.md) and
 [disaster-recovery.md](../disaster-recovery.md).

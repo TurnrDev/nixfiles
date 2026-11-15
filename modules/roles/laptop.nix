@@ -14,7 +14,7 @@
         desk-azelphur-floating
         desk-home
         ../common/dockmgr-laptop-monitors.nix
-        ../services/wireguard.nix
+        service-wireguard
       ];
 
       # Enable touchpad support (enabled default in most desktopManager).

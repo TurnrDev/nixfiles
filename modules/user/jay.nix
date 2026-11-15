@@ -47,6 +47,7 @@ in
 
       config = {
         nix.settings.trusted-users = [ username ];
+        users.manageLingering = true;
 
         # Apply this host's Home Manager configuration to Jay.
         home-manager.users.${username}.imports = [
@@ -83,8 +84,10 @@ in
     };
 
   flake.modules.homeManager."user-${username}" =
-    { ... }:
+    { osConfig, ... }:
     {
-      home.username = "${username}";
+      home.username = osConfig.my.users.${username}.username;
+      home.homeDirectory = osConfig.my.users.${username}.homeDirectory;
+      nixpkgs.overlays = osConfig.nixpkgs.overlays;
     };
 }

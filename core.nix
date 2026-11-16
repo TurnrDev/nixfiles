@@ -107,7 +107,7 @@
     }
   '';
 
-  systems = [ "x86_64-linux" ];
+  systems = lib.mkForce [ "x86_64-linux" ];
 
   perSystem =
     { pkgs, ... }:

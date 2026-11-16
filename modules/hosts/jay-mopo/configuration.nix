@@ -170,7 +170,6 @@
     {
       imports = with inputs.self.modules.homeManager; [
         jay-mopo-google-drive
-        jay-mopo-grafana
         role-laptop
       ];
 

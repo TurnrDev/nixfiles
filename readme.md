@@ -1,6 +1,6 @@
 # NixOS
 
-My NixOS configurations, built on [AquaticOS](https://git.aquaticservers.com/aqua/AquaticOS), flake-parts and Home Manager.
+My NixOS configurations, built on [Aquatic](https://git.aquaticservers.com/aqua/AquaticOS), flake-parts and Home Manager.
 
 | Host | Purpose |
 | --- | --- |

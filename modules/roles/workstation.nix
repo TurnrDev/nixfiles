@@ -186,14 +186,6 @@
             folders = {
             }
             // lib.optionalAttrs hasPersonalFolders {
-              "3D Printing" = {
-                path = "${config.my.users.jay.homeDirectory}/3D Printing/";
-                devices = config.my.syncthing.personalDeviceList;
-                versioning = {
-                  type = "simple";
-                  params.keep = "10";
-                };
-              };
               "Documents" = {
                 path = "${config.my.users.jay.homeDirectory}/Documents/";
                 devices = config.my.syncthing.personalDeviceList;
